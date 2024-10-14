@@ -148,7 +148,7 @@
         - 版本：`v20.18.0`
         - 資料庫： MySQL
     * 前端：
-        - 框架： React or Vue
+        - 框架： Vue
 
 * 團隊合作
     * 要採用的 Branching Model 是哪一種
