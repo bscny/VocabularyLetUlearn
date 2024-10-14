@@ -169,3 +169,6 @@
 
     - 專案功能細項繁多，目前還沒完全確定實現功能的技術
         - 分配可能使用到的技術查詢工作，並根據工作進度適時調整開會頻率
+
+   
+* [10/17 第一次進度追蹤報告 ppt](https://docs.google.com/presentation/d/1wIFWWrF15rPliAVujuIl7uflQy9MEA0n30VhcRyYvrE/edit#slide=id.g30afa59ef66_1_9)
