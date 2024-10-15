@@ -172,3 +172,5 @@
 
    
 * [10/17 第一次進度追蹤報告 ppt](https://docs.google.com/presentation/d/1wIFWWrF15rPliAVujuIl7uflQy9MEA0n30VhcRyYvrE/edit#slide=id.g30afa59ef66_1_9)
+
+* [Core Features 的 POC](https://docs.google.com/document/d/1oVrSQyUTKLqCo1zymF01pJZYTRNzJ4W5WqrHR_7MXAo/edit?tab=t.0)
