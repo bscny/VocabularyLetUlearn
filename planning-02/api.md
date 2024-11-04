@@ -1,5 +1,7 @@
 # 為自己的專案設計 API
 
+決定使用 API first
+
 ## 專案外接 API
 
 1. WordsAPI
