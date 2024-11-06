@@ -2,8 +2,8 @@
 
 ## ER Model
 
-![ER Model](https://github.com/bscny/VocabularyLetsUlearn/blob/feature_planning02/planning-02/asset/pdfs/Vocabletulearn_er_model.pdf)
+![ER Model](https://github.com/bscny/VocabularyLetsUlearn/blob/main/planning-02/asset/pdfs/Vocabletulearn_er_model.pdf)
 
 ## Table Schema
 
-![Table Schema](https://github.com/bscny/VocabularyLetsUlearn/blob/feature_planning02/planning-02/asset/pdfs/Tables.pdf)
+![Table Schema](https://github.com/bscny/VocabularyLetsUlearn/blob/main/planning-02/asset/pdfs/Tables.pdf)
