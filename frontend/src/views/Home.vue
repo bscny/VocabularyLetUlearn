@@ -97,6 +97,8 @@ export default {
                 this.showLoginModal = false;
                 this.loginError = '';
 
+                this.updateLastLogin(this.userEmail);
+
                 if (!response.data.isVerified) {
                     this.showVerifyPrompt = true;
                     /*this.loginError = '您的信箱尚未驗證。請檢查郵件完成驗證。';
@@ -107,6 +109,7 @@ export default {
                 this.loginError = '登入失敗，請檢查電子郵件和密碼。';
             });
         },
+
         handleRegister(userData) {
             api.register(userData).then(response => {
                 localStorage.setItem('name', userData.name);
@@ -116,14 +119,18 @@ export default {
                 this.userName = userData.name;
                 this.userEmail = userData.email;
                 this.showRegisterModal = false;
+                this.showVerifyPrompt = true;
                 this.registerError = '';
             }).catch(error => {
                 this.registerError = '註冊失敗，請檢查電子郵件和密碼。';
             });
         },
+
         hideVerifyPrompt() {
             this.showVerifyPrompt = false;
+            this.logout();
         },
+
         logout() {
             localStorage.removeItem('name');
             localStorage.removeItem('token');
@@ -132,14 +139,26 @@ export default {
             this.userName = '';
             this.userEmail = '';
         },
+
         switchToForgetPasswordModal() {
             this.showLoginModal = false;
             this.showForgetPasswordModal = true;
             console.log('showForgetPasswordModal:', this.showForgetPasswordModal);
         },
+
         switchToRegisterModal() {
             this.showLoginModal = false;  // 關閉登入框
             this.showRegisterModal = true; // 打開註冊框
+        },
+
+        updateLastLogin(emailData) {
+            api.updateLastLogin({ email: emailData }) // 假設傳送使用者的 ID 或 Email
+                .then(response => {
+                    console.log('Last login time updated successfully.');
+                })
+                .catch(error => {
+                    console.error('Failed to update last login time:', error);
+                });
         }
     }
 };

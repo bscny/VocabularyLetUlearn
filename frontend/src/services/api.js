@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,7 +18,7 @@ const api = {
   },
 
   checkEmail(emailData) {
-    return axios.post('/api/auth/check-email', emailData);
+    return axios.post('/auth/check-email', emailData);
   },
 
   verifyEmail(token) {
@@ -27,6 +27,10 @@ const api = {
 
   resendVerificationEmail(emailData) {
     return apiClient.post('/auth/resend-verification-email', emailData);
+  },
+
+  updateLastLogin(emailData) {
+    return apiClient.post('/auth/update-last-login', emailData);
   }
 };
 
