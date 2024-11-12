@@ -164,3 +164,20 @@ exports.resendVerificationEmail = (req, res) => {
         });
     });
 };
+
+exports.updateLastLogin = (req, res) => {
+    const { email } = req.body;
+    db.query('UPDATE user SET last_login = NOW() WHERE email = ?', [email], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: '伺服器錯誤，請稍後再試' });
+        }
+
+        // 使用 affectedRows 來確認是否有資料被更新
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: '未找到註冊的用戶' });
+        }
+
+        res.status(200).json({ message: '成功更新登入時間' });
+    });
+};
