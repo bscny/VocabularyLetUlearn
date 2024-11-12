@@ -7,4 +7,5 @@ router.get('/verify-email', authController.verifyEmail);
 router.post('/check-email', authController.checkEmail);
 router.post('/login', authController.login);
 router.post('/resend-verification-email', authController.resendVerificationEmail);
+router.post('/update-last-login', authController.updateLastLogin);
 module.exports = router;
