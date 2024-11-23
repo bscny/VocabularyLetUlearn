@@ -4,7 +4,7 @@
   </header>
 
   <nav>
-    <FolderSetSlide />
+    <LeftSideBar />
   </nav>
 
   <main style="height: 3000px;"> 
@@ -32,13 +32,13 @@
 
 <script>
 import Navbar from '../components/Navbar.vue';
-import FolderSetSlide from '../components/FolderSetSlide.vue';
+import LeftSideBar from '../components/LeftSideBar.vue';
 
 export default {
   name: 'UserInventory',
   components: {
     Navbar,
-    FolderSetSlide,
+    LeftSideBar,
   },
 
   data() {

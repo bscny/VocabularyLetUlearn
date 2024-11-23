@@ -16,7 +16,7 @@
 import { shallowReactive, toDisplayString } from 'vue';
 
 export default {
-    name: 'FolderSetSlide',
+    name: 'LeftSideBar',
     data() {
         return {
             folders: [
