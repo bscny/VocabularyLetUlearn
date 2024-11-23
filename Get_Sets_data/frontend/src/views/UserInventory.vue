@@ -1,91 +1,81 @@
 <template>
-  <div class="home">
+  <header>
     <Navbar />
-      <div class="main-layout">
-          <FolderSetSlide />
-          <button class="action-button">Click Me</button>
-          <input class="search-box" type="text" placeholder="Search..." />
+  </header>
+
+  <nav>
+    <FolderSetSlide />
+  </nav>
+
+  <main style="height: 3000px;"> 
+    <button class="quiz-button">
+      Local Quiz
+    </button>
+
+    <input class="search-box" type="text" placeholder="Search" />
+
+    <ul class="vocabulary" v-for="vocabulary in words" :key="vocabulary.word">
+      <div>
+        {{ vocabulary.word }}
       </div>
-  </div>
+
+      <div>
+        {{ vocabulary.def }}
+      </div>
+
+      <div class="eg">
+        {{ vocabulary.eg }}
+      </div>
+    </ul>
+  </main>
 </template>
 
 <script>
 import Navbar from '../components/Navbar.vue';
-import Content from '../components/Content.vue';
 import FolderSetSlide from '../components/FolderSetSlide.vue';
 
 export default {
   name: 'UserInventory',
   components: {
     Navbar,
-    Content,
     FolderSetSlide,
+  },
+
+  data() {
+    return {
+      words: [
+        {word: "apple", def: "a red fruit", eg: "i have an apple"},
+        {word: "banana", def: "a yellow fruit", eg: "i have an banana"}
+      ]
+    }
   }
 }
 </script>
 
 <style scoped>
-.home {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; 
-  width: 100vw;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 20;
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
-}
-
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.main-layout {
-  display: flex;
-  flex-grow: 1;
-  margin-top: 60px;
-  overflow: hidden;
-}
-
-.action-button {
-  margin-left: 80px; /* Adjust spacing between FolderSetSlide and button */
-  margin-bottom: 100px;
-  height: 50px;
-  align-self: flex-start; /* Align button to the top if needed */
-  background-color: #4caf50; /* Example styling */
+.quiz-button {
+  display: block;
+  margin: 100px 0 0 250px;
+  padding: 10px 20px 10px 20px;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s;
+
+  z-index: 100;
 }
 
-.action-button:hover {
-  background-color: #45a049;
+.quiz-button:hover {
+  background-color: #288d2e;
 }
 
 .search-box {
-  margin-left: 80px; /* Align with the button */
-  width: 500px; /* Adjust as needed */
-  height: 80px;
+  display: block;
+  margin: 10px 0 0 250px;
   padding: 5px 10px;
+  font-size: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -97,16 +87,16 @@ export default {
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
-@media (max-width: 600px) {
-  .navbar {
-      flex-direction: column;
-      align-items: flex-start;
-  }
-  .icons {
-      gap: 10px;
-  }
-  .icon {
-      font-size: 1em;
-  }
+.vocabulary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0 0 0 300px;
+  margin: 50px 0 0 0;
+
+  font-size: 20px;
+}
+
+.vocabulary .eg{
+  margin: 30px 0 0 0;
 }
 </style>

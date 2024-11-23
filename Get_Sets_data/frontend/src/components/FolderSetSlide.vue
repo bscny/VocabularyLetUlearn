@@ -1,18 +1,15 @@
 <template>
-    <div class="left-sidebar">
-        <ul class="folder-menu">
-            <li v-for="folder in folders" :key="folder.id">
-                <div @click="toggleShow(folder)">
-                    {{ folder.name }}
-                </div>
-                <ul class="set-menu"v-if="folder.isShow">
-                    <li v-for="set in folder.sets" :key="set.id">
-                        {{ set.name }}
-                    </li>
+    <nav class="left-sidebar">
+        <ul class="folders" v-for="folder in folders" :key="folder.id"  @click="toggleShow(folder)">
+            {{ folder.name }}
+
+            <div v-if="folder.isShow">
+                <ul class="sets" v-for="set in folder.sets" :key="set.id"  @click="displaySet(set.id)">
+                    {{ set.name }}
                 </ul>
-            </li>
+            </div>
         </ul>
-    </div>
+    </nav>
 </template>
 
 <script>
@@ -53,6 +50,11 @@ export default {
     methods: {
         toggleShow(folder) {
             folder.isShow = !folder.isShow;
+        },
+
+        displaySet(setId) {
+            // display it from DB
+            console.log("display" + setId);
         }
     }
 };
@@ -61,58 +63,34 @@ export default {
 
 <style scoped>
 .left-sidebar {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    bottom: 0;
     width: 200px;
-    padding: 1rem;
-    background-color: #f7f7f7;
-    height: 100vh;
-    border-right: 1px solid #ddd;
-    overflow-y: auto;
-}
-
-.folder-menu {
-    list-style: none;
     padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    background-color: #f7f7f7;
+    border-right: 1px solid #ddd;
 }
 
-.folder-menu li {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.folders {
+    margin: 30px 0 0 0;
+    padding: 0 0 0 70px;
+    font-size: 20px;
 }
 
-.folder-name {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.folder-name:hover {
+.folders:hover {
     background-color: #e0e0e0;
-}
-
-.set-menu {
-    list-style: none;
-    margin: 0;
-}
-
-.set-menu li {
-    display: flex;
-    align-items: center;
-    padding: 8px 10px;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
 }
 
-.set-menu li:hover {
-    background-color: #e0e0e0;
+.sets {
+    margin: 30px 0 0 10px;
+}
+
+.sets:hover {
+    background-color: #9c9c9c;
+    cursor: pointer;
 }
 </style>
 
