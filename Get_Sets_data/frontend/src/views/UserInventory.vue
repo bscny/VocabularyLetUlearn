@@ -4,7 +4,7 @@
   </header>
 
   <nav>
-    <LeftSideBar />
+    <LeftBarSets />
   </nav>
 
   <main style="height: 3000px;"> 
@@ -32,13 +32,13 @@
 
 <script>
 import Navbar from '../components/Navbar.vue';
-import LeftSideBar from '../components/LeftSideBar.vue';
+import LeftBarSets from '../components/LeftBarSets.vue';
 
 export default {
   name: 'UserInventory',
   components: {
     Navbar,
-    LeftSideBar,
+    LeftBarSets,
   },
 
   data() {
