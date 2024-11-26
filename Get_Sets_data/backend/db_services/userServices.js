@@ -6,4 +6,4 @@ async function SelectAllFromUsers() {
     return row;
 }
 
-module.exports = {SelectAllFromUsers};
+module.exports = { SelectAllFromUsers };

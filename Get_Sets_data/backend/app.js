@@ -10,22 +10,25 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
-//app.use(express.json);
-//app.use(cors);
+app.use(bodyParser.json());
+// app.use(cors);
 
-// globally checker for error handling, so we dont need catch for any async func in backend
-app.use((err, req, res, next) => {
-    console.log(err);
-    res.status(err.status || 500).send("something is wrong...");
-})
 
-// middle ware here
+// routes are here
 const userRoutes = require("./routes/userRoutes.js");
 
 app.use("/users", userRoutes);
 
+// routes end
+
 app.get("/test", (req, res) => {
-    res.status(200).json({'success': 'success'});
+    res.status(200).send({'success': 'success'});
+})
+
+// globally checker for error handling, so we dont need catch for any async func in backend
+app.use((err, req, res, next) => {
+    console.log(err);
+    res.status(err.status || 500).send("something is wrong...\n detected in global error handler");
 })
   
 app.listen(PORT, () => {
