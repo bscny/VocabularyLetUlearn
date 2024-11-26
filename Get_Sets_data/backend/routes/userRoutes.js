@@ -7,4 +7,6 @@ const userControllers = require('../controllers/userController.js');
 // http://localhost:PORT/users
 router.get("/", userControllers.DisplayUsers);
 
+router.get("/:id", userControllers.DisplayUser);
+
 module.exports = router;
