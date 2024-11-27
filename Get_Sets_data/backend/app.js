@@ -11,7 +11,10 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(bodyParser.json());
-// app.use(cors);
+
+app.use(cors({
+    origin: "http://localhost:5173",
+}));
 
 
 // routes are here
@@ -22,7 +25,7 @@ app.use("/users", userRoutes);
 // routes end
 
 app.get("/test", (req, res) => {
-    res.status(200).send({'success': 'success'});
+    res.status(200).send({ 'success': 'success' });
 })
 
 // globally checker for error handling, so we dont need catch for any async func in backend
@@ -30,7 +33,7 @@ app.use((err, req, res, next) => {
     console.log(err);
     res.status(err.status || 500).send("something is wrong...\n detected in global error handler");
 })
-  
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
