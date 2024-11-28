@@ -1,12 +1,9 @@
-// controllers/wordController.js
-
 const axios = require('axios');
 
-exports.getWordData = async (req, res) => {
+exports.searchWord = async (req, res) => {
     const word = req.params.word;
 
     try {
-        // 向 WordsAPI 發送請求
         const response = await axios.get(`https://${process.env.WORDSAPI_HOST}/words/${word}`, {
             headers: {
                 'X-RapidAPI-Key': process.env.WORDSAPI_KEY,
@@ -16,7 +13,6 @@ exports.getWordData = async (req, res) => {
 
         const data = response.data;
 
-        // 從返回的資料中提取需要的資訊
         const definitions = data.results?.map(result => result.definition) || [];
         const examples = data.results?.flatMap(result => result.examples || []) || [];
         const synonyms = data.results?.flatMap(result => result.synonyms || []) || [];
