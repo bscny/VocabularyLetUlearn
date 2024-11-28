@@ -3,7 +3,7 @@ use vocab_let_u_learn;
 
 -- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
--- Host: localhost    Database: test
+-- Host: localhost    Database: vocab_let_u_learn
 -- ------------------------------------------------------
 -- Server version	8.0.39
 
@@ -50,11 +50,14 @@ DROP TABLE IF EXISTS `folders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `folders` (
   `FOLDER_ID` int NOT NULL AUTO_INCREMENT,
-  `Folder_name` varchar(20) NOT NULL,
+  `Folder_name` varchar(50) NOT NULL,
   `Owner_id` int NOT NULL,
+  `Parent_folder_id` int DEFAULT NULL,
   PRIMARY KEY (`FOLDER_ID`),
   KEY `fk_OwnerId_UserId_Folders` (`Owner_id`),
-  CONSTRAINT `fk_OwnerId_UserId_Folders` FOREIGN KEY (`Owner_id`) REFERENCES `vocab_let_u_learn`.`users` (`USER_ID`)
+  KEY `fk_ParentFolderId_FolderId_Folders` (`Parent_folder_id`),
+  CONSTRAINT `fk_OwnerId_UserId_Folders` FOREIGN KEY (`Owner_id`) REFERENCES `users` (`USER_ID`),
+  CONSTRAINT `fk_ParentFolderId_FolderId_Folders` FOREIGN KEY (`Parent_folder_id`) REFERENCES `folders` (`FOLDER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -79,8 +82,8 @@ CREATE TABLE `friend` (
   `FRIEND_ID` int NOT NULL,
   PRIMARY KEY (`USER_ID`,`FRIEND_ID`),
   KEY `fk_FriendId_UsrId_Friend` (`FRIEND_ID`),
-  CONSTRAINT `fk_FriendId_UsrId_Friend` FOREIGN KEY (`FRIEND_ID`) REFERENCES `vocab_let_u_learn`.`users` (`USER_ID`),
-  CONSTRAINT `fk_UsrId_UsrId_Friend` FOREIGN KEY (`USER_ID`) REFERENCES `vocab_let_u_learn`.`users` (`USER_ID`)
+  CONSTRAINT `fk_FriendId_UsrId_Friend` FOREIGN KEY (`FRIEND_ID`) REFERENCES `users` (`USER_ID`),
+  CONSTRAINT `fk_UsrId_UsrId_Friend` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -106,8 +109,8 @@ CREATE TABLE `history_answer` (
   `Is_correct` tinyint(1) NOT NULL,
   PRIMARY KEY (`USER_ID`,`QUESTION_ID`),
   KEY `fk_QId_QId_HistoryAnswer` (`QUESTION_ID`),
-  CONSTRAINT `fk_QId_QId_HistoryAnswer` FOREIGN KEY (`QUESTION_ID`) REFERENCES `vocab_let_u_learn`.`question` (`QUESTION_ID`),
-  CONSTRAINT `fk_UsrId_UsrId_HistoryAnswer` FOREIGN KEY (`USER_ID`) REFERENCES `vocab_let_u_learn`.`users` (`USER_ID`)
+  CONSTRAINT `fk_QId_QId_HistoryAnswer` FOREIGN KEY (`QUESTION_ID`) REFERENCES `question` (`QUESTION_ID`),
+  CONSTRAINT `fk_UsrId_UsrId_HistoryAnswer` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -129,11 +132,11 @@ DROP TABLE IF EXISTS `question`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `question` (
   `QUESTION_ID` int NOT NULL AUTO_INCREMENT,
-  `Correct_ans` varchar(30) NOT NULL,
-  `OptionA` varchar(30) NOT NULL,
-  `OptionB` varchar(30) NOT NULL,
-  `OptionC` varchar(30) NOT NULL,
-  `Ans_definition` varchar(50) NOT NULL,
+  `Correct_ans` varchar(50) NOT NULL,
+  `OptionA` varchar(50) NOT NULL,
+  `OptionB` varchar(50) NOT NULL,
+  `OptionC` varchar(50) NOT NULL,
+  `Ans_definition` varchar(100) NOT NULL,
   `Sentence` varchar(100) NOT NULL,
   PRIMARY KEY (`QUESTION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -160,8 +163,8 @@ CREATE TABLE `question_in_exam` (
   `QUESTION_ID` int NOT NULL,
   PRIMARY KEY (`EXAM_ID`,`QUESTION_ID`),
   KEY `fk_QId_QId_QuestionInExam` (`QUESTION_ID`),
-  CONSTRAINT `fk_ExamId_ExamId_QuestionInExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `vocab_let_u_learn`.`ranking_exam` (`EXAM_ID`),
-  CONSTRAINT `fk_QId_QId_QuestionInExam` FOREIGN KEY (`QUESTION_ID`) REFERENCES `vocab_let_u_learn`.`question` (`QUESTION_ID`)
+  CONSTRAINT `fk_ExamId_ExamId_QuestionInExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `ranking_exam` (`EXAM_ID`),
+  CONSTRAINT `fk_QId_QId_QuestionInExam` FOREIGN KEY (`QUESTION_ID`) REFERENCES `question` (`QUESTION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -206,12 +209,12 @@ DROP TABLE IF EXISTS `sets`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sets` (
   `SET_ID` int NOT NULL AUTO_INCREMENT,
-  `SET_name` varchar(20) NOT NULL,
+  `SET_name` varchar(50) NOT NULL,
   `Is_public` tinyint(1) NOT NULL DEFAULT '1',
   `In_folder_id` int NOT NULL,
   PRIMARY KEY (`SET_ID`),
   KEY `fk_InFolder_FolderId_Sets` (`In_folder_id`),
-  CONSTRAINT `fk_InFolder_FolderId_Sets` FOREIGN KEY (`In_folder_id`) REFERENCES `vocab_let_u_learn`.`folders` (`FOLDER_ID`)
+  CONSTRAINT `fk_InFolder_FolderId_Sets` FOREIGN KEY (`In_folder_id`) REFERENCES `folders` (`FOLDER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -237,8 +240,8 @@ CREATE TABLE `take_exam` (
   `Plus_points` int NOT NULL,
   PRIMARY KEY (`USER_ID`,`EXAM_ID`),
   KEY `fk_ExamId_ExamId_TakeExam` (`EXAM_ID`),
-  CONSTRAINT `fk_ExamId_ExamId_TakeExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `vocab_let_u_learn`.`ranking_exam` (`EXAM_ID`),
-  CONSTRAINT `fk_UsrId_UsrId_TakeExam` FOREIGN KEY (`USER_ID`) REFERENCES `vocab_let_u_learn`.`users` (`USER_ID`)
+  CONSTRAINT `fk_ExamId_ExamId_TakeExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `ranking_exam` (`EXAM_ID`),
+  CONSTRAINT `fk_UsrId_UsrId_TakeExam` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -263,8 +266,8 @@ CREATE TABLE `use_set_in_room` (
   `ROOM_ID` int NOT NULL,
   PRIMARY KEY (`SET_ID`,`ROOM_ID`),
   KEY `fk_RoomId_RoomId_UseSetInRoom` (`ROOM_ID`),
-  CONSTRAINT `fk_RoomId_RoomId_UseSetInRoom` FOREIGN KEY (`ROOM_ID`) REFERENCES `vocab_let_u_learn`.`current_room` (`ROOM_ID`),
-  CONSTRAINT `fk_SetId_SetId_UseSetInRoom` FOREIGN KEY (`SET_ID`) REFERENCES `vocab_let_u_learn`.`sets` (`SET_ID`)
+  CONSTRAINT `fk_RoomId_RoomId_UseSetInRoom` FOREIGN KEY (`ROOM_ID`) REFERENCES `current_room` (`ROOM_ID`),
+  CONSTRAINT `fk_SetId_SetId_UseSetInRoom` FOREIGN KEY (`SET_ID`) REFERENCES `sets` (`SET_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -286,15 +289,15 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `USER_ID` int NOT NULL AUTO_INCREMENT,
-  `User_name` varchar(20) NOT NULL,
-  `Email` char(30) NOT NULL,
+  `User_name` varchar(30) NOT NULL,
+  `Email` char(50) NOT NULL,
   `Pass_word` char(30) NOT NULL,
   `Ranking_points` int NOT NULL DEFAULT '0',
   `Last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Current_room_id` int DEFAULT NULL,
   PRIMARY KEY (`USER_ID`),
   KEY `fk_CurrentRoom_RoomId_Users` (`Current_room_id`),
-  CONSTRAINT `fk_CurrentRoom_RoomId_Users` FOREIGN KEY (`Current_room_id`) REFERENCES `vocab_let_u_learn`.`current_room` (`ROOM_ID`)
+  CONSTRAINT `fk_CurrentRoom_RoomId_Users` FOREIGN KEY (`Current_room_id`) REFERENCES `current_room` (`ROOM_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -316,15 +319,15 @@ DROP TABLE IF EXISTS `vocabulary`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `vocabulary` (
   `SET_ID` int NOT NULL,
-  `WORD` varchar(30) NOT NULL,
-  `Definitions` varchar(50) NOT NULL,
+  `WORD` varchar(50) NOT NULL,
+  `Definitions` varchar(100) NOT NULL,
   `Sentence` varchar(100) DEFAULT NULL,
   `Create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Is_marked` tinyint(1) NOT NULL DEFAULT '0',
   `Num_test` int NOT NULL DEFAULT '0',
   `Num_wrong` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`SET_ID`,`WORD`),
-  CONSTRAINT `fk_SetId_SetId_Vocabulary` FOREIGN KEY (`SET_ID`) REFERENCES `vocab_let_u_learn`.`sets` (`SET_ID`)
+  CONSTRAINT `fk_SetId_SetId_Vocabulary` FOREIGN KEY (`SET_ID`) REFERENCES `sets` (`SET_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -346,4 +349,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-25  1:02:55
+-- Dump completed on 2024-11-29  0:06:08
