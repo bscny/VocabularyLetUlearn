@@ -14,17 +14,17 @@
   
       <input class="search-box" type="text" placeholder="Search" />
   
-      <ul class="vocabulary" v-for="vocabulary in words" :key="vocabulary.word">
+      <ul v-if="isPrepared" class="vocabulary" v-for="vocabulary in words" :key="vocabulary.USER_ID">
         <div>
-          {{ vocabulary.word }}
+          {{ vocabulary.User_name }}
         </div>
   
         <div>
-          {{ vocabulary.def }}
+          {{ vocabulary.Pass_word }}
         </div>
   
         <div class="eg">
-          {{ vocabulary.eg }}
+          {{ vocabulary.Email }}
         </div>
       </ul>
     </main>
@@ -45,28 +45,21 @@
     data() {
       return {
         words: [
-          {word: "apple", def: "a red fruit", eg: "i have an apple"},
-          {word: "banana", def: "a yellow fruit", eg: "i have an banana"}
-        ]
+          // {word: "apple", def: "a red fruit", eg: "i have an apple"},
+          // {word: "banana", def: "a yellow fruit", eg: "i have an banana"}
+        ],
+
+        isPrepared: false
       }
     },
 
-    mounted() {
-      // axios.get("http://localhost:3000/users")
-      // .then((res) => {
-      //   console.log(res);
-      // })
+    async mounted() {
+      const users = await axios.get("http://localhost:3000/users");
 
-      axios({
-        method: 'get',
-        url: 'http://localhost:3000/users',
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      console.log(users.data);
+      this.words = users.data;
+
+      this.isPrepared = true;
     }
   }
   </script>
