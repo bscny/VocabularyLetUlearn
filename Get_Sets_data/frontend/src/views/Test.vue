@@ -1,10 +1,10 @@
 <template>
     <header>
-      <Navbar />
+      <!-- <Navbar /> -->
     </header>
   
     <nav>
-      <LeftBarSets />
+      <!-- <LeftBarFolders /> -->
     </nav>
   
     <main style="height: 3000px;"> 
@@ -13,33 +13,19 @@
       </button>
   
       <input class="search-box" type="text" placeholder="Search" />
-  
-      <ul v-if="isPrepared" class="vocabulary" v-for="vocabulary in words" :key="vocabulary.USER_ID">
-        <div>
-          {{ vocabulary.User_name }}
-        </div>
-  
-        <div>
-          {{ vocabulary.Pass_word }}
-        </div>
-  
-        <div class="eg">
-          {{ vocabulary.Email }}
-        </div>
-      </ul>
     </main>
   </template>
   
   <script>
   import Navbar from '../components/Navbar.vue';
-  import LeftBarSets from '../components/LeftBarSets.vue';
+  import LeftBarFolders from '../components/LeftBarFolders.vue';
   import axios from 'axios';
   
   export default {
     name: 'UserInventory',
     components: {
       Navbar,
-      LeftBarSets,
+      LeftBarFolders,
     },
   
     data() {

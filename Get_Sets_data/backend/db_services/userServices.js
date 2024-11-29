@@ -17,15 +17,7 @@ async function SelectFromUsersWhereID(USER_ID) {
 async function SelectFolderInUser(USER_ID) {
     const [records] = await db.query(`select *
                                       from folders
-                                      where Parent_folder_id is null and Owner_id = ?`, [USER_ID]);
-
-    return records;
-}
-
-async function SelectFolderInFolder(FOLDER_ID) {
-    const [records] = await db.query(`select *
-                                      from folders
-                                      where Parent_folder_id = ?`, [FOLDER_ID]);
+                                      where Owner_id = ?`, [USER_ID]);
 
     return records;
 }
@@ -50,7 +42,6 @@ module.exports = {
     SelectAllFromUsers,
     SelectFromUsersWhereID,
     SelectFolderInUser,
-    SelectFolderInFolder,
     SelectSetInFolder,
     SelectVocabInSet
 };

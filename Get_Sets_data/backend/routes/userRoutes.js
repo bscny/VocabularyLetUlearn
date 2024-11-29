@@ -7,6 +7,12 @@ const userControllers = require('../controllers/userController.js');
 // http://localhost:PORT/users
 router.get("/", userControllers.DisplayUsers);
 
-router.get("/:id", userControllers.DisplayUser);
+router.get("/:USER_ID", userControllers.DisplayUser);
+
+router.get("/:USER_ID/folders", userControllers.DisplayFolders);
+
+router.get("/folders/:FOLDER_ID/sets", userControllers.DisplaySets);
+
+router.get("/folders/sets/:SET_ID/words", userControllers.DisplayWords);
 
 module.exports = router;

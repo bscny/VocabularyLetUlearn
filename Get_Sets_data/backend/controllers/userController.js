@@ -7,20 +7,33 @@ async function DisplayUsers(req, res) {
 }
 
 async function DisplayUser(req, res) {
-    const result = await service.SelectFromUsersWhereID(req.params.id);
-
-    console.log(req);
+    const result = await service.SelectFromUsersWhereID(req.params.USER_ID);
 
     res.send(result);
 }
 
-// async function DisplayInitFolder(req, res) {
-//     const result = await service.SelectFolderInUser(req.params.id);
+async function DisplayFolders(req, res) {
+    const result = await service.SelectFolderInUser(req.params.USER_ID);
 
-//     res.send(result);
-// }
+    res.send(result);
+}
+
+async function DisplaySets(req, res) {
+    const result = await service.SelectSetInFolder(req.params.FOLDER_ID);
+
+    res.send(result);
+}
+
+async function DisplayWords(req, res) {
+    const result = await service.SelectVocabInSet(req.params.SET_ID);
+
+    res.send(result);
+}
 
 module.exports = {
     DisplayUsers,
-    DisplayUser
+    DisplayUser,
+    DisplayFolders,
+    DisplaySets,
+    DisplayWords
 };

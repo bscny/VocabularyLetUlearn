@@ -4,7 +4,7 @@
   </header>
 
   <nav>
-    <LeftBarSets />
+    <LeftBarFolders  @displayWords="setCanShow($event)"/>
   </nav>
 
   <main style="height: 3000px;"> 
@@ -14,41 +14,59 @@
 
     <input class="search-box" type="text" placeholder="Search" />
 
-    <ul class="vocabulary" v-for="vocabulary in words" :key="vocabulary.word">
+    <ul class="grid-each-word" v-if="canShow" v-for="vocabulary in words" :key="vocabulary.WORD">
       <div>
-        {{ vocabulary.word }}
+          {{ vocabulary.WORD }}
       </div>
 
       <div>
-        {{ vocabulary.def }}
+          {{ vocabulary.Definitions }}
       </div>
 
-      <div class="eg">
-        {{ vocabulary.eg }}
+      <div>
+          {{ vocabulary.Sentence }}
       </div>
     </ul>
+
   </main>
 </template>
 
 <script>
 import Navbar from '../components/Navbar.vue';
-import LeftBarSets from '../components/LeftBarSets.vue';
+import LeftBarFolders from '../components/LeftBarFolders.vue';
+import axios from "axios";
 
 export default {
   name: 'UserInventory',
   components: {
     Navbar,
-    LeftBarSets,
+    LeftBarFolders,
   },
 
-  data() {
-    return {
-      words: [
-        {word: "apple", def: "a red fruit", eg: "i have an apple"},
-        {word: "banana", def: "a yellow fruit", eg: "i have an banana"}
-      ]
+  data(){
+    return{
+      canShow: false,
+      curDisplaySetId: null,
+
+      words: []
+    };
+  },
+
+  methods: {
+    setCanShow(setId){
+      this.canShow = true;
+      this.curDisplaySetId = setId;
+
+      this.getWords();
+    },
+
+    async getWords(){
+      const wordsData = await axios.get(`http://localhost:3000/users/folders/sets/${this.curDisplaySetId}/words`);
+
+      this.words = wordsData.data;
     }
   }
+
 }
 </script>
 
@@ -87,16 +105,16 @@ export default {
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
-.vocabulary {
+.grid-each-word {
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 0 0 0 300px;
-  margin: 50px 0 0 0;
+  margin: 0 0 0 0;
 
   font-size: 20px;
 }
 
-.vocabulary .eg{
+.grid-each-word div{
   margin: 30px 0 0 0;
 }
 </style>

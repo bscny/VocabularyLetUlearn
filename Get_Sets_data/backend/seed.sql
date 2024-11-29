@@ -16,13 +16,6 @@ values
 ("testFolder3-usr2", 2),
 ("testFolder1-usr3", 3);
 
-insert into folders(Folder_name, Owner_id, Parent_folder_id)
-values
-("testFolder4-usr1", 1, 1),
-("testFolder5-usr1", 1, 1),
-("testFolder6-usr1", 1, 2),
-("testFolder4-usr2", 2, 5);
-
 insert into sets(Set_name, In_folder_id)
 values
 ("testSet1-folder1", 1),
@@ -38,9 +31,7 @@ values
 ("testSet2-folder4", 4),
 ("testSet3-folder4", 4),
 ("testSet1-folder5", 5),
-("testSet1-folder6", 6),
-("testSet1-folder1-folder4", 8),
-("testSet1-folder1-folder5", 9);
+("testSet1-folder6", 6);
 
 insert into vocabulary(SET_ID, WORD, Definitions, Sentence)
 values
@@ -85,10 +76,4 @@ values
 (13, "car", "a tool to help us move faster", "I have a car"),
 (14, "apple", "a red fruit", "I have an apple"),
 (14, "banana", "a yellow fruit", "I have a banana"),
-(14, "car", "a tool to help us move faster", "I have a car"),
-(15, "apple", "a red fruit", "I have an apple"),
-(15, "banana", "a yellow fruit", "I have a banana"),
-(15, "car", "a tool to help us move faster", "I have a car"),
-(16, "apple", "a red fruit", "I have an apple"),
-(16, "banana", "a yellow fruit", "I have a banana"),
-(16, "car", "a tool to help us move faster", "I have a car");
+(14, "car", "a tool to help us move faster", "I have a car");
