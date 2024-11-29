@@ -6,15 +6,51 @@ async function SelectAllFromUsers() {
     return records;
 }
 
-async function SelectFromUsersWhereID(id) {
+async function SelectFromUsersWhereID(USER_ID) {
     const [record] = await db.query(`select * 
-                                  from users
-                                  where USER_ID = ?`, [id]);
+                                    from users
+                                    where USER_ID = ?`, [USER_ID]);
 
     return record;
 }
 
+async function SelectFolderInUser(USER_ID) {
+    const [records] = await db.query(`select *
+                                      from folders
+                                      where Parent_folder_id is null and Owner_id = ?`, [USER_ID]);
+
+    return records;
+}
+
+async function SelectFolderInFolder(FOLDER_ID) {
+    const [records] = await db.query(`select *
+                                      from folders
+                                      where Parent_folder_id = ?`, [FOLDER_ID]);
+
+    return records;
+}
+
+async function SelectSetInFolder(FOLDER_ID) {
+    const [records] = await db.query(`select *
+                                      from sets
+                                      where In_folder_id = ?`, [FOLDER_ID]);
+
+    return records;
+}
+
+async function SelectVocabInSet(SET_ID) {
+    const [records] = await db.query(`select *
+                                      from vocabulary
+                                      where SET_ID = ?`, [SET_ID]);
+
+    return records;
+}
+
 module.exports = { 
     SelectAllFromUsers,
-    SelectFromUsersWhereID
+    SelectFromUsersWhereID,
+    SelectFolderInUser,
+    SelectFolderInFolder,
+    SelectSetInFolder,
+    SelectVocabInSet
 };

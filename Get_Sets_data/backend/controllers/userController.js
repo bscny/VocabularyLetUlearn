@@ -9,8 +9,16 @@ async function DisplayUsers(req, res) {
 async function DisplayUser(req, res) {
     const result = await service.SelectFromUsersWhereID(req.params.id);
 
+    console.log(req);
+
     res.send(result);
 }
+
+// async function DisplayInitFolder(req, res) {
+//     const result = await service.SelectFolderInUser(req.params.id);
+
+//     res.send(result);
+// }
 
 module.exports = {
     DisplayUsers,
