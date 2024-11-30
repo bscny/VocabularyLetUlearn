@@ -5,6 +5,7 @@
         v-model="searchTerm"
         class="searchInput"
         placeholder="Search vocabulary..."
+        @keydown.enter="searchButton"
       />
       <button
         class="searchButton"
@@ -18,13 +19,14 @@
     <div :class="['SearchResult', { hidden: !result || !Object.keys(result).length }]">
       <template v-if="result && Object.keys(result).length">
         <div class="wordRow">
-          <h1>{{ result.word }}</h1>
-          <button class="soundButton" @click="playSound">🔊</button>
+          <h1>{{ result.word }}  {{ result.partOfSpeech.join(' ') }}</h1>
+
         </div>
         <p><strong>Definition:</strong> {{ result.definition }}</p>
         <p><strong>e.g.:</strong> {{ result.example }}</p>
         <p><strong>Synonyms:</strong> {{ result.synonyms.join(', ') }}</p>
         <p><strong>Antonyms:</strong> {{ result.antonyms.join(', ') }}</p>
+        <button class="addButton" @click="addToSet">➕ Add to My Set</button>
       </template>
       <template v-else>
         <p class="placeholder">Start searching to see the results here...</p>
@@ -50,7 +52,7 @@ export default {
   },
   methods: {
     async searchButton() {
-      if (!this.searchTerm) {
+      if (!this.searchTerm.trim()) {
         alert("Please enter a word to search.");
         return;
       }
@@ -61,17 +63,23 @@ export default {
       try {
         console.log("Sending request for:", this.searchTerm);
         const response = await api.searchWord(this.searchTerm);
-        console.log("API Response:", response.data);
 
-        this.result = {
-          word: response.data.word || "No word available",
-          definition: response.data.definitions?.[0] || "No definition available",
-          example: response.data.examples?.[0] || "No examples available",
-          synonyms: response.data.synonyms.length > 0 ? response.data.synonyms : ["No synonyms available"],
-          antonyms: response.data.antonyms.length > 0 ? response.data.antonyms : ["No antonyms available"],
-        };
+        if (response.status === 200 && response.data) {
+          console.log("API Response:", response.data);
 
-        console.log("Processed Result:", this.result);
+          this.result = {
+            word: response.data.word || "No word available",
+            partOfSpeech: response.data.partOfSpeech || "No partOfSpeech available",
+            definition: response.data.definitions?.[0] || "No definition available",
+            example: response.data.examples?.[0] || "No examples available",
+            synonyms: response.data.synonyms?.length ? response.data.synonyms : ["No synonyms available"],
+            antonyms: response.data.antonyms?.length ? response.data.antonyms : ["No antonyms available"],
+          };
+
+          console.log("Processed Result:", this.result);
+        } else {
+          throw new Error("Invalid API response");
+        }
       } catch (err) {
         console.error("Error searching word:", err);
         this.error = "Failed to fetch word. Please try again later.";
@@ -79,17 +87,9 @@ export default {
         this.loading = false;
       }
     },
-
-    playSound() {
-      if (this.result && this.result.audio) {
-        const audio = new Audio(this.result.audio);
-        audio.play();
-      } else {
-        alert("No audio available for this word.");
-      }
-    },
   },
 };
+
 </script>
 
 <style scoped>
@@ -141,6 +141,7 @@ export default {
 }
 
 .SearchResult {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -154,6 +155,7 @@ export default {
   overflow: hidden;
   transition: all 0.3s ease;
   opacity: 1;
+  font-size: 18px;
 }
 
 .SearchResult.hidden {
@@ -168,20 +170,8 @@ export default {
 }
 
 .wordRow h1 {
-  margin: 0;
+  margin: 10px;
   font-size: 24px;
-}
-
-.soundButton {
-  background-color: #f0f0f0;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.soundButton:hover {
-  background-color: #e0e0e0;
 }
 
 .placeholder {
@@ -196,5 +186,20 @@ export default {
 .error {
   color: red;
   margin-top: 15px;
+}
+
+.addButton {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.addButton:hover {
+  background-color: #e0e0e0;
 }
 </style>
