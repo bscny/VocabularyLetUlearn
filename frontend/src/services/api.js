@@ -35,7 +35,12 @@ const api = {
 
   searchWord(word) {
     return apiClient.get(`/words/${word}`);
-  }
+  },
+
+  addWordToSet(wordData) {
+    return apiClient.post('/set/vocabulary', wordData);
+},
+
 };
 
 export default api;

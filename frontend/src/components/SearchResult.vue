@@ -26,7 +26,7 @@
         <p><strong>e.g.:</strong> {{ result.example }}</p>
         <p><strong>Synonyms:</strong> {{ result.synonyms.join(', ') }}</p>
         <p><strong>Antonyms:</strong> {{ result.antonyms.join(', ') }}</p>
-        <button class="addButton" @click="addToSet">➕ Add to My Set</button>
+        <button class="addButton"  @click="addToSet(result)">➕ Add to My Set</button>
       </template>
       <template v-else>
         <p class="placeholder">Start searching to see the results here...</p>
@@ -70,8 +70,8 @@ export default {
           this.result = {
             word: response.data.word || "No word available",
             partOfSpeech: response.data.partOfSpeech || "No partOfSpeech available",
-            definition: response.data.definitions?.[0] || "No definition available",
-            example: response.data.examples?.[0] || "No examples available",
+            definition: response.data.definitions?.length ? response.data.definitions[0] : "No definition available",
+            example: response.data.examples?.length ? response.data.examples[0] : "No examples available",
             synonyms: response.data.synonyms?.length ? response.data.synonyms : ["No synonyms available"],
             antonyms: response.data.antonyms?.length ? response.data.antonyms : ["No antonyms available"],
           };
@@ -87,6 +87,25 @@ export default {
         this.loading = false;
       }
     },
+
+    async addToSet(wordData) {
+    try {
+        const response = await api.addWordToSet({
+            word: wordData.word,
+            definitions: wordData.definition,
+            sentence: wordData.example,
+            is_marked: 0,
+            num_test: 0,
+            num_wrong: 0,
+        });
+
+        alert(response.data.message || "Word successfully added to vocabulary set.");
+        console.log("Added to set:", response.data.data);
+    } catch (error) {
+        console.error("Error adding word to set:", error);
+        alert("Failed to add word to vocabulary set. Please try again.");
+    }
+}
   },
 };
 
