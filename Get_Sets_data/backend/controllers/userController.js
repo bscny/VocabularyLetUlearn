@@ -12,28 +12,7 @@ async function DisplayUser(req, res) {
     res.send(result);
 }
 
-async function DisplayFolders(req, res) {
-    const result = await service.SelectFolderInUser(req.params.USER_ID);
-
-    res.send(result);
-}
-
-async function DisplaySets(req, res) {
-    const result = await service.SelectSetInFolder(req.params.FOLDER_ID);
-
-    res.send(result);
-}
-
-async function DisplayWords(req, res) {
-    const result = await service.SelectVocabInSet(req.params.SET_ID);
-
-    res.send(result);
-}
-
 module.exports = {
     DisplayUsers,
-    DisplayUser,
-    DisplayFolders,
-    DisplaySets,
-    DisplayWords
+    DisplayUser
 };

@@ -54,7 +54,7 @@ CREATE TABLE `folders` (
   `Owner_id` int NOT NULL,
   PRIMARY KEY (`FOLDER_ID`),
   KEY `fk_OwnerId_UserId_Folders` (`Owner_id`),
-  CONSTRAINT `fk_OwnerId_UserId_Folders` FOREIGN KEY (`Owner_id`) REFERENCES `users` (`USER_ID`)
+  CONSTRAINT `fk_OwnerId_UserId_Folders` FOREIGN KEY (`Owner_id`) REFERENCES `users` (`USER_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -79,8 +79,8 @@ CREATE TABLE `friend` (
   `FRIEND_ID` int NOT NULL,
   PRIMARY KEY (`USER_ID`,`FRIEND_ID`),
   KEY `fk_FriendId_UsrId_Friend` (`FRIEND_ID`),
-  CONSTRAINT `fk_FriendId_UsrId_Friend` FOREIGN KEY (`FRIEND_ID`) REFERENCES `users` (`USER_ID`),
-  CONSTRAINT `fk_UsrId_UsrId_Friend` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`)
+  CONSTRAINT `fk_FriendId_UsrId_Friend` FOREIGN KEY (`FRIEND_ID`) REFERENCES `users` (`USER_ID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_UsrId_UsrId_Friend` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -106,8 +106,8 @@ CREATE TABLE `history_answer` (
   `Is_correct` tinyint(1) NOT NULL,
   PRIMARY KEY (`USER_ID`,`QUESTION_ID`),
   KEY `fk_QId_QId_HistoryAnswer` (`QUESTION_ID`),
-  CONSTRAINT `fk_QId_QId_HistoryAnswer` FOREIGN KEY (`QUESTION_ID`) REFERENCES `question` (`QUESTION_ID`),
-  CONSTRAINT `fk_UsrId_UsrId_HistoryAnswer` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`)
+  CONSTRAINT `fk_QId_QId_HistoryAnswer` FOREIGN KEY (`QUESTION_ID`) REFERENCES `question` (`QUESTION_ID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_UsrId_UsrId_HistoryAnswer` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -160,8 +160,8 @@ CREATE TABLE `question_in_exam` (
   `QUESTION_ID` int NOT NULL,
   PRIMARY KEY (`EXAM_ID`,`QUESTION_ID`),
   KEY `fk_QId_QId_QuestionInExam` (`QUESTION_ID`),
-  CONSTRAINT `fk_ExamId_ExamId_QuestionInExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `ranking_exam` (`EXAM_ID`),
-  CONSTRAINT `fk_QId_QId_QuestionInExam` FOREIGN KEY (`QUESTION_ID`) REFERENCES `question` (`QUESTION_ID`)
+  CONSTRAINT `fk_ExamId_ExamId_QuestionInExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `ranking_exam` (`EXAM_ID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_QId_QId_QuestionInExam` FOREIGN KEY (`QUESTION_ID`) REFERENCES `question` (`QUESTION_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -237,8 +237,8 @@ CREATE TABLE `take_exam` (
   `Plus_points` int NOT NULL,
   PRIMARY KEY (`USER_ID`,`EXAM_ID`),
   KEY `fk_ExamId_ExamId_TakeExam` (`EXAM_ID`),
-  CONSTRAINT `fk_ExamId_ExamId_TakeExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `ranking_exam` (`EXAM_ID`),
-  CONSTRAINT `fk_UsrId_UsrId_TakeExam` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`)
+  CONSTRAINT `fk_ExamId_ExamId_TakeExam` FOREIGN KEY (`EXAM_ID`) REFERENCES `ranking_exam` (`EXAM_ID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_UsrId_UsrId_TakeExam` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`USER_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -263,8 +263,8 @@ CREATE TABLE `use_set_in_room` (
   `ROOM_ID` int NOT NULL,
   PRIMARY KEY (`SET_ID`,`ROOM_ID`),
   KEY `fk_RoomId_RoomId_UseSetInRoom` (`ROOM_ID`),
-  CONSTRAINT `fk_RoomId_RoomId_UseSetInRoom` FOREIGN KEY (`ROOM_ID`) REFERENCES `current_room` (`ROOM_ID`),
-  CONSTRAINT `fk_SetId_SetId_UseSetInRoom` FOREIGN KEY (`SET_ID`) REFERENCES `sets` (`SET_ID`)
+  CONSTRAINT `fk_RoomId_RoomId_UseSetInRoom` FOREIGN KEY (`ROOM_ID`) REFERENCES `current_room` (`ROOM_ID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_SetId_SetId_UseSetInRoom` FOREIGN KEY (`SET_ID`) REFERENCES `sets` (`SET_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -294,7 +294,7 @@ CREATE TABLE `users` (
   `Current_room_id` int DEFAULT NULL,
   PRIMARY KEY (`USER_ID`),
   KEY `fk_CurrentRoom_RoomId_Users` (`Current_room_id`),
-  CONSTRAINT `fk_CurrentRoom_RoomId_Users` FOREIGN KEY (`Current_room_id`) REFERENCES `current_room` (`ROOM_ID`)
+  CONSTRAINT `fk_CurrentRoom_RoomId_Users` FOREIGN KEY (`Current_room_id`) REFERENCES `current_room` (`ROOM_ID`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -324,7 +324,7 @@ CREATE TABLE `vocabulary` (
   `Num_test` int NOT NULL DEFAULT '0',
   `Num_wrong` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`SET_ID`,`WORD`),
-  CONSTRAINT `fk_SetId_SetId_Vocabulary` FOREIGN KEY (`SET_ID`) REFERENCES `sets` (`SET_ID`)
+  CONSTRAINT `fk_SetId_SetId_Vocabulary` FOREIGN KEY (`SET_ID`) REFERENCES `sets` (`SET_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -346,4 +346,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-29 21:22:03
+-- Dump completed on 2024-11-30 20:02:33

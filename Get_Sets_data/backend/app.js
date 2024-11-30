@@ -19,8 +19,14 @@ app.use(cors({
 
 // routes are here
 const userRoutes = require("./routes/userRoutes.js");
+const folderRoutes = require("./routes/folderRoutes.js");
+const setRoutes = require("./routes/setRoutes.js");
+const wordRoutes = require("./routes/wordRoutes.js");
 
 app.use("/users", userRoutes);
+app.use("/folders", folderRoutes);
+app.use("/sets", setRoutes);
+app.use("/words", wordRoutes);
 
 // routes end
 
