@@ -38,7 +38,9 @@
 <script>
 import Navbar from '@/components/Navbar.vue';
 import LeftBarFolders from '@/components/LeftBarFolders.vue';
-import axios from "axios";
+import {
+  getWordsBySetId
+} from '@/services/wordAPI.js'
 
 export default {
   name: 'UserInventory',
@@ -85,9 +87,7 @@ export default {
     },
 
     async getWords(){
-      const wordsData = await axios.get(`http://localhost:3000/users/folders/sets/${this.curDisplaySetId}/words`);
-
-      this.words = wordsData.data;
+      this.words = await getWordsBySetId(this.curDisplaySetId);
     }
   }
 

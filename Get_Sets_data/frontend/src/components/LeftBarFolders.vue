@@ -28,7 +28,12 @@
 <script>
 import { shallowReactive, toDisplayString } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
-import axios from 'axios';
+import {
+    getFoldersByUserId
+} from '@/services/folderAPI'
+import {
+    getSetsByFolderId
+} from '@/services/setAPI'
 
 export default {
     name: 'LeftBarfolders',
@@ -37,7 +42,8 @@ export default {
         return {
             folders: [],
 
-            // curDisplaySetId: null
+            // user id variables here
+            userId: 1
         };
     },
 
@@ -60,15 +66,13 @@ export default {
     },
 
     async mounted(){
-        const initFolderDatas = await axios.get("http://localhost:3000/users/1/folders");
-
-        this.folders = initFolderDatas.data;
+        this.folders = await getFoldersByUserId(this.userId)
 
         this.folders.forEach(async function(folder) {
-            const setsInFolderDatas = await axios.get(`http://localhost:3000/users/folders/${folder.FOLDER_ID}/sets`);
+            const setsInFolder = await getSetsByFolderId(folder.FOLDER_ID)
 
             Object.assign(folder, {
-                sets: setsInFolderDatas.data,
+                sets: setsInFolder,
                 isShow: false
             });
         })
