@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-exports.searchWord = async (req, res) => {
+async function searchWord(req, res) {
     const word = req.params.word;
 
     const partOfSpeechMapping = {
@@ -54,3 +54,5 @@ exports.searchWord = async (req, res) => {
         });
     }
 };
+
+module.exports = { searchWord };

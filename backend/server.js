@@ -16,6 +16,9 @@ app.use(
 
 app.use(express.json());
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
 const wordRoutes = require('./routes/wordRoutes');
 app.use('/api/words', wordRoutes);
 

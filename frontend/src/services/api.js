@@ -37,9 +37,15 @@ const api = {
     return apiClient.get(`/words/${word}`);
   },
 
-  addWordToSet(wordData) {
-    return apiClient.post('/set/vocabulary', wordData);
-},
+  getSets(userId) {
+    return apiClient.get(`/set/${userId}`);
+  },
+  getFolders(userId) {
+    return apiClient.get(`/folder/${userId}`);
+  },
+  addWordToSet(data) {
+    return apiClient.post(`/set/vocabulary`, data);
+  },
 
 };
 
