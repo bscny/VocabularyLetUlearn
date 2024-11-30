@@ -1,10 +1,10 @@
 <template>
     <header>
-      <!-- <Navbar /> -->
+      <Navbar />
     </header>
   
     <nav>
-      <!-- <LeftBarFolders /> -->
+      <LeftBarFolders @displayWords="setCanShow($event)"/>
     </nav>
   
     <main style="height: 3000px;"> 
@@ -17,12 +17,12 @@
   </template>
   
   <script>
-  import Navbar from '../components/Navbar.vue';
-  import LeftBarFolders from '../components/LeftBarFolders.vue';
+  import Navbar from '@/components/Navbar.vue';
+  import LeftBarFolders from '@/components/LeftBarFolders.vue';
   import axios from 'axios';
   
   export default {
-    name: 'UserInventory',
+    name: 'Test',
     components: {
       Navbar,
       LeftBarFolders,

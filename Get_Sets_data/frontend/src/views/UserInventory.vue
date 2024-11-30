@@ -1,16 +1,20 @@
 <template>
-  <header>
-    <Navbar />
-  </header>
+  <Navbar />
 
-  <nav>
-    <LeftBarFolders  @displayWords="setCanShow($event)"/>
-  </nav>
+  <LeftBarFolders  @displayWords="setCanShow($event)"  @editFolder="setCanEditFolder($event)"
+                   @createFolder="setCanCreateFolder()"/>
 
   <main style="height: 3000px;"> 
-    <button class="quiz-button">
-      Local Quiz
-    </button>
+
+    <div class="flex-buttons">
+      <button class="quiz-button">
+        Local Quiz
+      </button>
+
+      <button class="edit-set-button">
+        Edit Set
+      </button>
+    </div>
 
     <input class="search-box" type="text" placeholder="Search" />
 
@@ -32,8 +36,8 @@
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue';
-import LeftBarFolders from '../components/LeftBarFolders.vue';
+import Navbar from '@/components/Navbar.vue';
+import LeftBarFolders from '@/components/LeftBarFolders.vue';
 import axios from "axios";
 
 export default {
@@ -45,10 +49,14 @@ export default {
 
   data(){
     return{
+      // variables for words display
       canShow: false,
       curDisplaySetId: null,
 
-      words: []
+      words: [],
+
+      // variables for folder actions
+      canDoAction: false
     };
   },
 
@@ -58,6 +66,22 @@ export default {
       this.curDisplaySetId = setId;
 
       this.getWords();
+    },
+
+    setCanEditFolder(fId){
+      if(this.canDoAction == false){
+        // open the edit folder UI window
+
+        this.canDoAction = true;
+      }
+    },
+
+    setCanCreateFolder(){
+      if(this.canDoAction == false){
+        // open the create folder UI window
+
+        this.canDoAction = true;
+      }
     },
 
     async getWords(){
@@ -71,9 +95,18 @@ export default {
 </script>
 
 <style scoped>
+.flex-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 100px 0 0 250px;
+}
+
 .quiz-button {
   display: block;
-  margin: 100px 0 0 250px;
+  margin: 0 0 0 0;
   padding: 10px 20px 10px 20px;
   background-color: #4caf50;
   color: white;
@@ -81,12 +114,26 @@ export default {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-
-  z-index: 100;
 }
 
 .quiz-button:hover {
   background-color: #288d2e;
+}
+
+.edit-set-button {
+  display: block;
+  margin: 0 20px 0 0;
+  padding: 10px 20px 10px 20px;
+  background-color: #cc3a46;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-set-button:hover {
+  background-color: #c96f99;
 }
 
 .search-box {
