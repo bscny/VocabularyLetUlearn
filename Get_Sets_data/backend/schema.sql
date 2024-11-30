@@ -206,7 +206,7 @@ DROP TABLE IF EXISTS `sets`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sets` (
   `SET_ID` int NOT NULL AUTO_INCREMENT,
-  `SET_name` varchar(50) NOT NULL,
+  `Set_name` varchar(50) NOT NULL,
   `Is_public` tinyint(1) NOT NULL DEFAULT '1',
   `In_folder_id` int NOT NULL,
   PRIMARY KEY (`SET_ID`),
@@ -346,4 +346,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-30 20:02:33
+-- Dump completed on 2024-12-01  0:39:10

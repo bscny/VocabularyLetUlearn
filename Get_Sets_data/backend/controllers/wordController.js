@@ -16,8 +16,24 @@ async function DeleteWord(req, res) {
     }
 }
 
+async function CreateWord(req, res) {
+    await service.InsertVocab(req.body);
+
+    res.status(201).send(`create successfully`);
+}
+
+async function ModifyWord(req, res) {
+    await service.UpdateVocab(req.body, req.params.SET_ID, req.params.WORD);
+
+    res.status(201).send(`update successfully`);
+}
+
 module.exports = {
     DisplayWords,
 
-    DeleteWord
+    DeleteWord,
+
+    CreateWord,
+
+    ModifyWord
 };

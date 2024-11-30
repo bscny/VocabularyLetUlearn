@@ -4,6 +4,10 @@
   <LeftBarFolders  @displayWords="setCanShow($event)"  @editFolder="setCanEditFolder($event)"
                    @createFolder="setCanCreateFolder()"/>
 
+  <div v-if="canDoAction">
+    <FolderCreate  @creationDone="resetCanCreateFolder()"/>
+  </div>
+
   <main style="height: 3000px;"> 
 
     <div class="flex-buttons">
@@ -38,6 +42,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue';
 import LeftBarFolders from '@/components/LeftBarFolders.vue';
+import FolderCreate from '@/components/FolderCreate.vue';
 import {
   getWordsBySetId
 } from '@/services/wordAPI.js'
@@ -47,6 +52,7 @@ export default {
   components: {
     Navbar,
     LeftBarFolders,
+    FolderCreate
   },
 
   data(){
@@ -83,6 +89,12 @@ export default {
         // open the create folder UI window
 
         this.canDoAction = true;
+      }
+    },
+
+    resetCanCreateFolder(){
+      if(this.canDoAction == true){
+        this.canDoAction = false;
       }
     },
 

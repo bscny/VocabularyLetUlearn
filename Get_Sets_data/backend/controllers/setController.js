@@ -16,8 +16,24 @@ async function DeleteSet(req, res) {
     }
 }
 
+async function CreateSet(req, res) {
+    await service.InsertSet(req.body);
+
+    res.status(201).send(`create successfully`);
+}
+
+async function ModifySet(req, res) {
+    await service.UpdateSet(req.body, req.params.SET_ID);
+
+    res.status(201).send(`update successfully`);
+}
+
 module.exports = {
     DisplaySets,
 
     DeleteSet,
+
+    CreateSet,
+
+    ModifySet
 };

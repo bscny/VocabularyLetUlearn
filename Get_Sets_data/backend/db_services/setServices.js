@@ -1,6 +1,6 @@
 const db = require('../db.js');
 
-// get services
+// read services
 async function SelectSetInFolder(FOLDER_ID) {
     const [records] = await db.query(`select *
                                       from sets
@@ -18,8 +18,33 @@ async function DeleteSetWhereId(SET_ID) {
     return records.affectedRows;
 }
 
+// create services
+async function InsertSet(bodyObj) {
+    const [records] = await db.query(`insert into sets(Set_name, Is_public, In_folder_id)
+                                      values
+                                      (?, ?, ?)`, [bodyObj.Set_name, bodyObj.Is_public, bodyObj.In_folder_id]);
+
+    return records;
+}
+
+// update services
+async function UpdateSet(bodyObj, SET_ID) {
+    const [records] = await db.query(`update sets
+                                      set
+                                      Set_name = ?,
+                                      Is_public = ?,
+                                      In_folder_id = ?
+                                      where SET_ID = ?`, [bodyObj.Set_name, bodyObj.Is_public, bodyObj.In_folder_id, SET_ID]);
+
+    return records;
+}
+
 module.exports = { 
     SelectSetInFolder,
 
     DeleteSetWhereId,
+
+    InsertSet,
+
+    UpdateSet
 };

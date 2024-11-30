@@ -1,6 +1,6 @@
 const db = require('../db.js');
 
-// get services
+// read services
 async function SelectFolderInUser(USER_ID) {
     const [records] = await db.query(`select *
                                       from folders
@@ -18,8 +18,32 @@ async function DeleteFolderWhereId(FOLDER_ID) {
     return records.affectedRows;
 }
 
+// create services
+async function InsertFolder(bodyObj) {
+    const [records] = await db.query(`insert into folders(Folder_name, Owner_id)
+                                      values
+                                      (?, ?)`, [bodyObj.Folder_name, bodyObj.Owner_id]);
+
+    return records;
+}
+
+// update services
+async function UpdateFolder(bodyObj, FOLDER_ID) {
+    const [records] = await db.query(`update folders
+                                      set
+                                      Folder_name = ?,
+                                      Owner_id = ?
+                                      where FOLDER_ID = ?`, [bodyObj.Folder_name, bodyObj.Owner_id, FOLDER_ID]);
+
+    return records;
+}
+
 module.exports = {
     SelectFolderInUser,
 
     DeleteFolderWhereId,
+
+    InsertFolder,
+    
+    UpdateFolder
 };

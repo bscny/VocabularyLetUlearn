@@ -10,14 +10,14 @@
             </button>
             
             <div class="folders"  @click="toggleShow(folder)">
-                {{ folder.Folder_name }} 
+                {{ folder.Folder_name }}
             </div>
             
 
             <div v-if="folder.isShow">
                 <ul v-for="set in folder.sets" :key="set.SET_ID"  @click="displayWords(set.SET_ID)">
                     <div class="sets">
-                        {{ set.SET_name }}
+                        {{ set.Set_name }}
                     </div>
                 </ul>
             </div>

@@ -5,8 +5,13 @@ const setControllers = require('../controllers/setController.js');
 
 // real http addr is:
 // http://localhost:PORT/sets
+
 router.get("/get-sets/:FOLDER_ID", setControllers.DisplaySets);
 
 router.delete("/delete-set/:SET_ID", setControllers.DeleteSet);
+
+router.post("/post-set", setControllers.CreateSet);
+
+router.put("/put-set/:SET_ID", setControllers.ModifySet);
 
 module.exports = router;
