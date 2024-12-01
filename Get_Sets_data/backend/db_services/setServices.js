@@ -9,6 +9,14 @@ async function SelectSetInFolder(FOLDER_ID) {
     return records;
 }
 
+async function SelectSet(SET_ID) {
+    const [records] = await db.query(`select *
+                                      from sets
+                                      where SET_ID = ?`, [SET_ID]);
+
+    return records[0];
+}
+
 // delete services
 async function DeleteSetWhereId(SET_ID) {
     const [records] = await db.query(`delete
@@ -41,6 +49,7 @@ async function UpdateSet(bodyObj, SET_ID) {
 
 module.exports = { 
     SelectSetInFolder,
+    SelectSet,
 
     DeleteSetWhereId,
 

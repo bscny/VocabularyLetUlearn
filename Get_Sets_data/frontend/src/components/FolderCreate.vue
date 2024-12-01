@@ -2,28 +2,46 @@
     <div class="BG">
         <div class="window">
             <button class="done-button"  @click="creationDone()">
-                Done
+                Crate Folder
             </button>
+            
+            <p>
+                Give New Folder a Name
+            </p>
+
+            <input class="folder-name-input" type="text"  v-model="folderName"/>
         </div>
     </div>
 </template>
 
 <script>
+import {
+    CreateFolder
+} from '@/services/folderAPI.js'
 
 export default {
     name: 'FolderCreate',
 
     data() {
         return {
-            
+            folderName: '',
+            userId: 1,
         };
     },
 
     methods: {
-        creationDone(){
-            this.$emit("creationDone")
+        async creationDone(){
+            if(this.folderName != ''){
+                await CreateFolder(this.folderName, this.userId);
+            }
+
+            this.$emit("creationDone");
         }
     },
+
+    computed: {
+
+    }
 }
 </script>
 
@@ -44,7 +62,7 @@ export default {
     position: fixed;
     top: 100px;
     right: 300px;
-    bottom: 100px;
+    bottom: 600px;
     left: 300px;
 
     background-color: rgb(43, 22, 77);
@@ -72,5 +90,33 @@ export default {
 
 .done-button:hover {
     background-color: #288d2e;
+}
+
+.window p{
+    position: absolute;
+
+    left: 10px;
+    top: 10px;
+
+    font-size: 30px;
+}
+
+.folder-name-input {
+    position: absolute;
+
+    left: 10px;
+    top: 60px;
+
+    font-size: 30px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.folder-name-input:focus {
+    border-color: #4caf50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 </style>

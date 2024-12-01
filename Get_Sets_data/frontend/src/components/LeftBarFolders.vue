@@ -5,7 +5,7 @@
         </button>
 
         <ul v-for="folder in folders" :key="folder.FOLDER_ID">
-            <button class="edit-folder-button"  @click="editFolder(folder.FOLDER_ID)">
+            <button class="edit-folder-button"  @click="editFolder(folder)">
                 Edit Folder
             </button>
             
@@ -56,8 +56,8 @@ export default {
             this.$emit("displayWords", setId);
         },
 
-        editFolder(fId){
-            this.$emit("editFolder", fId);
+        editFolder(f){
+            this.$emit("editFolder", f);
         },
 
         createFolder(){

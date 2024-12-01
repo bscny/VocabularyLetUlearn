@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import UserInventory from '../views/UserInventory.vue'
 import Home from '../views/HomeView.vue'
 import Test from '../views/Test.vue'
-import EditInventory from '../views/EditInventory.vue'
+import EditSet from '../views/EditSet.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,10 +23,10 @@ const router = createRouter({
       component: Test,
     },
     {
-      path: '/EditInventory',
-      name: 'EditInventory',
-      component: EditInventory,
-    }
+      path: '/EditSet/:SET_ID',
+      name: 'EditSet',
+      component: EditSet,
+    },
   ],
 })
 

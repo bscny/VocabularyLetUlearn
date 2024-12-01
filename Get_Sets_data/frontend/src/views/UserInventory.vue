@@ -1,179 +1,205 @@
 <template>
-  <Navbar />
+    <Navbar />
 
-  <LeftBarFolders  @displayWords="setCanShow($event)"  @editFolder="setCanEditFolder($event)"
-                   @createFolder="setCanCreateFolder()"/>
+    <LeftBarFolders  @displayWords="setCanShow($event)"  @editFolder="setCanEditFolder($event)"
+                     @createFolder="setCanCreateFolder()"/>
 
-  <div v-if="canDoAction">
-    <FolderCreate  @creationDone="resetCanCreateFolder()"/>
-  </div>
-
-  <main style="height: 3000px;"> 
-
-    <div class="flex-buttons">
-      <button class="quiz-button">
-        Local Quiz
-      </button>
-
-      <button class="edit-set-button">
-        Edit Set
-      </button>
+    <div v-if="canCreate">
+        <FolderCreate  @creationDone="resetCanCreateFolder()"/>
     </div>
 
-    <input class="search-box" type="text" placeholder="Search" />
+    <div v-if="canEdit">
+        <FolderEdit  :folder="curLookingFolder"
+                     @EditionDone="resetCanEditFolder()"/>
+    </div>
 
-    <ul class="grid-each-word" v-if="canShow" v-for="vocabulary in words" :key="vocabulary.WORD">
-      <div>
-          {{ vocabulary.WORD }}
-      </div>
+    <main style="height: 3000px;"> 
 
-      <div>
-          {{ vocabulary.Definitions }}
-      </div>
+        <div v-if="canShow" class="flex-buttons">
+        <button class="quiz-button">
+            Local Quiz
+        </button>
 
-      <div>
-          {{ vocabulary.Sentence }}
-      </div>
-    </ul>
+        <button class="edit-set-button"  @click="EditSet()">
+            Edit Set
+        </button>
+        </div>
 
-  </main>
+        <input v-if="canShow" class="search-box" type="text" v-model="search" />    
+
+        <ul class="grid-each-word" v-if="canShow" v-for="vocabulary in SearchFilterWords" :key="vocabulary.WORD">
+        <div>
+            {{ vocabulary.WORD }}
+        </div>
+
+        <div>
+            {{ vocabulary.Definitions }}
+        </div>
+
+        <div>
+            {{ vocabulary.Sentence }}
+        </div>
+        </ul>
+
+    </main>
 </template>
 
 <script>
 import Navbar from '@/components/Navbar.vue';
 import LeftBarFolders from '@/components/LeftBarFolders.vue';
 import FolderCreate from '@/components/FolderCreate.vue';
+import FolderEdit from "@/components/FolderEdit.vue";
 import {
-  getWordsBySetId
+    getWordsBySetId
 } from '@/services/wordAPI.js'
 
 export default {
-  name: 'UserInventory',
-  components: {
-    Navbar,
-    LeftBarFolders,
-    FolderCreate
-  },
-
-  data(){
-    return{
-      // variables for words display
-      canShow: false,
-      curDisplaySetId: null,
-
-      words: [],
-
-      // variables for folder actions
-      canDoAction: false
-    };
-  },
-
-  methods: {
-    setCanShow(setId){
-      this.canShow = true;
-      this.curDisplaySetId = setId;
-
-      this.getWords();
+    name: 'UserInventory',
+    components: {
+        Navbar,
+        LeftBarFolders,
+        FolderCreate,
+        FolderEdit,
     },
 
-    setCanEditFolder(fId){
-      if(this.canDoAction == false){
-        // open the edit folder UI window
+    data(){
+        return{
+            // variables for words display
+            canShow: false,
+            curDisplaySetId: null,
 
-        this.canDoAction = true;
-      }
+            words: [],
+
+            search: '',
+
+            // variables for folder actions
+            canCreate: false,
+            canEdit: false,
+            curLookingFolder: null,
+        };
     },
 
-    setCanCreateFolder(){
-      if(this.canDoAction == false){
-        // open the create folder UI window
+    methods: {
+        setCanShow(setId){
+            this.canShow = true;
+            this.curDisplaySetId = setId;
 
-        this.canDoAction = true;
-      }
+            this.getWords();
+        },
+
+        setCanEditFolder(f){
+            this.curLookingFolder = f;
+
+            this.canEdit = true;
+        },
+
+        setCanCreateFolder(){
+            this.canCreate = true;
+        },
+
+        resetCanCreateFolder(){
+            location.reload(); // reload the page for new folders
+            this.canCreate = false;
+        },
+
+        resetCanEditFolder(){
+            location.reload(); // reload the page for new folders
+            this.canEdit = false;
+        },
+
+        EditSet(){
+            this.$router.push({
+                name: 'EditSet',
+                params: {
+                    SET_ID: this.curDisplaySetId
+                }
+            });
+        },
+
+        async getWords(){
+            this.words = await getWordsBySetId(this.curDisplaySetId);
+        },
     },
 
-    resetCanCreateFolder(){
-      if(this.canDoAction == true){
-        this.canDoAction = false;
-      }
+    computed: {
+        SearchFilterWords(){
+            return this.words.filter((vocabulary) => {
+                return vocabulary.WORD.toLowerCase().includes(this.search.toLocaleLowerCase());
+            });
+        }
     },
-
-    async getWords(){
-      this.words = await getWordsBySetId(this.curDisplaySetId);
-    }
-  }
 
 }
 </script>
 
 <style scoped>
 .flex-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 
-  margin: 100px 0 0 250px;
+    margin: 100px 0 0 250px;
 }
 
 .quiz-button {
-  display: block;
-  margin: 0 0 0 0;
-  padding: 10px 20px 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    display: block;
+    margin: 0 0 0 0;
+    padding: 10px 20px 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .quiz-button:hover {
-  background-color: #288d2e;
+    background-color: #288d2e;
 }
 
 .edit-set-button {
-  display: block;
-  margin: 0 20px 0 0;
-  padding: 10px 20px 10px 20px;
-  background-color: #cc3a46;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    display: block;
+    margin: 0 20px 0 0;
+    padding: 10px 20px 10px 20px;
+    background-color: #cc3a46;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .edit-set-button:hover {
-  background-color: #c96f99;
+    background-color: #c96f99;
 }
 
 .search-box {
-  display: block;
-  margin: 10px 0 0 250px;
-  padding: 5px 10px;
-  font-size: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 10px 0 0 250px;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .search-box:focus {
-  border-color: #4caf50;
-  outline: none;
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    border-color: #4caf50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
 .grid-each-word {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 0 0 0 300px;
-  margin: 0 0 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 0 0 300px;
+    margin: 0 0 0 0;
 
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .grid-each-word div{
-  margin: 30px 0 0 0;
+    margin: 30px 0 0 0;
 }
 </style>

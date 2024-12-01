@@ -7,6 +7,7 @@ const setControllers = require('../controllers/setController.js');
 // http://localhost:PORT/sets
 
 router.get("/get-sets/:FOLDER_ID", setControllers.DisplaySets);
+router.get("/get-set/:SET_ID", setControllers.DisplaySet);
 
 router.delete("/delete-set/:SET_ID", setControllers.DeleteSet);
 
