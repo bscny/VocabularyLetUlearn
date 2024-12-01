@@ -45,7 +45,7 @@
 import {
     ModifyWord,
     DeleteWord
-} from '@/services/wordAPI.js'
+} from '@/services/User_Inventory_API/wordAPI.js'
 
 export default {
     name: 'VocabEdit',

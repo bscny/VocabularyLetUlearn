@@ -29,7 +29,7 @@
 <script>
 import {
     CreateWord
-} from '@/services/wordAPI.js'
+} from '@/services/User_Inventory_API/wordAPI.js'
 
 export default {
     name: 'VocabCreate',

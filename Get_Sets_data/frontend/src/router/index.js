@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import UserInventory from '../views/UserInventory.vue'
-import Home from '../views/HomeView.vue'
-import Test from '../views/Test.vue'
-import EditSet from '../views/EditSet.vue'
+import UserInventory from '@/views/Page_User_inventory/UserInventory.vue'
+import Home from '@/views/HomeView.vue'
+import EditSet from '@/views/Page_User_inventory/EditSet.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,11 +15,6 @@ const router = createRouter({
       path: '/UserInventory',
       name: 'UserInventory',
       component: UserInventory,
-    },
-    {
-      path: '/test',
-      name: 'test',
-      component: Test,
     },
     {
       path: '/EditSet/:SET_ID',

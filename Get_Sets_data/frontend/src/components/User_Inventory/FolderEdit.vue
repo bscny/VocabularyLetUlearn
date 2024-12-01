@@ -32,10 +32,10 @@
 import {
     DeleteFolder,
     ModifyFolder
-} from '@/services/folderAPI.js'
+} from '@/services/User_Inventory_API/folderAPI.js'
 import {
     CreateSet
-} from '@/services/setAPI.js'
+} from '@/services/User_Inventory_API/setAPI.js'
 
 export default {
     name: 'FolderEdit',

@@ -1,4 +1,4 @@
-import apiClient from './APIclient';
+import apiClient from '@/services/APIclient';
 
 async function getWordsBySetId(SET_ID) {
     const response = await apiClient.get(`/words/get-words/${SET_ID}`);

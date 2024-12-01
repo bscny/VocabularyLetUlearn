@@ -80,16 +80,16 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-import VocabCreate from '@/components/VocabCreate.vue';
-import VocabEdit from '@/components/VocabEdit.vue';
+import VocabCreate from '@/components/User_Inventory/VocabCreate.vue';
+import VocabEdit from '@/components/User_Inventory/VocabEdit.vue';
 import {
     getSet,
     ModifySet,
     DeleteSet
-} from '@/services/setAPI';
+} from '@/services/User_Inventory_API/setAPI.js';
 import {
     getWordsBySetId
-} from '@/services/wordAPI.js';
+} from '@/services/User_Inventory_API/wordAPI.js';
 
 export default {
     name: 'EditSet',

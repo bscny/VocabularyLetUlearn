@@ -17,7 +17,7 @@
 <script>
 import {
     CreateFolder
-} from '@/services/folderAPI.js'
+} from '@/services/User_Inventory_API/folderAPI.js'
 
 export default {
     name: 'FolderCreate',

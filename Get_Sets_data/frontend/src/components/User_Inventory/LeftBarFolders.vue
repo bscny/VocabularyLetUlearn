@@ -28,10 +28,10 @@
 <script>
 import {
     getFoldersByUserId
-} from '@/services/folderAPI'
+} from '@/services/User_Inventory_API/folderAPI.js'
 import {
     getSetsByFolderId
-} from '@/services/setAPI'
+} from '@/services/User_Inventory_API/setAPI.js'
 
 export default {
     name: 'LeftBarfolders',

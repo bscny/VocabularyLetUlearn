@@ -46,12 +46,13 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-import LeftBarFolders from '@/components/LeftBarFolders.vue';
-import FolderCreate from '@/components/FolderCreate.vue';
-import FolderEdit from "@/components/FolderEdit.vue";
+import LeftBarFolders from '@/components/User_Inventory/LeftBarFolders.vue';
+import FolderCreate from '@/components/User_Inventory/FolderCreate.vue';
+import FolderEdit from "@/components/User_Inventory/FolderEdit.vue";
+
 import {
     getWordsBySetId
-} from '@/services/wordAPI.js'
+} from '@/services/User_Inventory_API/wordAPI.js'
 
 export default {
     name: 'UserInventory',

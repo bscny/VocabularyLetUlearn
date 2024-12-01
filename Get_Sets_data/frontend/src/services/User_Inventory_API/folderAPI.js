@@ -1,4 +1,4 @@
-import apiClient from './APIclient';
+import apiClient from '@/services/APIclient';
 
 async function getFoldersByUserId(userId) {
     const response = await apiClient.get(`/folders/get-folders/${userId}`);
