@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const wordControllers = require('../controllers/wordController.js');
+const wordControllers = require('@/controllers/User_Inventory/wordController.js');
 
 // real http addr is:
 // http://localhost:PORT/words

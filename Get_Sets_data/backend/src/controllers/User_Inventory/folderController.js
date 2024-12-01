@@ -1,4 +1,4 @@
-const service = require("../db_services/folderServices.js");
+const service = require("@/db_services/User_Inventory/folderServices");
 
 async function DisplayFolders(req, res) {
     const result = await service.SelectFolderInUser(req.params.USER_ID);

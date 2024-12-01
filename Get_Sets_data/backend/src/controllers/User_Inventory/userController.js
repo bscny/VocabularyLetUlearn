@@ -1,4 +1,4 @@
-const service = require("../db_services/userServices.js");
+const service = require("@/db_services/User_Inventory/userServices.js");
 
 async function DisplayUsers(req, res) {
     const result = await service.SelectAllFromUsers();

@@ -1,4 +1,4 @@
-const service = require("../db_services/wordServices.js");
+const service = require("@/db_services/User_Inventory/wordServices.js");
 
 async function DisplayWords(req, res) {
     const result = await service.SelectVocabInSet(req.params.SET_ID);

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const folderControllers = require('../controllers/folderController.js');
+const folderControllers = require('@/controllers/User_Inventory/folderController.js');
 
 // real http addr is:
 // http://localhost:PORT/folders

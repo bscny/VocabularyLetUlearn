@@ -1,4 +1,4 @@
-const service = require("../db_services/setServices.js");
+const service = require("@/db_services/User_Inventory/setServices.js");
 
 async function DisplaySets(req, res) {
     const result = await service.SelectSetInFolder(req.params.FOLDER_ID);

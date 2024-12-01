@@ -1,4 +1,4 @@
-const db = require('../db.js');
+const db = require('@/db.js');
 
 // read services
 async function SelectSetInFolder(FOLDER_ID) {

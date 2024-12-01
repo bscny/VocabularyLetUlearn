@@ -1,6 +1,8 @@
 const express = require('express');
 require('express-async-errors');
 
+require('module-alias/register');
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
@@ -18,10 +20,10 @@ app.use(cors({
 
 
 // routes are here
-const userRoutes = require("./routes/userRoutes.js");
-const folderRoutes = require("./routes/folderRoutes.js");
-const setRoutes = require("./routes/setRoutes.js");
-const wordRoutes = require("./routes/wordRoutes.js");
+const userRoutes = require("@/routes/User_Inventory/userRoutes.js");
+const folderRoutes = require("@/routes/User_Inventory/folderRoutes.js");
+const setRoutes = require("@/routes/User_Inventory/setRoutes.js");
+const wordRoutes = require("@/routes/User_Inventory/wordRoutes.js");
 
 app.use("/users", userRoutes);
 app.use("/folders", folderRoutes);

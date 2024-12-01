@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const setControllers = require('../controllers/setController.js');
+const setControllers = require('@/controllers/User_Inventory/setController.js');
 
 // real http addr is:
 // http://localhost:PORT/sets
