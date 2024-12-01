@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import { shallowReactive, toDisplayString } from 'vue';
-import { RouterLink, RouterView } from 'vue-router'
 import {
     getFoldersByUserId
 } from '@/services/folderAPI'
@@ -116,6 +114,8 @@ export default {
     margin: 5px 0 30px 20px;
     padding: 0 0 0 0;
     font-size: 20px;
+
+    background-color: rgba(0, 0, 0, 0.137);
 }
 
 .folders:hover {

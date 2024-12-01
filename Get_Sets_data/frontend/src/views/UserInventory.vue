@@ -16,29 +16,29 @@
     <main style="height: 3000px;"> 
 
         <div v-if="canShow" class="flex-buttons">
-        <button class="quiz-button">
-            Local Quiz
-        </button>
+            <button class="quiz-button">
+                Local Quiz
+            </button>
 
-        <button class="edit-set-button"  @click="EditSet()">
-            Edit Set
-        </button>
+            <button class="edit-set-button"  @click="EditSet()">
+                Edit Set
+            </button>
         </div>
 
         <input v-if="canShow" class="search-box" type="text" v-model="search" />    
 
         <ul class="grid-each-word" v-if="canShow" v-for="vocabulary in SearchFilterWords" :key="vocabulary.WORD">
-        <div>
-            {{ vocabulary.WORD }}
-        </div>
+            <div>
+                {{ vocabulary.WORD }}
+            </div>
 
-        <div>
-            {{ vocabulary.Definitions }}
-        </div>
+            <div>
+                {{ vocabulary.Definitions }}
+            </div>
 
-        <div>
-            {{ vocabulary.Sentence }}
-        </div>
+            <div>
+                {{ vocabulary.Sentence }}
+            </div>
         </ul>
 
     </main>
