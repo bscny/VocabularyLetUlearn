@@ -37,13 +37,7 @@
               <option v-for="set in sets" :key="set.SET_ID" :value="set.SET_ID">
                 {{ set.SET_NAME }}
               </option>
-              <option value="new">+ Create New Set</option>
             </select>
-
-            <div v-if="selectedSetId === 'new'" class="newSetInput">
-              <input v-model="newSetName" placeholder="Enter new set name..." />
-              <button @click="createNewSet">Create</button>
-            </div>
 
             <button @click="confirmAddToSet(result)">Confirm</button>
             <button @click="toggleSetSelector">Cancel</button>

@@ -16,13 +16,13 @@ app.use(
 
 app.use(express.json());
 
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 app.use('/api/users', userRoutes);
 
-const wordRoutes = require('./routes/wordRoutes');
+const wordRoutes = require('./src/routes/wordRoutes');
 app.use('/api/words', wordRoutes);
 
-const setRoutes = require('./routes/setRoutes');
+const setRoutes = require('./src/routes/setRoutes');
 app.use('/api/set', setRoutes);
 
 const PORT = process.env.PORT || 3000;
