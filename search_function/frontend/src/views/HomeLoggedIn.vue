@@ -21,11 +21,6 @@
 
 <script>
 import Navbar from '../components/Navbar.vue';
-import LoginModal from '../components/LoginModal.vue';
-import RegisterModal from '../components/RegisterModal.vue';
-import ForgetPasswordModal from '../components/ForgetPasswordModal.vue';
-import Content from '../components/Content.vue';
-import VerifyPrompt from '../components/VerifyPrompt.vue';
 import LeftSideBar from '../components/LeftSideBar.vue';
 import api from '../services/api';
 import SearchResult from '../components/SearchResult.vue';
@@ -34,11 +29,6 @@ import UserDashboard from '../components/UserDashboard.vue';
 export default {
     components: {
         Navbar,
-        LoginModal,
-        RegisterModal,
-        ForgetPasswordModal,
-        Content,
-        VerifyPrompt,
         LeftSideBar,
         SearchResult,
         UserDashboard,
@@ -65,81 +55,7 @@ export default {
         }
     },
     methods: {
-        handleLogin(userData) {
-            api.login(userData).then(response => {
-                localStorage.setItem('name', response.data.name);
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('email', userData.email);
 
-                this.isLoggedIn = true;
-                this.userName = response.data.name;
-                this.userEmail = userData.email;
-                this.showLoginModal = false;
-                this.loginError = '';
-
-                this.updateLastLogin(this.userEmail);
-
-                if (!response.data.isVerified) {
-                    this.showVerifyPrompt = true;
-                    /*this.loginError = '您的信箱尚未驗證。請檢查郵件完成驗證。';
-                    this.logout();
-                    return;*/
-                }
-            }).catch(error => {
-                this.loginError = '登入失敗，請檢查電子郵件和密碼。';
-            });
-        },
-
-        handleRegister(userData) {
-            api.register(userData).then(response => {
-                localStorage.setItem('name', userData.name);
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('email', userData.email);
-                this.isLoggedIn = true;
-                this.userName = userData.name;
-                this.userEmail = userData.email;
-                this.showRegisterModal = false;
-                this.showVerifyPrompt = true;
-                this.registerError = '';
-            }).catch(error => {
-                this.registerError = '註冊失敗，請檢查電子郵件和密碼。';
-            });
-        },
-
-        hideVerifyPrompt() {
-            this.showVerifyPrompt = false;
-            this.logout();
-        },
-
-        logout() {
-            localStorage.removeItem('name');
-            localStorage.removeItem('token');
-            localStorage.removeItem('email');
-            this.isLoggedIn = false;
-            this.userName = '';
-            this.userEmail = '';
-        },
-
-        switchToForgetPasswordModal() {
-            this.showLoginModal = false;
-            this.showForgetPasswordModal = true;
-            console.log('showForgetPasswordModal:', this.showForgetPasswordModal);
-        },
-
-        switchToRegisterModal() {
-            this.showLoginModal = false;  // 關閉登入框
-            this.showRegisterModal = true; // 打開註冊框
-        },
-
-        updateLastLogin(emailData) {
-            api.updateLastLogin({ email: emailData }) // 假設傳送使用者的 ID 或 Email
-                .then(response => {
-                    console.log('Last login time updated successfully.');
-                })
-                .catch(error => {
-                    console.error('Failed to update last login time:', error);
-                });
-        }
     }
 };
 </script>

@@ -1,4 +1,4 @@
-const db = require('../db.js');
+const db = require('@/db.js');
 
 async function SelectAllFromUsers() {
     const [records] = await db.query(`select * from users`);

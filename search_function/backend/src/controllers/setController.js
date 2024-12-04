@@ -1,4 +1,4 @@
-const db = require("../db"); 
+const db = require("@/db"); 
 
 exports.addToSet = async (req, res) => {
     const { word, definitions, sentence, set_id, folder_id } = req.body;
