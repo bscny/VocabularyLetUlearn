@@ -13,8 +13,6 @@ const dbService = {
     return sets;
   },
   
-
-  
   async findWordInSet(setId, word) {
     const [result] = await db.query(
       `SELECT * FROM vocabulary WHERE SET_ID = ? AND WORD = ?`,
@@ -22,8 +20,6 @@ const dbService = {
     );
     return result;
   },
-
-
 
   async addWordToSet({ word, definitions, sentence, setId }) {
     return await db.query(
