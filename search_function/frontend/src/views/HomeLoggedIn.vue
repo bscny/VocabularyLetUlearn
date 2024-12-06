@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue';
-import LeftSideBar from '../components/LeftSideBar.vue';
-import api from '../services/api';
-import SearchResult from '../components/SearchResult.vue';
-import UserDashboard from '../components/UserDashboard.vue';
+import Navbar from '@/components/Navbar.vue';
+import LeftSideBar from '@/components/LeftSideBar.vue';
+import api from '@/services/api';
+import SearchResult from '@/components/SearchResult.vue';
+import UserDashboard from '@/components/UserDashboard.vue';
 
 export default {
     components: {
