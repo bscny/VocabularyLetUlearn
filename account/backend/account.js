@@ -1,7 +1,9 @@
+require('module-alias/register');
 const express = require('express');
 const bodyParser = require('body-parser');
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('@/routes/authRoutes');
 const cors = require('cors');
+
 
 const dotenv = require('dotenv');
 dotenv.config();

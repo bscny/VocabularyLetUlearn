@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../database');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+const userService = require('@/db_services/userServices.js');
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -21,14 +21,16 @@ exports.register = async (req, res) => {
     const { email, password, name } = req.body;
 
     try {
-        const [results] = await db.query('SELECT * FROM users WHERE Email = ?', [email]);
-        if (results.length > 0) return res.status(409).json({ message: 'Email already registered' });
+        const results = await userService.findUserByEmail(email);
+        if (results.length > 0) {
+            return res.status(409).json({ message: 'Email already registered' });
+        }
+
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // 將 name 也插入到資料庫
-        await db.query('INSERT INTO users (Email, Pass_word, User_name, Is_verified) VALUES (?, ?, ?, ?)', 
-        [email, hashedPassword, name, false]);
+        await userService.createUser(email, hashedPassword, name);
 
         const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1d' });
         const verificationLink = `http://localhost:5173/verify-email?token=${token}`;
@@ -57,7 +59,7 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const [results] = await db.query('SELECT * FROM users WHERE Email = ?', [email]);
+        const results = await userService.findUserByEmail(email);
 
         if (results.length === 0) {
             return res.status(401).json({ message: 'Invalid email or password' });
@@ -102,14 +104,14 @@ exports.verifyEmail = async (req, res) => {
         const { email } = decoded;
 
         // 查詢該 email 的用戶是否存在
-        const [user] = await db.query('SELECT * FROM users WHERE Email = ?', [email]);
+        const user = await userService.findUserByEmail(email);
         if (user.length === 0) {
             console.error('User not found for email:', email);
             return res.status(404).json({ message: 'User not found' });
         }
 
         // 如果用戶存在，更新其 Is_verified 欄位
-        const updateResult = await db.query('UPDATE users SET Is_verified = ? WHERE Email = ?', [1, email]);
+        const updateResult = await userService.updateVerificationStatus(email);
 
         if (updateResult.affectedRows === 0) {
             console.error('Failed to update Is_verified for email:', email);
@@ -130,7 +132,7 @@ exports.checkEmail = async (req, res) => {
     const { email, type} = req.body;
 
     try {
-        const [results] = await db.query('SELECT * FROM users WHERE Email = ?', [email]);
+        const results = await userService.findUserByEmail(email);
 
         if (type === 'register') {
             // 如果是注册，要求邮箱不可已注册
@@ -148,13 +150,6 @@ exports.checkEmail = async (req, res) => {
             res.status(400).json({ message: 'Invalid type specified' });
         }
 
-
-/*
-        if (results.length > 0) {
-            return res.status(409).json({ message: 'Email already registered' });
-        }
-        res.status(200).json({ message: 'Email available' });
-*/
     } catch (err) {
         console.error("Error:", err);
         res.status(500).json({ message: 'Server error' });
@@ -166,7 +161,7 @@ exports.resendVerificationEmail = async (req, res) => {
     const { email } = req.body;
 
     try {
-        const [results] = await db.query('SELECT * FROM users WHERE Email = ?', [email]);
+        const results = await userService.findUserByEmail(email);
 
         if (results.length === 0) {
             return res.status(404).json({ message: 'User not found' });
@@ -201,8 +196,7 @@ exports.updateLastLogin = async (req, res) => {
     const { email } = req.body;
 
     try {
-        const [results] = await db.query('UPDATE users SET Last_login = NOW() WHERE Email = ?', [email]);
-
+        const results = await userService.updateLastLogin(email);
         if (results.affectedRows === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -220,7 +214,7 @@ exports.sendResetPasswordEmail = async (req, res) => {
     const { email } = req.body;
 
     try {
-        const [results] = await db.execute('SELECT * FROM users WHERE Email = ?', [email]);
+        const results = await userService.findUserByEmail(email);
 
         if (results.length === 0) {
             return res.status(404).json({ message: '該用戶不存在' });
@@ -275,7 +269,7 @@ exports.resetPassword = async (req, res) => {
         }
 
         // 更新使用者密碼
-        const [result] = await db.execute('UPDATE users SET Pass_word = ? WHERE Email = ?', [hashedPassword, emailFromToken]);
+        const result = await userService.updatePassword(emailFromToken, hashedPassword);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'User not found' });
