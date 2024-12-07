@@ -44,14 +44,14 @@
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue';
-import LoginModal from '../components/LoginModal.vue';
-import RegisterModal from '../components/RegisterModal.vue';
-import ForgetPasswordModal from '../components/ForgetPasswordModal.vue';
-import Content from '../components/Content.vue';
-import VerifyPrompt from '../components/VerifyPrompt.vue';
-import LeftSideBar from '../components/LeftSideBar.vue';
-import api from '../services/api';
+import Navbar from '@/components/Navbar.vue';
+import LoginModal from '@/components/LoginModal.vue';
+import RegisterModal from '@/components/RegisterModal.vue';
+import ForgetPasswordModal from '@/components/ForgetPasswordModal.vue';
+import Content from '@/components/Content.vue';
+import VerifyPrompt from '@/components/VerifyPrompt.vue';
+import LeftSideBar from '@/components/LeftSideBar.vue';
+import api from '@/services/api';
 
 export default {
     components: {
