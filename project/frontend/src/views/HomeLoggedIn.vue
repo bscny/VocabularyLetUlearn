@@ -46,11 +46,11 @@ export default {
         };
     },
     created() {
-        const token = localStorage.getItem('token');
+        const token = JSON.parse(localStorage.getItem('token'));
         this.isLoggedIn = !!token;
         if (this.isLoggedIn) {
-            this.userName = localStorage.getItem('name');
-            this.userEmail = localStorage.getItem('email');
+            this.userName = JSON.parse(localStorage.getItem('name'));
+            this.userEmail = JSON.parse(localStorage.getItem('email'));
         }
     },
     methods: {

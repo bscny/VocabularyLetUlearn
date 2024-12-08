@@ -38,6 +38,9 @@ export default {
         .then(response => {
           this.loading = false;
           if (response.data.message === 'Email verified successfully') {
+            localStorage.setItem('token', JSON.stringify(token));
+            localStorage.setItem('USER_ID', JSON.stringify(response.data.USER_ID));
+
             this.verified = true;
             this.startCountdown();
           } else {
@@ -60,7 +63,7 @@ export default {
       }, 1000);
     },
     goToHome() {
-      this.$router.push({ name: 'home' });
+      this.$router.push({ name: 'Home' });
     }
   }
 };

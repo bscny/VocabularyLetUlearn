@@ -41,7 +41,7 @@ export default {
             folders: [],
 
             // user id variables here
-            userId: 1
+            userId: JSON.parse(localStorage.getItem('USER_ID')),
         };
     },
 

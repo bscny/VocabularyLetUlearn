@@ -25,7 +25,7 @@ export default {
     data() {
         return {
             folderName: '',
-            userId: 1,
+            userId: JSON.parse(localStorage.getItem('USER_ID')),
         };
     },
 

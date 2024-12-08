@@ -77,19 +77,20 @@ export default {
         };
     },
     created() {
-        const token = localStorage.getItem('token');
+        const token = JSON.parse(localStorage.getItem('token'));
         this.isLoggedIn = !!token;
         if (this.isLoggedIn) {
-            this.userName = localStorage.getItem('name');
-            this.userEmail = localStorage.getItem('email');
+            this.userName = JSON.parse(localStorage.getItem('name'));
+            this.userEmail = JSON.parse(localStorage.getItem('email'));
         }
     },
     methods: {
         handleLogin(userData) {
             api.login(userData).then(response => {
-                localStorage.setItem('name', response.data.name);
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('email', userData.email);
+                localStorage.setItem('USER_ID', JSON.stringify(response.data.USER_ID));
+                localStorage.setItem('name', JSON.stringify(response.data.name));
+                localStorage.setItem('token', JSON.stringify(response.data.token));
+                localStorage.setItem('email', JSON.stringify(userData.email));
 
                 this.isLoggedIn = true;
                 this.userName = response.data.name;
@@ -112,9 +113,9 @@ export default {
 
         handleRegister(userData) {
             api.register(userData).then(response => {
-                localStorage.setItem('name', userData.name);
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('email', userData.email);
+                localStorage.setItem('name', JSON.stringify(userData.name));
+                localStorage.setItem('email', JSON.stringify(userData.email));
+                
                 this.isLoggedIn = true;
                 this.userName = userData.name;
                 this.userEmail = userData.email;
@@ -132,6 +133,7 @@ export default {
         },
 
         logout() {
+            localStorage.removeItem('USER_ID');
             localStorage.removeItem('name');
             localStorage.removeItem('token');
             localStorage.removeItem('email');

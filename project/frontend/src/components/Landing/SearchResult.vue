@@ -102,11 +102,13 @@ export default {
     },
     async fetchSets() {
       try {
-        const userId = localStorage.getItem("userId");
+        const userId = JSON.parse(localStorage.getItem("USER_ID"));
         const response = await api.getSets(userId);
         this.sets = response.data;
         if (this.sets.length > 0) {
           this.selectedSetId = this.sets[0].SET_ID;
+        } else {
+          alert("current account has no sets, gotta create one first ^^");
         }
       } catch (error) {
         this.sets = [];
@@ -141,7 +143,7 @@ export default {
         return;
       }
       try {
-        const userId = localStorage.getItem("userId");
+        const userId = JSON.parse(localStorage.getItem("USER_ID"));
         const response = await api.createSet({ SET_NAME: this.newSetName, userId });
         const newSet = response.data;
 
@@ -159,10 +161,6 @@ export default {
   },
 
   created() {
-    const fakeUserId = 1;
-    localStorage.setItem("userId", fakeUserId);
-    console.log("Fake user logged in with userId:", fakeUserId);
-
     this.fetchSets();
   },
 };

@@ -31,7 +31,7 @@ exports.getSets = async (req, res) => {
   try {
     const sets = await dbService.getUserSets(userId);
     if (sets.length === 0) {
-      return res.status(404).json({ message: "No sets found." });
+      return res.status(200).json({ message: "No sets found." });
     }
 
     res.status(200).json(sets);

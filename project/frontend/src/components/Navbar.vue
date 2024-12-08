@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar">
-        <div class="logo">
+        <div class="logo"  @click="GotoHomePage()">
             VocabularyLetULearn
         </div>
 
@@ -42,6 +42,14 @@ export default {
         isLoggedIn: Boolean,
         userName: String,
         userEmail: String
+    },
+
+    methods: {
+        GotoHomePage() {
+            this.$router.push({
+                name: 'Home'
+            });
+        }
     }
 };
 </script>

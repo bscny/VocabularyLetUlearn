@@ -15,8 +15,8 @@ export default {
     data() {
         return {
             menuItems: [
-                { name: 'Search', route: '/search', icon: '/icons/search-icon.png' },
-                { name: 'My Set', route: '/my-set', icon: '/icons/my_set-icon.png' },
+                { name: 'Search', route: '/home-logged-in', icon: '/icons/search-icon.png' },
+                { name: 'My Set', route: '/userinventory', icon: '/icons/my_set-icon.png' },
                 { name: 'Ranking Exam', route: '/ranking-exam', icon: '/icons/ranking_exam-icon.png' },
                 { name: 'Room', route: '/room', icon: '/icons/room-icon.png' },
             ]

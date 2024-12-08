@@ -31,7 +31,7 @@ export default {
         };
     },
     created() {
-        this.userEmail = localStorage.getItem('email');
+        this.userEmail = JSON.parse(localStorage.getItem('email'));
     },
     methods: {
         resendVerificationEmail() {

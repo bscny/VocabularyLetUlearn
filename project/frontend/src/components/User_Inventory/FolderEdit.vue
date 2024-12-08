@@ -48,7 +48,7 @@ export default {
         return {
             folderName: this.folder.Folder_name,
             setName: '',
-            userId: 1,
+            userId: JSON.parse(localStorage.getItem('USER_ID')),
         };
     },
 

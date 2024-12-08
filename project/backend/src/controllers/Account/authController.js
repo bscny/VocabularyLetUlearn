@@ -78,6 +78,7 @@ exports.login = async (req, res) => {
         res.status(200).json({ 
             message: 'Login successful', 
             token, 
+            USER_ID: user.USER_ID,
             email: user.Email, 
             name: user.User_name, 
             isVerified: user.Is_verified === 1
@@ -119,7 +120,10 @@ exports.verifyEmail = async (req, res) => {
         }
 
         console.log('User verification successful:', email);
-        res.status(200).json({ message: 'Email verified successfully' });
+        res.status(200).json({ 
+            message: 'Email verified successfully',
+            USER_ID: user[0].USER_ID,
+        });
 
     } catch (err) {
         console.error("Error:", err);
