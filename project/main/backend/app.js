@@ -21,7 +21,7 @@ app.use(cors({
 
 
 // routes are here
-// user's inventory aka "my sets"
+// user's inventory aka "my sets page"
 const folderRoutes = require("@/routes/User_Inventory/folderRoutes.js");
 const setRoutes = require("@/routes/User_Inventory/setRoutes.js");
 const wordRoutes = require("@/routes/User_Inventory/wordRoutes.js");
@@ -31,13 +31,18 @@ app.use("/sets", setRoutes);
 app.use("/words", wordRoutes);
 
 // search add aka "main landing page"
-const landing_userRoutes = require('@/routes/SearchAdd/userRoutes');
-const landing_wordRoutes = require('@/routes/SearchAdd/wordRoutes');
-const landing_setRoutes = require('@/routes/SearchAdd/setRoutes');
+const landing_userRoutes = require('@/routes/SearchAdd/userRoutes.js');
+const landing_wordRoutes = require('@/routes/SearchAdd/wordRoutes.js');
+const landing_setRoutes = require('@/routes/SearchAdd/setRoutes.js');
 
 app.use('/api/users', landing_userRoutes);
 app.use('/api/words', landing_wordRoutes);
 app.use('/api/set', landing_setRoutes);
+
+// account related aka "log in page"
+const authRoutes = require('@/routes/Account/authRoutes.js');
+
+app.use('/auth', authRoutes);
 
 // routes end
 
