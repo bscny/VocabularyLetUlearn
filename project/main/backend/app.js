@@ -20,15 +20,23 @@ app.use(cors({
 
 
 // routes are here
-const userRoutes = require("@/routes/User_Inventory/userRoutes.js");
+// user's inventory aka "my sets"
 const folderRoutes = require("@/routes/User_Inventory/folderRoutes.js");
 const setRoutes = require("@/routes/User_Inventory/setRoutes.js");
 const wordRoutes = require("@/routes/User_Inventory/wordRoutes.js");
 
-app.use("/users", userRoutes);
 app.use("/folders", folderRoutes);
 app.use("/sets", setRoutes);
 app.use("/words", wordRoutes);
+
+// search add aka "main landing page"
+const landing_userRoutes = require('@/routes/SearchAdd/userRoutes');
+const landing_wordRoutes = require('@/routes/SearchAdd/wordRoutes');
+const landing_setRoutes = require('@/routes/SearchAdd/setRoutes');
+
+app.use('/api/users', landing_userRoutes);
+app.use('/api/words', landing_wordRoutes);
+app.use('/api/set', landing_setRoutes);
 
 // routes end
 
@@ -40,7 +48,7 @@ app.get("/test", (req, res) => {
 app.use((err, req, res, next) => {
     console.log(err);
     res.status(err.status || 500).send("something is wrong...\n detected in global error handler");
-})
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
