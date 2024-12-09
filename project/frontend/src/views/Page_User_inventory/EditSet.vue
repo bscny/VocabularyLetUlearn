@@ -97,7 +97,6 @@ import {
 import {
     getWordsBySetId
 } from '@/services/User_Inventory_API/wordAPI.js';
-import { afterAll } from 'vitest';
 
 export default {
     name: 'EditSet',
@@ -301,7 +300,7 @@ main {
 
 .vocabulary {
     display: block;
-    margin: 50px 0 50px 0;
+    margin: 6vh 0;
 
     font-size: 20px;
 }

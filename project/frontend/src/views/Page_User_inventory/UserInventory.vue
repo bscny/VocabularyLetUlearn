@@ -33,19 +33,40 @@
 
         <input v-if="canShow" class="search-box" type="text" v-model="search" />    
 
-        <ul class="grid-each-word" v-if="canShow" v-for="vocabulary in SearchFilterWords" :key="vocabulary.WORD">
-            <div>
-                {{ vocabulary.WORD }}
+        <ul class="vocabulary" v-if="canShow" v-for="vocabulary in SearchFilterWords" :key="vocabulary.WORD">
+            <div class="word-def-grid">
+                <div>
+                    <div class="category">
+                        Word:
+                    </div>
+                    <div class="content">
+                        {{ vocabulary.WORD }}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="category">
+                        Definition:
+                    </div>
+                    <div class="content">
+                        {{ vocabulary.Definitions }}
+                    </div>
+                </div>
             </div>
 
-            <div>
-                {{ vocabulary.Definitions }}
-            </div>
-
-            <div>
-                {{ vocabulary.Sentence }}
+            <div class="sentence">
+                <div class="category">
+                    Sentence:
+                </div>
+                <div class="content">
+                    {{ vocabulary.Sentence }}
+                </div>
             </div>
         </ul>
+
+        <div class="extra-space">
+
+        </div>
 
     </main>
 </template>
@@ -227,16 +248,43 @@ export default {
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
-.grid-each-word {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 0 0 300px;
-    margin: 0 0 0 0;
+.vocabulary {
+    display: block;
+    margin: 6vh 0 0 17vw;
 
     font-size: 20px;
 }
 
-.grid-each-word div{
-    margin: 30px 0 0 0;
+.word-def-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    border-top: solid;
+    border-width: 2px;
+    border-color: black;
+}
+
+.category {
+    display: block;
+    margin: 0 0 2vh 4vw;
+
+    text-decoration: underline;
+    font-size: 30px;
+}
+
+.content {
+    display: block;
+    margin: 0 0 0 4vw;
+    font-size: 25px;
+}
+
+.sentence {
+    display: block;
+
+    margin: 4vh 0 0 0;
+}
+
+.extra-space{
+    margin-top: 10vh;
 }
 </style>
