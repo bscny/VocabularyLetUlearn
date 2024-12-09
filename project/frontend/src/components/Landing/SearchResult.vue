@@ -170,7 +170,7 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   width: 100%;
   padding: 20px;
@@ -187,7 +187,7 @@ export default {
 
 .searchInput {
   flex: 1;
-  padding: 10px;
+  padding: 10px 60px 10px 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -207,11 +207,21 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #f9f9f9;
+  margin-top: 30px;
   padding: 1rem;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 800px;
   height: 320px;
+}
+
+.SearchResult h1 {
+  margin-bottom: 10px
+}
+
+.SearchResult p {
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .actionRow {

@@ -10,7 +10,7 @@
             </div>
             <div v-else class="user-info">
                 <span class="username">{{ userName }}</span>
-                <button @click="$emit('logout')">登出</button>
+                <button class="logout-button" @click="$emit('logout')">登出</button>
             </div>
 
             <div v-if="!isLoggedIn" class="register-button"  @click="$emit('toggleRegisterModal')">
@@ -46,10 +46,16 @@ export default {
 
     methods: {
         GotoHomePage() {
-            this.$router.push({
-                name: 'Home'
-            });
-        }
+            if(this.isLoggedIn){
+                this.$router.push({
+                    name: 'HomeLoggedIn'
+                });
+            } else {
+                this.$router.push({
+                    name: 'Home'
+                });
+            }
+        },
     }
 };
 </script>
@@ -67,6 +73,8 @@ export default {
     height: 50px;
     padding: 0 20px 0 20px;
     background-color: #333;
+
+    z-index: 10000;
 }
 
 .logo {
@@ -94,8 +102,21 @@ export default {
 
     color: white;
 }
-.user-info {
+
+.logout-button {
     margin: 0 0px 0 20px;
+    padding: 0 0 0 0;
+    cursor: pointer;
+    line-height: 50px;
+
+    border: none;
+
+    background-color: #333;
+    color: white;
+}
+
+.user-info {
+    margin: 0 0px 0 0px;
     padding: 0 0 0 0;
     display: flex;
     justify-content: space-between;

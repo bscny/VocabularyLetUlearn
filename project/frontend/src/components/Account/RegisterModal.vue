@@ -3,7 +3,7 @@
         <div class="modal-content">
             <span class="close" @click="$emit('close')">&times;</span>
             <h2>註冊</h2>
-            <form class="form" @submit.prevent="handleRegister">
+            <form class="form">
                 <div class="form-group">
                     <label for="userName">使用者名稱:</label>
                     <input type="text" v-model="registerName" required />
@@ -20,8 +20,8 @@
                     <label for="confirmPassword">確認密碼:</label>
                     <input type="password" v-model="confirmPassword" required />
                 </div>
-                <button type="submit">註冊</button>
             </form>
+            <button class="register-button"  @click="handleRegister">註冊</button>
             <div v-if="registerError" class="error-message">{{ registerError }}</div>
             <div v-if="passwordMismatch" class="error-message">密碼不一致</div>
         </div>
@@ -135,14 +135,15 @@ h2 {
 }
 
 .modal-content {
-    display: grid;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
     align-items: center;
     position: fixed;
-    top: 30%;
-    left: 35%;
-    width: 30%;
-    height: 40%;
+    top: 10vh;
+    left: 35vw;
+    bottom: 10vh;
+    right: 35vw;
     background-color: white;
 
     border-style: solid;
@@ -155,24 +156,28 @@ h2 {
 
 .close {
     position: absolute;
-    top: 5%;
-    right: 5%;
+    top: 0;
+    right: 0;
     cursor: pointer;
+    font-size: 35px;
     /* float: right; */
 }
 
 .modal-content h2 {
     display: block;
-    margin: auto;
-    /* margin: auto; */
-    /* margin: 5% 0 5% 40%; */
+    margin-top: 15vh;
 }
 
 .form {
-    display: block;
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
 }
 
 .form-group {
+    margin-top: 3vh;
     display: block;
     margin-bottom: 8px;
     line-height: 1.6;
@@ -188,10 +193,9 @@ h2 {
     display: inline;
 }
 
-.form button {
+.register-button {
+    margin-top: 5vh;
     display: block;
-    margin: auto;
-    margin-top: 20px;
     padding: 0.5rem 1rem;
     width: 220px;
     align-items: center;
@@ -206,7 +210,7 @@ h2 {
 .register-link, 
 .forget-password {
     display: block;
-    margin: auto;
+    margin-top: 5vh;
 
     color: blue;
     cursor: pointer;
@@ -215,6 +219,9 @@ h2 {
 }
 
 .error-message {
+    display: block;
+    margin-top: 5vh;
+
     color: red;
     font-size: 0.9rem;
 }

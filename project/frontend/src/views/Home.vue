@@ -10,7 +10,6 @@
         />
 
         <div class="main-layout">
-            <LeftSideBar />
             <Content :isLoggedIn="isLoggedIn" :userEmail="userEmail" :userName="userName" />
         </div>
         
@@ -50,7 +49,6 @@ import RegisterModal from '@/components/Account/RegisterModal.vue';
 import ForgetPasswordModal from '@/components/Account/ForgetPasswordModal.vue';
 import Content from '@/components/Account/Content.vue';
 import VerifyPrompt from '@/components/Account/VerifyPrompt.vue';
-import LeftSideBar from '@/components/Account/LeftSideBar.vue';
 import api from '@/services/Account_API/accountAPI.js';
 
 export default {
@@ -61,7 +59,6 @@ export default {
         ForgetPasswordModal,
         Content,
         VerifyPrompt,
-        LeftSideBar
     },
     data() {
         return {
@@ -105,6 +102,10 @@ export default {
                     /*this.loginError = '您的信箱尚未驗證。請檢查郵件完成驗證。';
                     this.logout();
                     return;*/
+                }else{
+                    this.$router.push({
+                        name: 'HomeLoggedIn'
+                    })
                 }
             }).catch(error => {
                 this.loginError = '登入失敗，請檢查電子郵件和密碼。';
@@ -140,6 +141,10 @@ export default {
             this.isLoggedIn = false;
             this.userName = '';
             this.userEmail = '';
+
+            this.$router.push({
+                name: 'Home'
+            });
         },
 
         switchToForgetPasswordModal() {

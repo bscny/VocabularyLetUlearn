@@ -1,20 +1,26 @@
 <template>
-    <Navbar />
+    <Navbar 
+            :isLoggedIn="isLoggedIn" 
+            :userName="userName"
+            :userEmail="userEmail" 
+            @toggleLoginModal="showLoginModal = true" 
+            @toggleRegisterModal="showRegisterModal = true" 
+            @logout="logout()" 
+    />
 
     <LeftBarFolders  @displayWords="setCanShow($event)"  @editFolder="setCanEditFolder($event)"
                      @createFolder="setCanCreateFolder()"/>
 
     <div v-if="canCreate">
-        <FolderCreate  @creationDone="resetCanCreateFolder()"/>
+        <FolderCreate  @creationDone="resetCanCreateFolder()" @cancelCreateFolder="cancel()"/>
     </div>
 
     <div v-if="canEdit">
         <FolderEdit  :folder="curLookingFolder"
-                     @EditionDone="resetCanEditFolder()"/>
+                     @EditionDone="resetCanEditFolder()"  @CancelEditFolder="cancel()"/>
     </div>
 
-    <main style="height: 3000px;"> 
-
+    <main> 
         <div v-if="canShow" class="flex-buttons">
             <button class="quiz-button">
                 Local Quiz
@@ -100,11 +106,18 @@ export default {
 
         resetCanCreateFolder(){
             location.reload(); // reload the page for new folders
+            alert("Folder Created");
             this.canCreate = false;
+        },
+
+        cancel(){
+            this.canCreate = false;
+            this.canEdit = false;
         },
 
         resetCanEditFolder(){
             location.reload(); // reload the page for new folders
+            alert("Changes Saved");
             this.canEdit = false;
         },
 
@@ -114,6 +127,20 @@ export default {
                 params: {
                     SET_ID: this.curDisplaySetId
                 }
+            });
+        },
+
+        logout() {
+            localStorage.removeItem('USER_ID');
+            localStorage.removeItem('name');
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            this.isLoggedIn = false;
+            this.userName = '';
+            this.userEmail = '';
+
+            this.$router.push({
+                name: 'Home'
             });
         },
 
@@ -130,6 +157,15 @@ export default {
         }
     },
 
+    created() {
+        const token = JSON.parse(localStorage.getItem('token'));
+        this.isLoggedIn = !!token;
+        if (this.isLoggedIn) {
+            this.userName = JSON.parse(localStorage.getItem('name'));
+            this.userEmail = JSON.parse(localStorage.getItem('email'));
+        }
+    },
+
 }
 </script>
 
@@ -140,7 +176,7 @@ export default {
     justify-content: space-between;
     align-items: center;
 
-    margin: 100px 0 0 250px;
+    margin: 10vh 0 0 20vw;
 }
 
 .quiz-button {
@@ -177,7 +213,7 @@ export default {
 
 .search-box {
     display: block;
-    margin: 10px 0 0 250px;
+    margin: 2vh 0 0 20vw;
     padding: 5px 10px;
     font-size: 20px;
     border: 1px solid #ccc;

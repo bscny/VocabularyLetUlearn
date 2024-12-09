@@ -3,7 +3,7 @@
     <div v-if="loading" class="loading">驗證中，請稍候...</div>
     <div v-if="verified" class="verified">
       <p>驗證成功！我們將會在 {{ countdown }} 秒後跳轉到首頁。</p>
-      <button class="jump-button" @click="goToHome">立即跳轉</button>
+      <button class="jump-button" @click="goToLoggedInHome">立即跳轉</button>
     </div>
     <div v-if="error" class="error">驗證失敗，請稍後再試。</div>
   </div>
@@ -58,12 +58,12 @@ export default {
           this.countdown -= 1;
         } else {
           clearInterval(interval);
-          this.goToHome();
+          this.goToLoggedInHome();
         }
       }, 1000);
     },
-    goToHome() {
-      this.$router.push({ name: 'Home' });
+    goToLoggedInHome() {
+      this.$router.push({ name: 'HomeLoggedIn' });
     }
   }
 };

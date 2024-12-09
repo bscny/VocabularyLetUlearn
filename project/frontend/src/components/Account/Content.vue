@@ -3,7 +3,7 @@
         <h1>這是首頁</h1>
         <div class="login-area">
             <span v-if="!isLoggedIn">請登入</span>
-            <span v-if="isLoggedIn">歡迎回來，{{ userName }}</span>
+            <span v-if="isLoggedIn" >歡迎回來，{{ userName }}</span>
         </div>
     </div>
 </template>
@@ -14,7 +14,21 @@ export default {
         isLoggedIn: Boolean,
         userName: String,
         userEmail: String
-    }
+    },
+    // methods: {
+    //     GotoHomeloggedIn(){
+    //         this.$router.push({
+    //             name: 'HomeLoggedIn'
+    //         });
+    //     }
+    // },
+    // watch: {
+    //     isLoggedIn(newValue) {
+    //         if (newValue) {
+    //             this.GotoHomeloggedIn();
+    //         }
+    //     }
+    // }
 };
 </script>
 

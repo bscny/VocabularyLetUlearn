@@ -31,6 +31,10 @@
                 Delete This Vocabulary
             </button>
 
+            <button class="cancel-button"  @click="Cancel()">
+                Cancel
+            </button>
+
             <button v-if="isMarked" class="isMarked-button"  @click="ToggleIsMarked()">
                 Set to Un-Marked
             </button>
@@ -79,6 +83,10 @@ export default {
             this.$emit("VocabEditionDone");
         },
 
+        Cancel(){
+            this.$emit("VocabEditionCancel");
+        },
+
         ToggleIsMarked(){
             this.isMarked = !this.isMarked;
         }
@@ -105,10 +113,10 @@ export default {
 
 .window {
     position: fixed;
-    top: 100px;
-    right: 300px;
-    bottom: 100px;
-    left: 300px;
+    top: 10vh;
+    right: 20vw;
+    bottom: 10vh;
+    left: 20vw;
 
     background-color: rgb(43, 22, 77);
     color: white;
@@ -119,8 +127,8 @@ export default {
 .done-button {
     position: absolute;
 
-    right: 0;
-    bottom: 0;
+    right: 1px;
+    bottom: 2px;
 
     padding: 10px 20px 10px 20px;
     background-color: #4caf50;
@@ -138,19 +146,17 @@ export default {
 }
 
 .window p{
-    position: static;
     display: block;
 
-    margin: 10px 0 0 5px;
+    margin: 2vh 0 0 1vw;
 
     font-size: 30px;
 }
 
 .word-input {
-    position: static;
     display: block;
 
-    margin: 0 0 0 5px;
+    margin: 2vh 0 0 1vw;
 
     font-size: 30px;
     padding: 5px 10px;
@@ -166,10 +172,9 @@ export default {
 }
 
 .def-sen-input {
-    position: static;
     display: block;
 
-    margin: 0 0 0 5px;
+    margin: 2vh 0 0 1vw;
 
     font-size: 30px;
     width: 600px;
@@ -186,16 +191,16 @@ export default {
 }
 
 .title {
-    position: static;
     display: block;
+    margin: 1vh 1vw;
     font-size: 30px;
 }
 
 .delete-button {
     position: absolute;
 
-    left: 0;
-    bottom: 0;
+    left: 2px;
+    bottom: 2px;
 
     padding: 10px 20px 10px 20px;
     background-color: #ee3030;
@@ -212,11 +217,32 @@ export default {
     background-color: #f01212;
 }
 
+.cancel-button {
+    position: absolute;
+
+    left: 2px;
+    bottom: 10vh;
+
+    padding: 10px 20px 10px 20px;
+    background-color: #32a9be;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    font-size: 30px;
+}
+
+.cancel-button:hover {
+    background-color: #12a3bd;
+}
+
 .isMarked-button {
     position: absolute;
 
-    right: 0;
-    bottom: 80px;
+    right: 1px;
+    bottom: 10vh;
 
     padding: 10px 20px 10px 20px;
     background-color: #3082ee;

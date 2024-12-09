@@ -11,7 +11,11 @@ export default {};
 
 <style scoped>
 .UserDashboard {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 20vw 0 20vw;
+  height: 15vw;
   background-color: #bebebe;
   padding: 1rem;
   border-radius: 5px;

@@ -32,6 +32,7 @@ export default {
 
 <style scoped>
 .left-sidebar {
+    position: fixed;
     width: 200px;
     padding: 1rem;
     background-color: #f7f7f7;
@@ -40,15 +41,19 @@ export default {
 }
 
 .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
     list-style: none;
     padding: 0;
-    margin: 0;
 }
 
 .sidebar-menu li {
-    display: flex;
-    align-items: center;
+    display: block;
+    /* align-items: center; */
     padding: 10px;
+    margin-bottom: 30px;
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s;

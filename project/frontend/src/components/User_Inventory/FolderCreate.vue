@@ -4,12 +4,16 @@
             <button class="done-button"  @click="creationDone()">
                 Crate Folder
             </button>
+
+            <button class="cancel-button"  @click="cancel()">
+                Cancel
+            </button>
             
             <p>
                 Give New Folder a Name
             </p>
 
-            <input class="folder-name-input" type="text"  v-model="folderName"/>
+            <input class="folder-name-input" type="text"  v-model="folderName"  @keydown.enter="creationDone()"/>
         </div>
     </div>
 </template>
@@ -36,6 +40,10 @@ export default {
             }
 
             this.$emit("creationDone");
+        },
+
+        cancel(){
+            this.$emit("cancelCreateFolder");
         }
     },
 
@@ -60,10 +68,10 @@ export default {
 
 .window {
     position: fixed;
-    top: 100px;
-    right: 300px;
-    bottom: 600px;
-    left: 300px;
+    top: 10vh;
+    right: 20vw;
+    bottom: 60vh;
+    left: 20vw;
 
     background-color: rgb(43, 22, 77);
     color: white;
@@ -74,8 +82,8 @@ export default {
 .done-button {
     position: absolute;
 
-    right: 0;
-    bottom: 0;
+    right: 5px;
+    bottom: 5px;
 
     padding: 10px 20px 10px 20px;
     background-color: #4caf50;
@@ -92,20 +100,38 @@ export default {
     background-color: #288d2e;
 }
 
-.window p{
+.cancel-button {
     position: absolute;
 
-    left: 10px;
-    top: 10px;
+    left: 5px;
+    bottom: 5px;
+
+    padding: 10px 20px 10px 20px;
+    background-color: #32a9be;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    font-size: 30px;
+}
+
+.cancel-button:hover {
+    background-color: #12a3bd;
+}
+
+.window p{
+    display: block;
+
+    margin: 1vh 1vw;
 
     font-size: 30px;
 }
 
 .folder-name-input {
-    position: absolute;
-
-    left: 10px;
-    top: 60px;
+    display: block;
+    margin: 3vh 1vw;
 
     font-size: 30px;
     padding: 5px 10px;

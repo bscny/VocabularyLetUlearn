@@ -1,22 +1,30 @@
 <template>
-    <Navbar />
+    <Navbar 
+            :isLoggedIn="isLoggedIn" 
+            :userName="userName"
+            :userEmail="userEmail" 
+            @toggleLoginModal="showLoginModal = true" 
+            @toggleRegisterModal="showRegisterModal = true" 
+            @logout="logout()" 
+    />
 
     <div v-if="canCreateVocab">
         <VocabCreate  :SET_ID="SET_ID"
-                      @VocabCreationDone="resetCanCreateVocab()"/>
+                      @VocabCreationDone="resetCanCreateVocab()"  @VocabCreationCancel="cancel()"/>
     </div>
 
     <div v-if="canEditVocab">
         <VocabEdit  :vocabulary="curWord"
-                    @VocabEditionDone="resetCanEditVocab()"/>
+                    @VocabEditionDone="resetCanEditVocab()"  @VocabEditionCancel="cancel()"/>
     </div>
 
-    <button class="done-button"  @click="DoneEditSet()">Done</button>
-    <button class="cancle-button"  @click="CancleEditSet()">Cancle</button>
-
-    <header>
-        Set Name:
+    <div class="header">
+        <div>
+            Set Name:
+        </div>
+        
         <input class="setName-box" type="text"  v-model="set.Set_name">
+
         <div v-if="set.Is_public">
             <button class="public-private-button"  @click="ToggleIsPublic()">
                 Set to Private
@@ -27,9 +35,13 @@
                 Set to Public
             </button>
         </div>
-    </header>
+
+    </div>
 
     <main>
+        <button class="done-button"  @click="DoneEditSet()">Done</button>
+        <button class="delete-button"  @click="DeleteThisSet()">Delete Set</button>
+
         <ul class="vocabulary" v-for="vocabulary in words" :key="vocabulary.WORD">
             <div class="edit-word-def-grid">
                 <button class="edit-vocab-button"  @click="SetCanEditVocab(vocabulary)">
@@ -54,7 +66,6 @@
                     </div>
                 </div>
 
-                
             </div>
 
             <div class="sentence">
@@ -69,10 +80,6 @@
 
         <button class="create-vocab-button"  @click="SetCanCreateVocab()">
             Create New Vocabulary
-        </button>
-
-        <button class="delete-set"  @click="DeleteThisSet()">
-            Delete this Set
         </button>
     </main>
 </template>
@@ -90,6 +97,7 @@ import {
 import {
     getWordsBySetId
 } from '@/services/User_Inventory_API/wordAPI.js';
+import { afterAll } from 'vitest';
 
 export default {
     name: 'EditSet',
@@ -152,7 +160,13 @@ export default {
 
         resetCanCreateVocab(){
             location.reload(); // reload the page for new folders
+            alert("Word created!");
             this.canCreateVocab = false;
+        },
+
+        cancel(){
+            this.canCreateVocab = false;
+            this.canEditVocab = false;
         },
 
         SetCanEditVocab(vocab){
@@ -163,14 +177,38 @@ export default {
 
         resetCanEditVocab(){
             location.reload(); // reload the page for new folders
+            alert("Changes Saved!");
             this.canEditVocab = false;
+        },
+        
+        logout() {
+            localStorage.removeItem('USER_ID');
+            localStorage.removeItem('name');
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            this.isLoggedIn = false;
+            this.userName = '';
+            this.userEmail = '';
+
+            this.$router.push({
+                name: 'Home'
+            });
         },
     },
 
     async mounted(){
         this.words = await getWordsBySetId(this.SET_ID);
         this.set = await getSet(this.SET_ID);
-    }
+    },
+
+    created() {
+        const token = JSON.parse(localStorage.getItem('token'));
+        this.isLoggedIn = !!token;
+        if (this.isLoggedIn) {
+            this.userName = JSON.parse(localStorage.getItem('name'));
+            this.userEmail = JSON.parse(localStorage.getItem('email'));
+        }
+    },
 
 }
 
@@ -178,9 +216,9 @@ export default {
 
 <style scoped>
 .done-button {
-    position: fixed;
-    top: 80px;
-    right: 20px;
+    position: absolute;
+    top: -10vh;
+    right: 2vw;
     padding: 10px 20px 10px 20px;
     background-color: #4caf50;
     color: white;
@@ -194,12 +232,12 @@ export default {
     background-color: #288d2e;
 }
 
-.cancle-button {
-    position: fixed;
-    top: 80px;
-    left: 20px;
+.delete-button {
+    position: absolute;
+    top: -10vh;
+    left: 2vw;
     padding: 10px 20px 10px 20px;
-    background-color: #ec2a5b;
+    background-color: #fc2c2c;
     color: white;
     border: none;
     border-radius: 5px;
@@ -207,25 +245,28 @@ export default {
     transition: background-color 0.3s;
 }
 
-.cancle-button:hover {
-    background-color: #f0154c;
+.delete-button:hover {
+    background-color: #f70e0e;
 }
 
-header {
-    display: block;
-    margin: 80px 0 10px 0;
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10vh 0 3vh 0;
     font-size: 40px;
-    text-align: center;
+    /* text-align: center; */
 }
 
-header div {
-    display: inline;
+.header div {
+    display: block;
+    margin: 0 3vw;
 }
 
 .setName-box {
-    display: inline;
-    vertical-align: middle;
+    display: block;
     padding: 5px 10px;
+    margin: 0;
     font-size: 30px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -239,8 +280,7 @@ header div {
 }
 
 .public-private-button {
-    display: inline;
-    margin: 0 0 0 50px;
+    display: block;
     padding: 10px 20px 10px 20px;
     background-color: #20acd6;
     color: white;
@@ -256,6 +296,7 @@ header div {
 
 main {
     display: block;
+    position: relative;
 }
 
 .vocabulary {
@@ -267,11 +308,17 @@ main {
 
 .edit-word-def-grid {
     display: grid;
-    grid-template-columns: 100px 1fr 1fr;
+    grid-template-columns: 10vw 1fr 1fr;
+
+    border-top: solid;
+    border-width: 2px;
+    border-color: black;
 }
 
 .edit-vocab-button {
+    display: block;
     padding: 10px 20px 10px 20px;
+    margin: 2vh 2vw;
     background-color: #db45b6;
     color: white;
     border: none;
@@ -287,25 +334,27 @@ main {
 .sentence {
     display: block;
 
-    margin: 50px 0 0 100px;
+    margin: 4vh 0 0 10vw;
 }
 
 .category {
     display: block;
-    margin: 0 0 10px 120px;
+    margin: 0 0 2vh 4vw;
+
+    text-decoration: underline;
+    font-size: 30px;
 }
 
 .content {
     display: block;
-    margin: 0 0 0 120px;
-    width: 700px;
-    font-size: 20px;
+    margin: 0 0 0 4vw;
+    font-size: 25px;
 }
 
 .create-vocab-button {
     display: block;
     margin: auto;
-    margin-bottom: 100px;
+    margin-bottom: 10vh;
     padding: 10px 20px 10px 20px;
     background-color: #6145db;
     color: white;
@@ -317,21 +366,5 @@ main {
 
 .create-vocab-button:hover {
     background-color: #411de0;
-}
-
-.delete-set {
-    display: block;
-    margin: 0 0 100px 100px;
-    padding: 10px 20px 10px 20px;
-    background-color: #fc2c2c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.delete-set:hover {
-    background-color: #f70e0e;
 }
 </style>

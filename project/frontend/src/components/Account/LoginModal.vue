@@ -3,7 +3,7 @@
         <div class="modal-content">
             <span class="close" @click="$emit('close')">&times;</span>
             <h2>登入</h2>
-            <form class="form" @submit.prevent="handleLogin">
+            <form class="form">
                 <div class="form-group">
                     <label for="email">電子郵件:</label>
                     <input type="email" v-model="email" required />
@@ -12,8 +12,8 @@
                     <label for="password">密碼:</label>
                     <input type="password" v-model="password" required />
                 </div>
-                <button type="submit">登入</button>
             </form>
+            <button class="login-button"  @click="handleLogin">登入</button>
             <div v-if="loginError" class="error-message">{{ loginError }}</div>
             <div class="forget-password" @click="$emit('openForgetPasswordModal')">忘記密碼</div>
             <div class="register-link" @click="$emit('openRegisterModal')">還沒有帳號？點擊這裡註冊</div>
@@ -53,14 +53,15 @@ export default {
 }
 
 .modal-content {
-    display: grid;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
     align-items: center;
     position: fixed;
-    top: 30%;
-    left: 35%;
-    width: 30%;
-    height: 40%;
+    top: 10vh;
+    left: 35vw;
+    bottom: 10vh;
+    right: 35vw;
     background-color: white;
 
     border-style: solid;
@@ -73,24 +74,28 @@ export default {
 
 .close {
     position: absolute;
-    top: 5%;
-    right: 5%;
+    top: 0;
+    right: 0;
     cursor: pointer;
+    font-size: 35px;
     /* float: right; */
 }
 
 .modal-content h2 {
     display: block;
-    margin: auto;
-    /* margin: auto; */
-    /* margin: 5% 0 5% 40%; */
+    margin-top: 15vh;
 }
 
 .form {
-    display: block;
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
 }
 
 .form-group {
+    margin-top: 3vh;
     display: block;
     margin-bottom: 8px;
     line-height: 1.6;
@@ -106,10 +111,9 @@ export default {
     display: inline;
 }
 
-.form button {
+.login-button {
+    margin-top: 5vh;
     display: block;
-    margin: auto;
-    margin-top: 20px;
     padding: 0.5rem 1rem;
     width: 220px;
     align-items: center;
@@ -124,7 +128,7 @@ export default {
 .register-link, 
 .forget-password {
     display: block;
-    margin: auto;
+    margin-top: 5vh;
 
     color: blue;
     cursor: pointer;
@@ -133,6 +137,9 @@ export default {
 }
 
 .error-message {
+    display: block;
+    margin-top: 5vh;
+
     color: red;
     font-size: 0.9rem;
 }

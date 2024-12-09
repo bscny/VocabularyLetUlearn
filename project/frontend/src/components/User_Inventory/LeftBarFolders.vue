@@ -4,7 +4,7 @@
             Create Folder
         </button>
 
-        <ul v-for="folder in folders" :key="folder.FOLDER_ID">
+        <ul class="grid-container" v-for="folder in folders" :key="folder.FOLDER_ID">
             <button class="edit-folder-button"  @click="editFolder(folder)">
                 Edit Folder
             </button>
@@ -81,11 +81,11 @@ export default {
 
 <style scoped>
 .left-sidebar {
-    position: fixed;
+    position: absolute;
     top: 50px;
     left: 0;
     bottom: 0;
-    width: 200px;
+    width: 17vw;
     padding: 0;
     background-color: #f7f7f7;
     border-right: 1px solid #ddd;
@@ -93,7 +93,7 @@ export default {
 
 .create-folder-button {
     display: block;
-    margin: 30px 40px 0 20px;
+    margin: 2.5vh 0 0 2.5vw;
     padding: 0 10px 0 10px;
     font-size: 18px;
     background-color: rgb(177, 187, 240);
@@ -109,10 +109,18 @@ export default {
   background-color: #ccc7eb;
 }
 
+/* .grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-content: center;
+} */
+
 .folders {
     display: block;
-    margin: 5px 0 30px 20px;
+    margin: 1vh 0 1vh 1vw;
     padding: 0 0 0 0;
+    width: auto;
     font-size: 20px;
 
     background-color: rgba(0, 0, 0, 0.137);
@@ -125,7 +133,7 @@ export default {
 
 .edit-folder-button {
     display: block;
-    margin: 60px 0 0 10px;
+    margin: 3.5vh 0 0 1vw;
     padding: 5px 5px 5px 5px;
     background-color: #db5d67;
     color: white;
@@ -141,7 +149,7 @@ export default {
 }
 
 .sets {
-    margin: 10px 0 30px 20px;
+    margin: 1vh 0 1vh 2vw;
     font-size: 18px;
 }
 

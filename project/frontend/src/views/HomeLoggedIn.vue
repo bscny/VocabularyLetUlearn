@@ -6,13 +6,16 @@
             :userEmail="userEmail" 
             @toggleLoginModal="showLoginModal = true" 
             @toggleRegisterModal="showRegisterModal = true" 
-            @logout="logout" 
+            @logout="logout()" 
         />
 
         <div class="main-layout">
             <LeftSideBar />
-            <div class="content-area">
+            <div class="search-component">
                 <SearchResult />
+            </div>
+
+            <div class="user-dashboard">
                 <UserDashboard />
             </div>
         </div>
@@ -54,7 +57,19 @@ export default {
         }
     },
     methods: {
+        logout() {
+            localStorage.removeItem('USER_ID');
+            localStorage.removeItem('name');
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            this.isLoggedIn = false;
+            this.userName = '';
+            this.userEmail = '';
 
+            this.$router.push({
+                name: 'Home'
+            });
+        },
     }
 };
 </script>
@@ -92,13 +107,21 @@ export default {
 }
 
 .main-layout {
-    display: flex;
-    flex-grow: 1;
+    /* display: flex; */
+    /* flex-grow: 1; */
     margin-top: 60px;
     overflow: hidden;
 }
 
-.left-sidebar {
+.search-component {
+    display: block;
+}
+
+.user-dashboard {
+    display: block;
+}
+
+/* .left-sidebar {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -154,5 +177,6 @@ export default {
     .icon {
         font-size: 1em;
     }
-}
+}*/
+
 </style>

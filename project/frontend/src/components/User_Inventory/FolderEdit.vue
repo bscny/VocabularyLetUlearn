@@ -24,6 +24,11 @@
             <button class="delete-button" @click="EditionDone(0)">
                 Delete This Folder
             </button>
+
+            <button class="cancel-button" @click="cancel()">
+                Cancel
+            </button>
+
         </div>
     </div>
 </template>
@@ -71,6 +76,10 @@ export default {
             }
 
             this.$emit("EditionDone");
+        },
+
+        cancel(){
+            this.$emit("CancelEditFolder");
         }
     },
 
@@ -97,10 +106,10 @@ export default {
 
 .window {
     position: fixed;
-    top: 100px;
-    right: 300px;
-    bottom: 100px;
-    left: 300px;
+    top: 10vh;
+    right: 20vw;
+    bottom: 10vh;
+    left: 20vw;
 
     background-color: rgb(43, 22, 77);
     color: white;
@@ -111,8 +120,8 @@ export default {
 .done-button {
     position: absolute;
 
-    right: 0;
-    bottom: 0;
+    right: 1px;
+    bottom: 1px;
 
     padding: 10px 20px 10px 20px;
     background-color: #4caf50;
@@ -132,8 +141,8 @@ export default {
 .delete-button {
     position: absolute;
 
-    left: 0;
-    bottom: 0;
+    left: 1px;
+    bottom: 1px;
 
     padding: 10px 20px 10px 20px;
     background-color: #d82d2d;
@@ -150,29 +159,44 @@ export default {
     background-color: #c52323;
 }
 
-.window p1{
+.cancel-button {
     position: absolute;
 
-    left: 10px;
-    top: 10px;
+    left: 1px;
+    bottom: 70px;
+
+    padding: 10px 20px 10px 20px;
+    background-color: #32a9be;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    font-size: 30px;
+}
+
+.cancel-button:hover {
+    background-color: #12a3bd;
+}
+
+.window p1{
+    display: block;
+    margin: 1vh 1vw;
 
     font-size: 30px;
 }
 
 .window p2{
-    position: absolute;
-
-    left: 10px;
-    top: 50px;
+    display: block;
+    margin: 1vh 1vw;
 
     font-size: 30px;
 }
 
 .folder-name-input {
-    position: absolute;
-
-    left: 10px;
-    top: 100px;
+    display: block;
+    margin: 3vh 1vw;
 
     font-size: 30px;
     padding: 5px 10px;
@@ -188,19 +212,15 @@ export default {
 }
 
 .window p3{
-    position: absolute;
-
-    left: 10px;
-    top: 250px;
+    display: block;
+    margin: 10vh 1vw 0 1vw;
 
     font-size: 30px;
 }
 
 .set-name-input {
-    position: absolute;
-
-    left: 10px;
-    top: 300px;
+    display: block;
+    margin: 5vh 1vw;
 
     font-size: 30px;
     padding: 5px 10px;
