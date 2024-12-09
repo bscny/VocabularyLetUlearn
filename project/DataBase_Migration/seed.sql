@@ -1,10 +1,10 @@
 use vocab_let_u_learn;
 
-insert into users(User_name, Email, Pass_word)
-values
-("test1", "test1@email.com", "test1PW"),
-("test2", "test2@email.com", "test2PW"),
-("test3", "test3@email.com", "test3PW");
+-- insert into users(User_name, Email, Pass_word)
+-- values
+-- ("test1", "test1@email.com", "test1PW"),
+-- ("test2", "test2@email.com", "test2PW"),
+-- please create 2 accounts first
 
 insert into folders(Folder_name, Owner_id)
 values
@@ -14,7 +14,6 @@ values
 ("testFolder1-usr2", 2),
 ("testFolder2-usr2", 2),
 ("testFolder3-usr2", 2),
-("testFolder1-usr3", 3);
 
 insert into sets(Set_name, In_folder_id)
 values

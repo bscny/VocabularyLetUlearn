@@ -72,12 +72,14 @@ export default {
 .logo {
     font-size: 1.5em;
     color: white;
+
+    cursor: pointer;
 }
 
 .icons {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -85,19 +87,18 @@ export default {
 .login-button,
 .register-button,
 .username {
-    margin-right: 10px;
-    padding: 0 10px;
+    margin: 0 0px 0 20px;
+    padding: 0 0 0 0;
     cursor: pointer;
     line-height: 50px;
 
     color: white;
 }
 .user-info {
+    margin: 0 0px 0 20px;
+    padding: 0 0 0 0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-}
-
-.username {
-    margin-right: 10px;
 }
 </style>
