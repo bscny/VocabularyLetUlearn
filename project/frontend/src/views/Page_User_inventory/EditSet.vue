@@ -315,8 +315,10 @@ main {
 }
 
 .edit-vocab-button {
-    display: block;
-    padding: 10px 20px 10px 20px;
+    display: inline;
+    /* padding: 10px 20px 10px 20px; */
+    height: 5vh;
+    width: 5vw;
     margin: 2vh 2vw;
     background-color: #db45b6;
     color: white;
