@@ -5,8 +5,8 @@ CREATE TABLE Current_Room(
 
 CREATE TABLE Users(
     USER_ID int not null primary key AUTO_INCREMENT,
-    User_name varchar(30) not null,
-    Email varchar(50) not null ,
+    User_name varchar(300) not null,
+    Email varchar(300) not null ,
     Pass_word varchar(300) not null ,
     Is_verified bool not null default false,
     Ranking_points int not null default 0,
@@ -20,7 +20,7 @@ CREATE TABLE Users(
 
 CREATE TABLE Folders(
     FOLDER_ID int not null primary key AUTO_INCREMENT,
-    Folder_name varchar(50) not null,
+    Folder_name varchar(300) not null,
     Owner_id int not null,
     
     constraint fk_OwnerId_UserId_Folders
@@ -30,7 +30,7 @@ CREATE TABLE Folders(
 
 CREATE TABLE Sets(
     SET_ID int not null primary key AUTO_INCREMENT,
-    Set_name varchar(50) not null,
+    Set_name varchar(300) not null,
     Is_public bool not null default true,
     In_folder_id int not null,
     
@@ -40,9 +40,9 @@ CREATE TABLE Sets(
 
 CREATE TABLE Vocabulary(
     SET_ID int not null,
-    WORD varchar(50) not null,
-    Definitions varchar(100) not null,
-    Sentence varchar(100),
+    WORD varchar(300) not null,
+    Definitions varchar(500) not null,
+    Sentence varchar(1000),
     Create_date datetime not null default now(),
     Is_marked bool not null default false,
     Num_test int not null default 0,
@@ -95,12 +95,12 @@ CREATE TABLE Ranking_Exam(
 
 CREATE TABLE Question(
     QUESTION_ID int not null primary key AUTO_INCREMENT,
-    Correct_ans varchar(50) not null,
-    OptionA varchar(50) not null,
-    OptionB varchar(50) not null,
-    OptionC varchar(50) not null,
-    Ans_definition varchar(100) not null,
-    Sentence varchar(100) not null
+    Correct_ans varchar(300) not null,
+    OptionA varchar(300) not null,
+    OptionB varchar(300) not null,
+    OptionC varchar(300) not null,
+    Ans_definition varchar(500) not null,
+    Sentence varchar(1000) not null
 );
 
 CREATE TABLE Take_Exam(

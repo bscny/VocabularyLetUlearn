@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS `folders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `folders` (
   `FOLDER_ID` int NOT NULL AUTO_INCREMENT,
-  `Folder_name` varchar(50) NOT NULL,
+  `Folder_name` varchar(300) NOT NULL,
   `Owner_id` int NOT NULL,
   PRIMARY KEY (`FOLDER_ID`),
   KEY `fk_OwnerId_UserId_Folders` (`Owner_id`),
@@ -129,12 +129,12 @@ DROP TABLE IF EXISTS `question`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `question` (
   `QUESTION_ID` int NOT NULL AUTO_INCREMENT,
-  `Correct_ans` varchar(50) NOT NULL,
-  `OptionA` varchar(50) NOT NULL,
-  `OptionB` varchar(50) NOT NULL,
-  `OptionC` varchar(50) NOT NULL,
-  `Ans_definition` varchar(100) NOT NULL,
-  `Sentence` varchar(100) NOT NULL,
+  `Correct_ans` varchar(300) NOT NULL,
+  `OptionA` varchar(300) NOT NULL,
+  `OptionB` varchar(300) NOT NULL,
+  `OptionC` varchar(300) NOT NULL,
+  `Ans_definition` varchar(500) NOT NULL,
+  `Sentence` varchar(1000) NOT NULL,
   PRIMARY KEY (`QUESTION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -206,7 +206,7 @@ DROP TABLE IF EXISTS `sets`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sets` (
   `SET_ID` int NOT NULL AUTO_INCREMENT,
-  `Set_name` varchar(50) NOT NULL,
+  `Set_name` varchar(300) NOT NULL,
   `Is_public` tinyint(1) NOT NULL DEFAULT '1',
   `In_folder_id` int NOT NULL,
   PRIMARY KEY (`SET_ID`),
@@ -286,8 +286,8 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `USER_ID` int NOT NULL AUTO_INCREMENT,
-  `User_name` varchar(30) NOT NULL,
-  `Email` varchar(50) NOT NULL,
+  `User_name` varchar(300) NOT NULL,
+  `Email` varchar(300) NOT NULL,
   `Pass_word` varchar(300) NOT NULL,
   `Is_verified` tinyint(1) NOT NULL DEFAULT '0',
   `Ranking_points` int NOT NULL DEFAULT '0',
@@ -317,9 +317,9 @@ DROP TABLE IF EXISTS `vocabulary`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `vocabulary` (
   `SET_ID` int NOT NULL,
-  `WORD` varchar(50) NOT NULL,
-  `Definitions` varchar(100) NOT NULL,
-  `Sentence` varchar(100) DEFAULT NULL,
+  `WORD` varchar(300) NOT NULL,
+  `Definitions` varchar(500) NOT NULL,
+  `Sentence` varchar(1000) DEFAULT NULL,
   `Create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Is_marked` tinyint(1) NOT NULL DEFAULT '0',
   `Num_test` int NOT NULL DEFAULT '0',
@@ -347,4 +347,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-03 19:25:38
+-- Dump completed on 2024-12-11 20:41:23
