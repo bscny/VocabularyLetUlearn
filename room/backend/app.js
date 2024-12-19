@@ -59,6 +59,9 @@ io.on("connection", (socket) => {
   });
 });
 
+const setRoutes = require('@/routes/setRoutes.js');
+app.use(setRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
