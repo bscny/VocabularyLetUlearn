@@ -1,5 +1,9 @@
+// modules:
 const express = require('express');
 require('express-async-errors');
+
+const http = require('http');
+const { Server } = require('socket.io');
 
 require('module-alias/register');
 
@@ -10,7 +14,16 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
+    },
+});
+
+// start initializing------------------------------------------------------------------
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -20,7 +33,7 @@ app.use(cors({
 }));
 
 
-// routes are here
+// routes are here -------------------------------------------------------------------
 // user's inventory aka "my sets page"
 const folderRoutes = require("@/routes/User_Inventory/folderRoutes.js");
 const setRoutes = require("@/routes/User_Inventory/setRoutes.js");
@@ -46,16 +59,32 @@ app.use('/auth', authRoutes);
 
 // routes end
 
-app.get("/test", (req, res) => {
-    res.status(200).send({ 'success': 'success' });
-})
+// Socket.IO event handling -------------------------------------------------------------
 
-// globally checker for error handling, so we dont need catch for any async func in backend
+io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
+
+    // Listen for a custom event from the client
+    // socket.on('customEvent', (data) => {
+    //     console.log('Received data from client:', data);
+
+    //     // Broadcast data to all connected clients
+    //     io.emit('serverEvent', { message: 'Hello from server', ...data });
+    // });
+
+    // Handle disconnection
+    socket.on('disconnect', () => {
+        console.log('A user disconnected:', socket.id);
+    });
+});
+
+// globally checker for error handling, so we dont need catch for any async func in backend ---------
 app.use((err, req, res, next) => {
     console.log(err);
     res.status(err.status || 500).send("something is wrong...\n detected in global error handler");
 });
 
-app.listen(PORT, () => {
+// start the server
+server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
