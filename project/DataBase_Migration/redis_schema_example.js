@@ -44,6 +44,7 @@ data = {
             OptionA: "Dog",
             OptionB: "Frog",
             OptionC: "Bird",
+            OptionD: "Cat",
             Ans_definition: "A small domesticated carnivorous mammal.",
             Sentence: "The cat is on the roof.",
         },
@@ -53,6 +54,7 @@ data = {
             OptionA: "Rock",
             OptionB: "Grass",
             OptionC: "Flower",
+            OptionD: "Tree",
             Ans_definition: "A perennial plant with a woody stem.",
             Sentence: "The tree is tall.",
         },
@@ -96,6 +98,7 @@ for (const question of data.Test_sheet) {
         OptionA: question.OptionA,
         OptionB: question.OptionB,
         OptionC: question.OptionC,
+        OptionD: question.OptionD,
         Ans_definition: question.Ans_definition,
         Sentence: question.Sentence,
     });
