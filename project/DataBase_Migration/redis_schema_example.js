@@ -1,5 +1,3 @@
-const redis = require('ioredis');
-
 const Redis = require("redis");
 
 const redisCli = Redis.createClient()
