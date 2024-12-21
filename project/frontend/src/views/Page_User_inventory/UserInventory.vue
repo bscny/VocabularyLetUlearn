@@ -1,12 +1,5 @@
 <template>
-    <Navbar 
-            :isLoggedIn="isLoggedIn" 
-            :userName="userName"
-            :userEmail="userEmail" 
-            @toggleLoginModal="showLoginModal = true" 
-            @toggleRegisterModal="showRegisterModal = true" 
-            @logout="logout()" 
-    />
+    <Navbar />
 
     <LeftBarFolders  @displayWords="setCanShow($event)"  @editFolder="setCanEditFolder($event)"
                      @createFolder="setCanCreateFolder()"/>
@@ -148,20 +141,6 @@ export default {
                 params: {
                     SET_ID: this.curDisplaySetId
                 }
-            });
-        },
-
-        logout() {
-            localStorage.removeItem('USER_ID');
-            localStorage.removeItem('name');
-            localStorage.removeItem('token');
-            localStorage.removeItem('email');
-            this.isLoggedIn = false;
-            this.userName = '';
-            this.userEmail = '';
-
-            this.$router.push({
-                name: 'Home'
             });
         },
 

@@ -1,12 +1,5 @@
 <template>
-    <Navbar 
-            :isLoggedIn="isLoggedIn" 
-            :userName="userName"
-            :userEmail="userEmail" 
-            @toggleLoginModal="showLoginModal = true" 
-            @toggleRegisterModal="showRegisterModal = true" 
-            @logout="logout()" 
-    />
+    <Navbar/>
 
     <div v-if="canCreateVocab">
         <VocabCreate  :SET_ID="SET_ID"
@@ -178,20 +171,6 @@ export default {
             location.reload(); // reload the page for new folders
             alert("Changes Saved!");
             this.canEditVocab = false;
-        },
-        
-        logout() {
-            localStorage.removeItem('USER_ID');
-            localStorage.removeItem('name');
-            localStorage.removeItem('token');
-            localStorage.removeItem('email');
-            this.isLoggedIn = false;
-            this.userName = '';
-            this.userEmail = '';
-
-            this.$router.push({
-                name: 'Home'
-            });
         },
     },
 

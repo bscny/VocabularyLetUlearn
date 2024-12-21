@@ -108,7 +108,7 @@ export default {
         if (this.sets.length > 0) {
           this.selectedSetId = this.sets[0].SET_ID;
         } else {
-          alert("current account has no sets, gotta create one first ^^");
+          alert("current account has no set, gotta create one at My Set section first ^^");
         }
       } catch (error) {
         this.sets = [];
