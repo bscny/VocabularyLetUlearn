@@ -13,7 +13,7 @@ values
 ("testFolder3-usr1", 1),
 ("testFolder1-usr2", 2),
 ("testFolder2-usr2", 2),
-("testFolder3-usr2", 2),
+("testFolder3-usr2", 2);
 
 insert into sets(Set_name, In_folder_id)
 values

@@ -57,6 +57,11 @@ const authRoutes = require('@/routes/Account/authRoutes.js');
 
 app.use('/auth', authRoutes);
 
+// room exam related
+const roomTestingFakeDataRoutes = require('@/routes/Room/Room_Exam/fakadataRoutes.js');
+
+app.use('/test', roomTestingFakeDataRoutes);
+
 // routes end
 
 // Socket.IO event handling -------------------------------------------------------------

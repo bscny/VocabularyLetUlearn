@@ -22,11 +22,18 @@ export default {
     },
 
     async created() {
+        this.socket = io(import.meta.env.VITE_API_BASE_URL);
+
+        // get the current Room_id from pinia store
+
+        // re-join this socket
+
+        // send request to get the test sheet
 
     },
 
     async mounted() {
-        this.socket = io(import.meta.env.VITE_API_BASE_URL);
+
     },
 
     watch: {
@@ -35,7 +42,13 @@ export default {
 
     computed: {
 
-    }
+    },
+
+
+    beforeUnmount() {
+        // Disconnect the socket when the component is destroyed
+        this.socket.disconnect();
+    },
 }
 </script>
 
