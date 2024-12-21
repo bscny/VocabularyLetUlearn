@@ -59,8 +59,10 @@ app.use('/auth', authRoutes);
 
 // room exam related
 const roomTestingFakeDataRoutes = require('@/routes/Room/Room_Exam/fakadataRoutes.js');
+const roomExamRoutes = require("@/routes/Room/Room_Exam/roomRoutes.js");
 
 app.use('/test', roomTestingFakeDataRoutes);
+app.use('/room', roomExamRoutes);
 
 // routes end
 
@@ -70,12 +72,20 @@ io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
     // Listen for a custom event from the client
-    // socket.on('customEvent', (data) => {
-    //     console.log('Received data from client:', data);
+    socket.on("join-room-exam", (roomID) => {
+        console.log('Received current room from client:', roomID);
 
-    //     // Broadcast data to all connected clients
-    //     io.emit('serverEvent', { message: 'Hello from server', ...data });
-    // });
+        // Broadcast data to all connected clients
+        io.emit('send-testsheet', {
+            message: 'Hello from server',
+            Test_sheet: [
+                {
+                    Q_num: 1,
+                    Q_body: "Am i stupid?"
+                }
+            ]
+        });
+    });
 
     // Handle disconnection
     socket.on('disconnect', () => {

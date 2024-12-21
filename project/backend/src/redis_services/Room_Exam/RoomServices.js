@@ -1,5 +1,19 @@
 const redisClient = require('@/redis.js');
 
+async function GetSetsInRoom(ROOM_ID) {
+    const result = await redisClient.lRange(`Room:${ROOM_ID}:Sets`, 0, -1);
+
+    const paresedResult = result.map(item => JSON.parse(item));
+
+    return paresedResult;
+}
+
+async function CreateTestSheet(ROOM_ID, TestSheet) {
+    for (const question of TestSheet) {
+        await redisClient.rPush(`Room:${ROOM_ID}:Test_sheet`, JSON.stringify(question));
+    }
+}
+
 async function GetRoomInfo(ROOM_ID) {
     let result = await redisClient.hGetAll(`Room:${ROOM_ID}`);
 
@@ -21,6 +35,8 @@ async function CreateQuestion(questionObj, ROOM_ID) {
 }
 
 module.exports = {
+    GetSetsInRoom,
+    CreateTestSheet,
     GetRoomInfo,
     GetTestSheet,
     CreateQuestion

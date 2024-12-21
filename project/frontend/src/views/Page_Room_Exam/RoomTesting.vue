@@ -1,35 +1,44 @@
 <template>
-
+    <Navbar 
+            :isLoggedIn="isLoggedIn" 
+            :userName="userName"
+            :userEmail="userEmail" 
+            @toggleLoginModal="showLoginModal = true" 
+            @toggleRegisterModal="showRegisterModal = true" 
+            @logout="logout()" 
+    />
 </template>
 
 <script>
-import { io } from 'socket.io-client'
+import Navbar from "@/components/Navbar.vue";
+
+import {
+    GetTestSheet,
+} from "@/services/Room_Exam_API/testingAPI.js"
 
 export default {
     name: 'RoomTesting',
     components: {
-
+        Navbar,
     },
 
     data() {
         return {
-            socket: null,
+            testSheet: null,
         };
     },
 
     methods: {
-
+        
     },
 
     async created() {
-        this.socket = io(import.meta.env.VITE_API_BASE_URL);
-
         // get the current Room_id from pinia store
+        // fake data:
+        let curRoomID = 1;
 
-        // re-join this socket
-
-        // send request to get the test sheet
-
+        // get test sheet
+        this.testSheet = await GetTestSheet(curRoomID);
     },
 
     async mounted() {
@@ -46,8 +55,7 @@ export default {
 
 
     beforeUnmount() {
-        // Disconnect the socket when the component is destroyed
-        this.socket.disconnect();
+
     },
 }
 </script>
