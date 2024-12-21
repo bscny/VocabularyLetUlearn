@@ -1,33 +1,27 @@
-const redis = require("@/redis_services/redisClient");
+const chatService = require("@/redis_services/chatService");
 
-// 儲存訊息到 Redis
-exports.saveMessage = async (room, user, message) => {
-  const msgData = { user, message, timestamp: Date.now() };
+exports.SaveMessage = async (room, user, message) => {
   try {
-
-    await redis.lpush(room, JSON.stringify(msgData));
-    console.log("Message saved to Redis:", msgData);
-    return msgData;
-
+    const savedMessage = await chatService.SaveMessageToRoom(room, user, message);
+    return savedMessage;
   } catch (error) {
-    console.error("Error saving message to Redis:", error);
+    console.error("[ERROR] Failed to save message:", error);
     throw error;
   }
 };
 
-// 取得聊天歷史紀錄
-exports.getMessages = async (req, res) => {
+exports.GetMessages = async (req, res) => {
+  const { room } = req.params;
+
+  if (!room) {
+    return res.status(400).json({ success: false, message: "Missing room parameter" });
+  }
+
   try {
-    const { room } = req.params;
-
-    // 從 Redis 讀取訊息
-    const messages = await redis.lrange(room, 0, -1);
-    const parsedMessages = messages.map((msg) => JSON.parse(msg));
-
-    res.status(200).json({ success: true, data: parsedMessages });
-    
+    const messages = await chatService.GetMessagesFromRoom(room);
+    res.status(200).json({ success: true, data: messages });
   } catch (error) {
-    console.error("Error fetching messages:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("[ERROR] Error fetching messages:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch messages" });
   }
 };

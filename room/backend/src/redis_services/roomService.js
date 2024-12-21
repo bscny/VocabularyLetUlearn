@@ -1,14 +1,15 @@
-const redisClient = require("@/redis_services/redisClient");
+const redisClient = require('@/redis.js');
 
-async function initializeRoom(roomId) {
-  const roomKey = `Room:${roomId}`;
-  await redisClient.hset(roomKey, {
-    Room_name: "Test Room",
-    Is_public: true,
-    Password: "1234",
-  });
-  console.log(`Room with ID ${roomId} initialized.`);
+async function GetRoomInfo(ROOM_ID) {
+    let result = await redisClient.hGetAll(`Room:${ROOM_ID}`);
+
+    result.Is_public = JSON.parse(result.Is_public);
+
+    return result;
 }
 
-// 測試初始化房間
-initializeRoom(1);
+
+module.exports = {
+  GetRoomInfo,
+};
+
