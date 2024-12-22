@@ -1,16 +1,13 @@
 <template>
-    <Navbar 
-            :isLoggedIn="isLoggedIn" 
-            :userName="userName"
-            :userEmail="userEmail" 
-            @toggleLoginModal="showLoginModal = true" 
-            @toggleRegisterModal="showRegisterModal = true" 
-            @logout="logout()" 
-    />
+    <Navbar />
+
+    <Header :answeredQuestionNum="answeredQuestionNum" 
+            :totalQuestionNum="totalQuestionNum" />
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import Header from "@/components/Room_Exam/Testing/Header.vue";
 
 import {
     GetTestSheet,
@@ -20,11 +17,15 @@ export default {
     name: 'RoomTesting',
     components: {
         Navbar,
+        Header,
     },
 
     data() {
         return {
-            testSheet: null,
+            testSheet: [],
+            answeredQuestionNum: 0,
+            totalQuestionNum: 0,
+
         };
     },
 
@@ -39,6 +40,7 @@ export default {
 
         // get test sheet
         this.testSheet = await GetTestSheet(curRoomID);
+        this.totalQuestionNum = this.testSheet.length;
     },
 
     async mounted() {
