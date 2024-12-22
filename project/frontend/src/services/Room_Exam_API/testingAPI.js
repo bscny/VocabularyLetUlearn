@@ -6,6 +6,11 @@ async function GetTestSheet(ROOM_ID) {
     return testSheet.data;
 }
 
+async function SubmitTestSheet(AnswerSheet) {
+    
+}
+
 export {
     GetTestSheet,
+    SubmitTestSheet,
 };

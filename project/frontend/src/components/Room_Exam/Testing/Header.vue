@@ -5,7 +5,7 @@
         </div>
     </div>
 
-    <button class="exit-button">
+    <button class="exit-button" @click="GoHomePage()">
         Exit Test
     </button>
 </template>
@@ -30,7 +30,11 @@ export default{
     },
 
     methods: {
-
+        GoHomePage(){
+            this.$router.push({
+                name: 'HomeLoggedIn'
+            });
+        }
     },
 
     async created(){
