@@ -1,13 +1,20 @@
 <template>
     <Navbar />
-
+    
+    <LeftBar    :totalQuestionNum="totalQuestionNum" 
+                @SelectQuestion="DisplaySelectedQuestion($event)" />
+    
     <Header :answeredQuestionNum="answeredQuestionNum" 
             :totalQuestionNum="totalQuestionNum" />
+
+    <DisplayQuestion    :displayQnum="curDisplaying" />
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 import Header from "@/components/Room_Exam/Testing/Header.vue";
+import LeftBar from "@/components/Room_Exam/Testing/LeftBar.vue";
+import DisplayQuestion from "@/components/Room_Exam/Testing/DisplayQuestion.vue";
 
 import {
     GetTestSheet,
@@ -18,6 +25,8 @@ export default {
     components: {
         Navbar,
         Header,
+        LeftBar,
+        DisplayQuestion,
     },
 
     data() {
@@ -26,11 +35,14 @@ export default {
             answeredQuestionNum: 0,
             totalQuestionNum: 0,
 
+            curDisplaying: 1,
         };
     },
 
     methods: {
-        
+        DisplaySelectedQuestion(qNum){
+            this.curDisplaying = qNum;
+        },
     },
 
     async created() {
@@ -62,4 +74,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.main{
+    margin: 10vh 0 0 6vh;
+}
+</style>

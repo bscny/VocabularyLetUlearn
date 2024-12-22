@@ -4,6 +4,10 @@
             Total Answered: {{ answeredQuestionNum }} / {{ totalQuestionNum }}
         </div>
     </div>
+
+    <button class="exit-button">
+        Exit Test
+    </button>
 </template>
 
 <script>
@@ -55,6 +59,31 @@ export default{
     align-items: center;
     justify-content: center;
 
-    margin-top: 10vh;
+    margin-top: 12vh;
+}
+
+.info {
+    font-size: 1.4vw;
+}
+
+.exit-button {
+    position: absolute;
+
+    right: 1vw;
+    top: 11vh;
+
+    padding: 1vh 1vw;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    font-size: 1.2vw;
+}
+
+.exit-button:hover {
+    background-color: #e43d3d;
 }
 </style>
