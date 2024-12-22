@@ -60,9 +60,11 @@ app.use('/auth', authRoutes);
 // room exam related
 const roomTestingFakeDataRoutes = require('@/routes/Room/Room_Exam/fakadataRoutes.js');
 const roomExamRoutes = require("@/routes/Room/Room_Exam/roomRoutes.js");
+const roomUserExamRoutes = require("@/routes/Room/Room_Exam/userRoutes.js")
 
 app.use('/test', roomTestingFakeDataRoutes);
 app.use('/room', roomExamRoutes);
+app.use("/room/user", roomUserExamRoutes);
 
 // routes end
 

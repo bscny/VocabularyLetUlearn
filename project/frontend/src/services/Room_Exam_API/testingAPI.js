@@ -7,7 +7,17 @@ async function GetTestSheet(ROOM_ID) {
 }
 
 async function SubmitTestSheet(AnswerSheet) {
-    
+    const respond = await apiClient.post(`/room/user/submit`, AnswerSheet, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if(respond.status != 200){
+        return false;
+    }
+
+    return true;
 }
 
 export {

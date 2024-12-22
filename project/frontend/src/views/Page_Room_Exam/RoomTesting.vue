@@ -77,7 +77,12 @@ export default {
             }
 
             // set result to redis using backend API
-            await SubmitTestSheet(ansSheet);
+            let ret = await SubmitTestSheet(ansSheet);
+            if(ret){
+                alert("Submit Successfully!");
+            }else{
+                alert("Submit Failed, try again");
+            }
         },
 
         Choose(chooseAns) {
