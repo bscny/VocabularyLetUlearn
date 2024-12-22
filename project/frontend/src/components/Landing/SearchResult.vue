@@ -21,10 +21,10 @@
         <div class="wordRow">
           <h1>{{ result.word }} {{ result.partOfSpeech.join(' ') }}</h1>
         </div>
-        <p><strong>Definition:</strong> {{ result.definition }}</p>
-        <p><strong>e.g.:</strong> {{ result.example }}</p>
-        <p><strong>Synonyms:</strong> {{ result.synonyms.join(', ') }}</p>
-        <p><strong>Antonyms:</strong> {{ result.antonyms.join(', ') }}</p>
+        <p><strong>Definition: </strong> {{ result.definition }}</p>
+        <p><strong>e.g: </strong> {{ result.example }}</p>
+        <p><strong>Synonyms: </strong> {{ result.synonyms.join(', ') }}</p>
+        <p><strong>Antonyms: </strong> {{ result.antonyms.join(', ') }}</p>
 
         <div class="actionRow">
           <button class="addButton" @click="toggleSetSelector">
@@ -32,15 +32,15 @@
           </button>
 
           <div v-if="showSetSelector" class="setSelector">
-            <label for="setSelect">Choose a Set: </label>
-            <select v-model="selectedSetId" id="setSelect">
+            <label class="setSelect" for="setSelect">Choose a Set: </label>
+            <select v-model="selectedSetId" class="setSelect">
               <option v-for="set in sets" :key="set.SET_ID" :value="set.SET_ID">
                 {{ set.SET_NAME }}
               </option>
             </select>
 
-            <button @click="confirmAddToSet(result)">Confirm</button>
-            <button @click="toggleSetSelector">Cancel</button>
+            <button class="setSelect" @click="confirmAddToSet(result)">Confirm</button>
+            <button class="setSelect" @click="toggleSetSelector">Cancel</button>
           </div>
         </div>
       </template>
@@ -108,7 +108,7 @@ export default {
         if (this.sets.length > 0) {
           this.selectedSetId = this.sets[0].SET_ID;
         } else {
-          alert("current account has no sets, gotta create one first ^^");
+          alert("current account has no set, gotta create one at My Set section first ^^");
         }
       } catch (error) {
         this.sets = [];
@@ -188,14 +188,14 @@ export default {
 .searchInput {
   flex: 1;
   padding: 10px 60px 10px 10px;
-  font-size: 16px;
+  font-size: 1.5vw;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 .searchButton {
   padding: 10px 15px;
-  font-size: 16px;
+  font-size: 1.5vw;
   background-color: #007bff;
   color: white;
   border: none;
@@ -211,8 +211,12 @@ export default {
   padding: 1rem;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 800px;
-  height: 320px;
+  width: 60vw;
+  min-height: 320px;
+}
+
+.wordRow{
+  font-size: 1vw;
 }
 
 .SearchResult h1 {
@@ -220,15 +224,17 @@ export default {
 }
 
 .SearchResult p {
-  font-size: 20px;
-  margin-bottom: 10px;
+  font-size: 1.2vw;
+  margin-bottom: 1.1vh;
 }
 
 .actionRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  justify-content: start;
+
+  gap: 1vw;
+  margin-top: 1vh;
 }
 
 .addButton {
@@ -236,12 +242,26 @@ export default {
   border-radius: 5px;
   padding: 5px 10px;
   cursor: pointer;
+
+  font-size: 1vw;
 }
 
 .setSelector {
+  display: flex;
+
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
   background-color: #fff;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 5px;
+}
+
+.setSelect{
+  font-size: 1vw;
+
+  margin-right: 1vw;
 }
 </style>
