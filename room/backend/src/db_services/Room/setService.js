@@ -20,17 +20,14 @@ async function getUserSets(userId) {
 
 async function submitSet(req, res) {
   try {
-    const { setId, roomId } = req.body;
+    const { setId, setName, roomId } = req.body;
 
-    if (!setId || !roomId) {
+    if (!setId || !setName || !roomId) {
       return res.status(400).json({ message: "Missing setId or roomId" });
     }
 
-    // 更新 Set 資料
-    const setData = await setService.submitSetToRoom(setId, roomId);
-
-    // 更新 Room 資料
-    const roomData = await roomService.addSetToRoom(roomId, setData);
+    const setData = await setService.submitSetToRoom(setId, setName, roomId);
+    const roomData = await roomService.addSetToRoom(roomId, setName, setData);
 
     res.status(200).json({
       message: "Set submitted successfully",

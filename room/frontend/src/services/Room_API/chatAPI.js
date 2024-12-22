@@ -48,4 +48,36 @@ export default {
       handler([...new Set(players.filter(Boolean))]);
     });
   },
+
+  submitSet(roomId, setId, setName, callback) {
+    if (socket) {
+      socket.emit("submitSet", { roomId, setId, setName }, (response) => {
+        if (response && response.success) {
+          console.log(`[INFO] Set submitted successfully: ${setName}`);
+          if (callback) callback(response);
+        } else {
+          console.error(`[ERROR] Failed to submit set: ${response?.message || "Unknown error"}`);
+          if (callback) callback(response);
+        }
+      });
+    } else {
+      console.error("[ERROR] Socket is not initialized");
+    }
+  },
+
+  /**
+   * 監聽新集合提交事件
+   * @param {Function} handler 處理新集合的函數
+   */
+  onSetSubmitted(handler) {
+    if (socket) {
+      socket.off("setSubmitted"); // 確保不重複綁定事件
+      socket.on("setSubmitted", (data) => {
+        console.log("[INFO] New set submitted:", data);
+        handler(data);
+      });
+    } else {
+      console.error("[ERROR] Socket is not initialized");
+    }
+  },
 };

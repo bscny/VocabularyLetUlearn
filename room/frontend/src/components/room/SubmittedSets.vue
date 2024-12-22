@@ -1,30 +1,25 @@
 <template>
   <div class="submitted-sets">
-    <!-- 已提交的單字集 -->
+
     <h3>The set player submitted</h3>
-    <ul 
-      ref="setList"
-      v-if="submittedSets.length > 0" 
-      class="set-list"
-    >
-      <li v-for="(set, index) in submittedSets" :key="index">
-        {{ set }}
+    <ul ref="setList" v-if="submittedSets.length > 0" class="set-list">
+      <li v-for="(set, index) in submittedSets" :key="set.setId">
+        {{ set.setName }}
       </li>
     </ul>
     <p v-else>No sets submitted yet.</p>
 
-    <!-- 選擇提交的新單字集 -->
     <div class="select-set">
       <div class="action-row">
-        <select v-model="selectedSetId" class="set-dropdown">
+        <select v-model="selectedSetId" class="set-dropdown" :disabled="loading">
           <option value="" disabled>Select a set to submit</option>
           <option v-for="set in availableSets" :key="set.SET_ID" :value="set.SET_ID">
             {{ set.SET_NAME }}
           </option>
         </select>
 
-        <button @click="handleReady" :disabled="!selectedSetId" class="ready-button">
-          Ready
+        <button @click="handleReady" :disabled="!selectedSetId || loading" class="ready-button">
+          {{ loading ? "Submitting..." : "Ready" }}
         </button>
       </div>
     </div>
@@ -32,57 +27,112 @@
 </template>
 
 <script>
-import userAPI from "@/services/Room_API/setAPI";
+import setAPI from "@/services/Room_API/setAPI";
+import chatAPI from "@/services/Room_API/chatAPI";
 
 export default {
   data() {
     return {
-      submittedSets: [], // 已提交的單字集名稱
-      availableSets: [], // 可選擇的單字集
-      selectedSetId: null, // 使用者選擇的單字集 ID
+      submittedSets: [],
+      availableSets: [],
+      selectedSetId: null,
       userId: 2, // 預設用戶 ID
-      roomId: 1, // 預設房間 ID
+      roomId: 1, // 房間 ID
+      loading: false,
     };
   },
   async created() {
+
+    chatAPI.initRoom((roomData) => {
+      this.roomId = roomData.room;
+    });
+
+    chatAPI.initUser((userData) => {
+      this.User_id = userData.User_id;
+      this.User_name = userData.User_name;
+    });
+
+    chatAPI.onSetSubmitted((data) => {
+      console.log("[INFO] New set received:", data);
+      const isDuplicate = this.submittedSets.some((set) => set.setId === data.setId);
+      if (!isDuplicate) {
+        this.submittedSets.push({
+          setId: data.setId,
+          setName: data.setName,
+        });
+        this.scrollToBottom();
+      }
+    });
+
+    await this.fetchRoomSubmittedSets();
     await this.fetchAvailableSets();
   },
   methods: {
+    // 獲取已提交的 set
+    async fetchRoomSubmittedSets() {
+  try {
+    const response = await setAPI.fetchSubmittedSets(this.roomId);
+
+    this.submittedSets = response.data.map((set) => ({
+      setId: set.setId,
+      setName: set.setName,
+    }));
+    console.log("Processed submittedSets:", this.submittedSets);
+  } catch (error) {
+    console.error("Failed to fetch submitted sets:", error.message);
+  }
+},
+
+    // 獲取可選擇的 set
     async fetchAvailableSets() {
       try {
-        const response = await userAPI.fetchUserSets(this.userId);
+        const response = await setAPI.fetchUserSets(this.userId);
         this.availableSets = Array.isArray(response.data) ? response.data : [];
         console.log("Available sets fetched:", this.availableSets);
       } catch (error) {
         console.error("Failed to fetch available sets:", error.message);
+        alert("Failed to fetch available sets. Please try again.");
       }
     },
 
+    // 提交 set
     async handleReady() {
       if (!this.selectedSetId || !this.roomId) {
         alert("Please select a set and make sure you are in a room.");
         return;
       }
-
-      try {
-        const response = await userAPI.submitSet({
-          setId: this.selectedSetId,
-          roomId: this.roomId,
-        });
-
-        const selectedSet = this.availableSets.find(
-          (set) => set.SET_ID === this.selectedSetId
-        );
-        if (selectedSet) {
-          this.submittedSets.push(selectedSet.SET_NAME);
-          this.scrollToBottom();
-        }
-
-        this.selectedSetId = null;
-      } catch (error) {
-        console.error("Error submitting set:", error);
-        alert("Failed to submit set. Please try again.");
+      
+      // 防止重複提交
+      const isDuplicate = this.submittedSets.some(
+        (set) => set.setId === this.selectedSetId
+      );
+      if (isDuplicate) {
+        alert("This set has already been submitted.");
+        return;
       }
+
+      this.loading = true;
+      const selectedSet = this.availableSets.find((set) => set.SET_ID === this.selectedSetId);
+      if (!selectedSet) {
+        alert("Invalid set selection. Please try again.");
+        this.loading = false;
+        return;
+      }
+
+      chatAPI.submitSet(this.roomId, selectedSet.SET_ID, selectedSet.SET_NAME, (response) => {
+        if (response && response.success) {
+          console.log("[INFO] Set submitted successfully:", selectedSet.SET_NAME);
+          this.submittedSets.push({
+            setId: selectedSet.SET_ID,
+            setName: selectedSet.SET_NAME,
+          });
+          this.scrollToBottom();
+        } else {
+          alert("Failed to submit set.");
+          console.error("[ERROR] Failed to submit set:", response?.message || "Unknown error");
+        }
+        this.loading = false;
+      });
     },
 
     scrollToBottom() {

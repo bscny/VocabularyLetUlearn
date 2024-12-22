@@ -1,13 +1,13 @@
 const redisClient = require("@/redis.js");
 const chatService = require("@/redis_services/chatService");
+const setService = require("@/redis_services/setService");
 
 module.exports = (io) => {
   io.on("connection", (socket) => {
     const room = "1";
     const User_id = Math.floor(Math.random() * 1000);
     const User_name = `Player${User_id}`;
-    
-    // 預設用戶與房間資訊
+
     socket.emit("init room", { room });
     socket.emit("init user", { room, User_id, User_name });
 
@@ -15,12 +15,14 @@ module.exports = (io) => {
       try {
         socket.join(room);
         await redisClient.sAdd(`Room`, room);
-        
-        const userData = JSON.stringify({ User_id, User_name });
-        await redisClient.sAdd(`Room:${room}:Users`, userData);
+
+        const userKey = `Room:${room}:Users`;
+        const userData = { User_id, User_name };
+        await redisClient.rPush(userKey, JSON.stringify(userData));
+
         console.log(`[INFO] User ${User_id} joined room: ${room}`);
 
-        const players = await redisClient.sMembers(`Room:${room}:Users`);
+        const players = await redisClient.lRange(userKey, 0, -1);
         const parsedPlayers = players.map((player) => JSON.parse(player));
 
         io.to(room).emit("update players", parsedPlayers);
@@ -46,24 +48,51 @@ module.exports = (io) => {
       }
     });
 
+    socket.on("submitSet", async ({ roomId, setId, setName }, callback) => {
+    
+      if (!roomId || !setId || !setName) {
+        console.error(`[ERROR] Missing parameters: roomId=${roomId}, setId=${setId}, setName=${setName}`);
+        if (callback) callback({ success: false, message: "Missing parameters" });
+        return;
+      }
+    
+      try {
+        const setData = JSON.stringify({ setId, setName });
+        await redisClient.rPush(`Room:${roomId}:Sets`, setData);
+    
+        console.log(`[INFO] Successfully added set ${setName}(${setId}) to room ${roomId}`);
+        
+        socket.broadcast.to(roomId).emit("setSubmitted", { setId, setName }); //只廣播給除了觸發者以外的用戶
+        if (callback) callback({ success: true });
+      } catch (error) {
+        console.error(`[ERROR] Failed to submit set to room ${roomId}:`, error);
+        if (callback) callback({ success: false, message: "Failed to submit set" });
+      }
+    });
+
     socket.on("disconnect", async () => {
       console.log(`[INFO] User disconnected: ${User_name}`);
 
       try {
+        const userKey = `Room:${room}:Users`;
 
-        const userData = JSON.stringify({ User_id, User_name });
-        await redisClient.sRem(`Room:${room}:Users`, userData);
+        const players = await redisClient.lRange(userKey, 0, -1);
+        const parsedPlayers = players.map((player) => JSON.parse(player));
 
-        // 更新後的玩家名單
-        const updatedPlayers = await redisClient.sMembers(`Room:${room}:Users`);
-        const parsedPlayers = updatedPlayers.map((player) => JSON.parse(player));
+        const updatedPlayers = parsedPlayers.filter((player) => player.User_id !== User_id);
 
-        io.to(room).emit("update players", parsedPlayers);
+        // 刪除舊的用戶列表並存儲更新後的列表
+        await redisClient.del(userKey);
+        for (const player of updatedPlayers) {
+          await redisClient.rPush(userKey, JSON.stringify(player));
+        }
 
-        // 如果房間內無玩家，刪除該房間資料
-        if (parsedPlayers.length === 0) {
-          await redisClient.del(`Room`);
+        io.to(room).emit("update players", updatedPlayers);
+
+        if (updatedPlayers.length === 0) {
+          await redisClient.sRem(`Room`, room);
           await redisClient.del(`Room:${room}:Users`);
+          await redisClient.del(`Room:${room}:Sets`);
           await redisClient.del(`Room:${room}:Chat_message`);
 
           console.log(`[INFO] Room ${room} is now empty and has been deleted`);

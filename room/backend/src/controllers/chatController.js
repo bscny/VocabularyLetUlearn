@@ -5,7 +5,7 @@ exports.SaveMessage = async (room, User_id, User_name, Content) => {
     const savedMessage = await chatService.SaveMessageToRoom(room, User_id, User_name, Content);
     return savedMessage;
   } catch (error) {
-    console.error("[ERROR] Failed to save message:", error);
+    console.error("Failed to save message:", error);
     throw error;
   }
 };

@@ -1,30 +1,36 @@
 const redisClient = require("@/redis.js");
 
-async function AddSetToRoom(setId, roomId) {
+async function AddSetToRoom(setId, setName, roomId) {
   try {
     const roomKey = `Room:${roomId}`;
-    const setKey = `Set:${setId}`;
 
-    const roomExists = await redisClient.exists(roomKey);
-    if (!roomExists) {
-      throw new Error(`Room with ID ${roomId} does not exist in Redis.`);
-    }
+    await redisClient.rPush(`${roomKey}:Sets`, JSON.stringify({
+      Set_id: setId,
+      Set_name: setName
+    }));
 
-    const setIdStr = setId.toString();
-    const roomIdStr = roomId.toString();
+    console.log(`[INFO] Successfully added set ${setId}(${setName}) to room ${roomId}.`);
 
-    await redisClient.sAdd(`${roomKey}:Sets`, setIdStr);
-    await redisClient.hSet(setKey, 'roomId', roomIdStr);
-
-    console.log(`Successfully added set ${setId} to room ${roomId}.`);
-
-    return { setId, roomId };
+    return { setId, setName, roomId };
   } catch (error) {
-    console.error(`Error in AddSetToRoom: ${error.message}`);
+    console.error(`[ERROR] Failed to AddSetToRoom: ${error.message}`);
+    throw error;
+  }
+}
+
+async function GetRoomSets(roomId) {
+  try {
+    const roomKey = `Room:${roomId}:Sets`;
+
+    const sets = await redisClient.lRange(roomKey, 0, -1);
+    return sets.map((set) => JSON.parse(set));
+  } catch (error) {
+    console.error(`[ERROR] Failed to fetch sets for room "${roomId}":`, error);
     throw error;
   }
 }
 
 module.exports = {
   AddSetToRoom,
+  GetRoomSets,
 };
