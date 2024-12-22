@@ -5,7 +5,7 @@ import HomeLoggedIn from '@/views/HomeLoggedIn.vue';
 import Home from '@/views/Home.vue';
 import VerifyEmail from '@/views/Page_Account/VerifyEmail.vue';
 import ResetPassword from '@/views/Page_Account/ResetPassword.vue';
-
+import CreateJoinRoom from '@/views/Page_Create_Join_Room/Create_Join_Room.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -38,6 +38,11 @@ const router = createRouter({
       path: '/reset-password',
       name: 'ResetPassword',
       component: ResetPassword,
+    },
+    {
+      path: '/create-join-room',
+      name: 'CreateJoinRoom',
+      component: CreateJoinRoom,
     }
   ],
 })

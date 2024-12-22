@@ -1,0 +1,55 @@
+<template>
+  <div class="join-room">
+    <h2>加入房間</h2>
+    <form @submit.prevent="joinRoom">
+      <div>
+        <label for="userName">用戶名稱：</label>
+        <input type="text" v-model="userName" required />
+      </div>
+      <div>
+        <label for="roomId">房間 ID：</label>
+        <input type="text" v-model="roomId" required />
+      </div>
+      <div>
+        <label for="password">密碼：</label>
+        <input type="password" v-model="password" />
+      </div>
+      <button type="submit">加入房間</button>
+    </form>
+  </div>
+</template>
+  
+  <script>
+  import {
+    JoinRoom
+} from '@/services/Create_Join_Room_API/roomAPI.js';
+import {
+    CreateUser
+} from '@/services/Create_Join_Room_API/userAPI.js';
+  export default {
+    data() {
+      return {
+        roomId: '',
+        userName: '',
+        password: ''
+      };
+    },
+    methods: {
+      async joinRoom() {
+        const user = await CreateUser(this.userName);
+        try {
+          const response = await JoinRoom(this.roomId, user.userId, user.userName, this.password);
+          console.log("加入房間成功：", response);
+          this.$emit("joinDone"); // 通知父組件
+        } catch (error) {
+            console.error("加入房間失敗：", error.message);
+            alert("加入房間失敗，請重試！");
+        }
+      }
+    }
+  };
+  </script>
+  
+  <style scoped>
+  /* Add custom styling here */
+  </style>

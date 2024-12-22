@@ -50,6 +50,7 @@ import ForgetPasswordModal from '@/components/Account/ForgetPasswordModal.vue';
 import Content from '@/components/Account/Content.vue';
 import VerifyPrompt from '@/components/Account/VerifyPrompt.vue';
 import api from '@/services/Account_API/accountAPI.js';
+//import { useUserStore } from '@/stores/User/userStore.js';
 
 export default {
     components: {
@@ -79,6 +80,7 @@ export default {
         if (this.isLoggedIn) {
             this.userName = JSON.parse(localStorage.getItem('name'));
             this.userEmail = JSON.parse(localStorage.getItem('email'));
+            //this.userStore.setUser(null, userName, userEmail);
         }
     },
     methods: {
@@ -88,6 +90,9 @@ export default {
                 localStorage.setItem('name', JSON.stringify(response.data.name));
                 localStorage.setItem('token', JSON.stringify(response.data.token));
                 localStorage.setItem('email', JSON.stringify(userData.email));
+
+
+                //this.userStore.setUser(response.data.USER_ID, response.data.name, userData.email);
 
                 this.isLoggedIn = true;
                 this.userName = response.data.name;
@@ -138,6 +143,9 @@ export default {
             localStorage.removeItem('name');
             localStorage.removeItem('token');
             localStorage.removeItem('email');
+
+            //this.userStore.logout();
+
             this.isLoggedIn = false;
             this.userName = '';
             this.userEmail = '';
