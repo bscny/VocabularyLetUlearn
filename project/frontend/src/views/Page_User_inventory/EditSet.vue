@@ -204,6 +204,8 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1vw;
 }
 
 .done-button:hover {
@@ -221,6 +223,8 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1vw;
 }
 
 .delete-button:hover {
@@ -231,8 +235,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 10vh 0 3vh 0;
-    font-size: 40px;
+    margin: 12vh 0 3vh 0;
+    font-size: 2vw;
     /* text-align: center; */
 }
 
@@ -245,7 +249,7 @@ export default {
     display: block;
     padding: 5px 10px;
     margin: 0;
-    font-size: 30px;
+    font-size: 2vw;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -266,6 +270,8 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1vw;
 }
 
 .public-private-button:hover {
@@ -305,6 +311,8 @@ main {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1vw;
 }
 
 .edit-vocab-button:hover {
@@ -322,13 +330,13 @@ main {
     margin: 0 0 2vh 4vw;
 
     text-decoration: underline;
-    font-size: 30px;
+    font-size: 1.8vw;
 }
 
 .content {
     display: block;
     margin: 0 0 0 4vw;
-    font-size: 25px;
+    font-size: 1.5vw;
 }
 
 .create-vocab-button {
@@ -342,6 +350,8 @@ main {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1.2vw;
 }
 
 .create-vocab-button:hover {

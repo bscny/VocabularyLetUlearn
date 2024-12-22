@@ -93,14 +93,16 @@ export default {
 <style scoped>
 .navbar {
     display: flex;
+
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 50px;
+    height: 10vh;
     padding: 0 20px 0 20px;
     background-color: #333;
 
@@ -119,6 +121,8 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    font-size: 1.2em;
 }
 
 .icon,

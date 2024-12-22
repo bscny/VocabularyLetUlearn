@@ -16,6 +16,7 @@ export default {};
   align-items: center;
   margin: 0 20vw 0 20vw;
   height: 15vw;
+  width: 80vw;
   background-color: #bebebe;
   padding: 1rem;
   border-radius: 5px;
