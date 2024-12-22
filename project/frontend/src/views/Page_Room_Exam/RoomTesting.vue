@@ -7,7 +7,7 @@
     <Header :answeredQuestionNum="answeredQuestionNum" 
             :totalQuestionNum="totalQuestionNum" />
 
-    <DisplayQuestion    :displayQnum="curDisplaying" />
+    <DisplayQuestion    :displayQuestion="testSheet[curDisplaying - 1]" />
 </template>
 
 <script>
