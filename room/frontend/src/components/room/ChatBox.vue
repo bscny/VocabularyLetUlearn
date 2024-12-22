@@ -1,19 +1,17 @@
 <template>
   <div class="chat-box">
     <h3>Room ID : {{ room }}</h3>
-
-    <div class="message-list">
+    <div class="message-list" ref="chatContainer">
       <ul>
         <li
           v-for="(msg, index) in messages"
           :key="index"
-          :class="{ self: msg.user === userName, other: msg.user !== userName }"
+          :class="{ self: msg.User_name === User_name, other: msg.User_name !== User_name }"
         >
-          <strong>{{ msg.user }}:</strong> {{ msg.message }}
+          <strong>{{ msg.User_name }}:</strong> {{ msg.Content }}
         </li>
       </ul>
     </div>
-
     <div class="message-input">
       <input
         v-model="newMessage"
@@ -34,46 +32,57 @@ export default {
     return {
       messages: [],
       newMessage: "",
-      userName: "Player" + Math.floor(Math.random() * 1000),
-      room: "room1",
+      User_id: null,
+      User_name: null,
+      room: null,
     };
   },
   created() {
+    chatAPI.initRoom((roomData) => {
+      this.room = roomData.room;
+    });
     
+    chatAPI.initUser((userData) => {
+      this.User_id = userData.User_id;
+      this.User_name = userData.User_name;
+    });
+
     chatAPI.joinRoom(this.room);
 
     chatAPI.onMessage((msg) => {
       this.messages.push(msg);
-      this.scrollToBottom();
+      this.$nextTick(() => this.scrollToBottom());
     });
   },
   methods: {
-
     async sendMessage() {
       if (this.newMessage.trim()) {
-        const newMsg = {
+        const messageData = {
           room: this.room,
-          user: this.userName,
-          message: this.newMessage.trim(),
+          User_id: this.User_id,
+          User_name: this.User_name,
+          Content: this.newMessage.trim(),
         };
 
+        console.log("Sending message:", messageData);
+
         try {
-          await chatAPI.sendMessage(newMsg);
+          await chatAPI.sendMessage(messageData);
           console.log("Message sent successfully");
         } catch (error) {
           console.error("Error sending message:", error.message);
         }
-        
+
         this.newMessage = "";
+      } else {
+        console.log("No message to send.");
       }
     },
-
-    // 訊息過多視窗滾動到底部
     scrollToBottom() {
-      this.$nextTick(() => {
-        const list = this.$el.querySelector(".message-list");
-        list.scrollTop = list.scrollHeight;
-      });
+      const chatContainer = this.$refs.chatContainer;
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
     },
   },
 };

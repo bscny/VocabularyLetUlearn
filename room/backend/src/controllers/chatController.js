@@ -1,8 +1,8 @@
 const chatService = require("@/redis_services/chatService");
 
-exports.SaveMessage = async (room, user, message) => {
+exports.SaveMessage = async (room, User_id, User_name, Content) => {
   try {
-    const savedMessage = await chatService.SaveMessageToRoom(room, user, message);
+    const savedMessage = await chatService.SaveMessageToRoom(room, User_id, User_name, Content);
     return savedMessage;
   } catch (error) {
     console.error("[ERROR] Failed to save message:", error);

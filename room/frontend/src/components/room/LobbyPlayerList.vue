@@ -2,25 +2,25 @@
   <div class="player-list">
     <h3>Lobby player names</h3>
     <ul>
-      <li v-for="(player, index) in players" :key="index">{{ player }}</li>
+      <li v-for="(player, index) in players" :key="index">{{ player.User_name }}</li>
     </ul>
   </div>
 </template>
 
 <script>
+import chatAPI from "@/services/Room_API/chatAPI";
+
 export default {
   data() {
     return {
-      players: ['Player1', 'Player2', 'Player3'],
+      players: [],
     };
   },
-  methods: {
-    invitePlayer() {
-      alert('Invite Player功能觸發');
-    },
-    kickPlayer() {
-      alert('Kick Player功能觸發');
-    },
+  created() {
+    
+    chatAPI.onPlayersUpdate((players) => {
+      this.players = players;
+    });
   },
 };
 </script>
@@ -32,14 +32,22 @@ export default {
   border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* 內容和按鈕分散排列 */
-  height: 100%; /* 填滿容器高度 */
+  justify-content: space-between;
+  height: 100%;
   box-sizing: border-box;
-  position: relative; /* 定位按鈕區域 */
+  position: relative;
+  font-size: 10 px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+h3 {
+  margin-top: 0;
+  text-align: center;
 }
 
 ul {
-  flex: 1; /* 占據剩餘空間 */
+  flex: 1;
   margin: 0;
   padding: 0;
   list-style: none;
