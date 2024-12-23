@@ -16,7 +16,7 @@ const io = new Server(server, {
 });
 
 
-require("@/socket_services/chatService")(io);
+require("@/socket_services/socketService")(io);
 
 
 const setRoutes = require('@/routes/setRoutes.js');

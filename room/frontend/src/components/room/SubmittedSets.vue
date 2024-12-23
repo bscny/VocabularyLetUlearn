@@ -1,6 +1,5 @@
 <template>
   <div class="submitted-sets">
-
     <h3>The set player submitted</h3>
     <ul ref="setList" v-if="submittedSets.length > 0" class="set-list">
       <li v-for="(set, index) in submittedSets" :key="set.setId">
@@ -18,8 +17,8 @@
           </option>
         </select>
 
-        <button @click="handleReady" :disabled="!selectedSetId || loading" class="ready-button">
-          {{ loading ? "Submitting..." : "Ready" }}
+        <button @click="handleReady" :disabled="!selectedSetId || loading" class="submit-button">
+          {{ loading ? "Submitting..." : "Submit" }}
         </button>
       </div>
     </div>
@@ -28,7 +27,7 @@
 
 <script>
 import setAPI from "@/services/Room_API/setAPI";
-import chatAPI from "@/services/Room_API/chatAPI";
+import socketAPI from "@/services/Room_API/socketAPI";
 
 export default {
   data() {
@@ -43,16 +42,16 @@ export default {
   },
   async created() {
 
-    chatAPI.initRoom((roomData) => {
+    socketAPI.initRoom((roomData) => {
       this.roomId = roomData.room;
     });
 
-    chatAPI.initUser((userData) => {
+    socketAPI.initUser((userData) => {
       this.User_id = userData.User_id;
       this.User_name = userData.User_name;
     });
 
-    chatAPI.onSetSubmitted((data) => {
+    socketAPI.onSetSubmitted((data) => {
       console.log("[INFO] New set received:", data);
       const isDuplicate = this.submittedSets.some((set) => set.setId === data.setId);
       if (!isDuplicate) {
@@ -119,7 +118,7 @@ export default {
         return;
       }
 
-      chatAPI.submitSet(this.roomId, selectedSet.SET_ID, selectedSet.SET_NAME, (response) => {
+      socketAPI.submitSet(this.roomId, selectedSet.SET_ID, selectedSet.SET_NAME, (response) => {
         if (response && response.success) {
           console.log("[INFO] Set submitted successfully:", selectedSet.SET_NAME);
           this.submittedSets.push({
@@ -127,6 +126,7 @@ export default {
             setName: selectedSet.SET_NAME,
           });
           this.scrollToBottom();
+          this.selectedSetId = null;
         } else {
           alert("Failed to submit set.");
           console.error("[ERROR] Failed to submit set:", response?.message || "Unknown error");
@@ -193,9 +193,9 @@ export default {
   font-size: 1rem;
 }
 
-.ready-button {
+.submit-button {
   flex: 1;
-  background-color: #ff4d4f;
+  background-color: #007bff;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -203,7 +203,7 @@ export default {
   cursor: pointer;
 }
 
-.ready-button:hover {
-  background-color: #d9363e;
+.submit-button:hover {
+  background-color: #0056b3;
 }
 </style>

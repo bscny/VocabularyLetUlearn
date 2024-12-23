@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import chatAPI from "@/services/Room_API/chatAPI";
+import socketAPI from "@/services/Room_API/socketAPI";
 
 export default {
   data() {
@@ -38,18 +38,18 @@ export default {
     };
   },
   created() {
-    chatAPI.initRoom((roomData) => {
+    socketAPI.initRoom((roomData) => {
       this.room = roomData.room;
     });
     
-    chatAPI.initUser((userData) => {
+    socketAPI.initUser((userData) => {
       this.User_id = userData.User_id;
       this.User_name = userData.User_name;
     });
 
-    chatAPI.joinRoom(this.room);
+    socketAPI.joinRoom(this.room);
 
-    chatAPI.onMessage((msg) => {
+    socketAPI.onMessage((msg) => {
       this.messages.push(msg);
       this.$nextTick(() => this.scrollToBottom());
     });
@@ -67,7 +67,7 @@ export default {
         console.log("Sending message:", messageData);
 
         try {
-          await chatAPI.sendMessage(messageData);
+          await socketAPI.sendMessage(messageData);
           console.log("Message sent successfully");
         } catch (error) {
           console.error("Error sending message:", error.message);

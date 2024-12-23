@@ -15,22 +15,87 @@ module.exports = (io) => {
       try {
         socket.join(room);
         await redisClient.sAdd(`Room`, room);
-
+    
         const userKey = `Room:${room}:Users`;
-        const userData = { User_id, User_name };
+    
+        const userData = { User_id, User_name, isReady: false };
         await redisClient.rPush(userKey, JSON.stringify(userData));
-
+    
         console.log(`[INFO] User ${User_id} joined room: ${room}`);
-
+    
         const players = await redisClient.lRange(userKey, 0, -1);
         const parsedPlayers = players.map((player) => JSON.parse(player));
-
+    
+        // 第一個玩家成為房主
+        if (parsedPlayers.length === 1) {
+          socket.emit("assignOwner");
+          console.log(`[INFO] Player ${User_name} (ID: ${User_id}) is the owner of room ${room}`);
+        }
+    
         io.to(room).emit("update players", parsedPlayers);
-
+    
         if (callback) callback({ success: true, room });
       } catch (error) {
         console.error(`[ERROR] Failed to join room "${room}":`, error);
         if (callback) callback({ success: false, message: "Failed to join room" });
+      }
+    });
+    
+    // 切換玩家準備狀態
+    socket.on("toggleReady", async (callback) => {
+      try {
+        const userKey = `Room:${room}:Users`;
+
+        const players = await redisClient.lRange(userKey, 0, -1);
+        const parsedPlayers = players.map((player) => JSON.parse(player));
+
+        // 找到當前用戶
+        const thisPlayerIndex = parsedPlayers.findIndex((p) => p.User_id === User_id);
+        if (thisPlayerIndex === -1) {
+          if (callback) callback({ success: false, message: "Player not found" });
+          return;
+        }
+
+        // 切換 isReady
+        parsedPlayers[thisPlayerIndex].isReady = !parsedPlayers[thisPlayerIndex].isReady;
+
+        await redisClient.del(userKey);
+        for (const player of parsedPlayers) {
+          await redisClient.rPush(userKey, JSON.stringify(player));
+        }
+
+        io.to(room).emit("update players", parsedPlayers);
+
+        if (callback) callback({ success: true });
+      } catch (error) {
+        console.error(`[ERROR] Failed to toggleReady in room "${room}":`, error);
+        if (callback) callback({ success: false, message: "Failed to toggle ready" });
+      }
+    });
+
+    /**
+     * [OPTIONAL] 開始遊戲 (若需要後端判斷房主以及全員就緒)
+     * 這裡以簡單方式示範：接收到房主的 startGame，若所有人 isReady=true 才廣播
+     * 可依自己邏輯去判斷是否為房主
+     */
+    socket.on("startGame", async (callback) => {
+      try {
+        const userKey = `Room:${room}:Users`;
+        const players = await redisClient.lRange(userKey, 0, -1);
+        const parsedPlayers = players.map((player) => JSON.parse(player));
+
+        const allReady = parsedPlayers.every((p) => p.isReady === true);
+        if (!allReady) {
+          if (callback) callback({ success: false, message: "Not all players are ready yet." });
+          return;
+        }
+
+        io.to(room).emit("gameStarted", { room });
+
+        if (callback) callback({ success: true });
+      } catch (error) {
+        console.error(`[ERROR] Failed to start game in room "${room}":`, error);
+        if (callback) callback({ success: false, message: "Failed to start game" });
       }
     });
 
@@ -49,20 +114,18 @@ module.exports = (io) => {
     });
 
     socket.on("submitSet", async ({ roomId, setId, setName }, callback) => {
-    
       if (!roomId || !setId || !setName) {
         console.error(`[ERROR] Missing parameters: roomId=${roomId}, setId=${setId}, setName=${setName}`);
         if (callback) callback({ success: false, message: "Missing parameters" });
         return;
       }
-    
       try {
         const setData = JSON.stringify({ setId, setName });
         await redisClient.rPush(`Room:${roomId}:Sets`, setData);
-    
+
         console.log(`[INFO] Successfully added set ${setName}(${setId}) to room ${roomId}`);
         
-        socket.broadcast.to(roomId).emit("setSubmitted", { setId, setName }); //只廣播給除了觸發者以外的用戶
+        socket.broadcast.to(roomId).emit("setSubmitted", { setId, setName });
         if (callback) callback({ success: true });
       } catch (error) {
         console.error(`[ERROR] Failed to submit set to room ${roomId}:`, error);
@@ -81,7 +144,6 @@ module.exports = (io) => {
 
         const updatedPlayers = parsedPlayers.filter((player) => player.User_id !== User_id);
 
-        // 刪除舊的用戶列表並存儲更新後的列表
         await redisClient.del(userKey);
         for (const player of updatedPlayers) {
           await redisClient.rPush(userKey, JSON.stringify(player));
@@ -89,12 +151,12 @@ module.exports = (io) => {
 
         io.to(room).emit("update players", updatedPlayers);
 
+        // 若房間內已無玩家，清除該房間資料
         if (updatedPlayers.length === 0) {
           await redisClient.sRem(`Room`, room);
           await redisClient.del(`Room:${room}:Users`);
           await redisClient.del(`Room:${room}:Sets`);
           await redisClient.del(`Room:${room}:Chat_message`);
-
           console.log(`[INFO] Room ${room} is now empty and has been deleted`);
         }
       } catch (error) {

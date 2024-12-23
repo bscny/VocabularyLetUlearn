@@ -42,13 +42,6 @@ export default {
     });
   },
 
-  onPlayersUpdate(handler) {
-    socket.on("update players", (players) => {
-      console.log("Updated players:", players);
-      handler([...new Set(players.filter(Boolean))]);
-    });
-  },
-
   submitSet(roomId, setId, setName, callback) {
     if (socket) {
       socket.emit("submitSet", { roomId, setId, setName }, (response) => {
@@ -65,10 +58,6 @@ export default {
     }
   },
 
-  /**
-   * 監聽新集合提交事件
-   * @param {Function} handler 處理新集合的函數
-   */
   onSetSubmitted(handler) {
     if (socket) {
       socket.off("setSubmitted"); // 確保不重複綁定事件
@@ -80,4 +69,33 @@ export default {
       console.error("[ERROR] Socket is not initialized");
     }
   },
-};
+
+  onPlayersUpdate(callback) {
+    socket.on("update players", (players) => {
+      const data = { players };  
+      callback(data);
+    });
+  },
+
+  onGameStarted(callback) {
+    socket.on("gameStarted", (data) => {
+      callback(data);
+    });
+  },
+
+  onAssignOwner(callback) {
+    socket.on("assignOwner", callback);
+  },
+
+  emitReady(callback) {
+    socket.emit("toggleReady", (response) => {
+      if (callback) callback(response);
+    });
+  },
+
+  emitStartGame(callback) {
+    socket.emit("startGame", (response) => {
+      if (callback) callback(response);
+    });
+  },
+}
