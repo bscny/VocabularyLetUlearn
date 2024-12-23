@@ -1,5 +1,7 @@
 <template>
+    <div class="summary-flexbox">
 
+    </div>
 </template>
 
 <script>
@@ -39,5 +41,14 @@ export default{
 </script>
 
 <style scoped>
+.summary-flexbox {
+    display: flex;
 
+    width: 80vw;
+    min-height: 10vh;
+    margin-bottom: 3vh;
+
+    background-color: gray;
+    border-radius: 10px;
+}
 </style>

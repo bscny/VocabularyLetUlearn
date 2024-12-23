@@ -80,6 +80,9 @@ export default {
             let ret = await SubmitTestSheet(ansSheet);
             if(ret){
                 alert("Submit Successfully!");
+                this.$route.push({
+                    name: TestResult
+                })
             }else{
                 alert("Submit Failed, try again");
             }
