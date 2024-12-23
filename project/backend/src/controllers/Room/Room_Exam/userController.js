@@ -1,5 +1,6 @@
 const userService = require("@/redis_services/Room_Exam/UserServices.js");
 const roomService = require("@/redis_services/Room_Exam/RoomServices.js");
+const { restart } = require("nodemon");
 
 async function SubmitTestAns(req, res) {
     let ansSheet = req.body;
@@ -35,6 +36,18 @@ async function SubmitTestAns(req, res) {
     res.status(200).send("sucess added test result to redis");
 }
 
+async function GetUserTestResult(req, res) {
+    const testResult = await userService.GetTestResult(req.params.USER_ID);
+
+    if(testResult[0] == undefined){
+        res.status(500).send("can not find test result");
+        return;
+    }
+
+    res.status(200).send(testResult);
+}
+
 module.exports = {
     SubmitTestAns,
+    GetUserTestResult,
 };

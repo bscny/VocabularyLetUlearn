@@ -2,11 +2,14 @@
     <Navbar />
 
     <main class="blocks">
-        <Header />
+        <Header :showingWrong="showingWrong"
+                @ToggleShowWrong="ToggleShowWrong()"
+                @RetakeTest="RetakeTest()" />
 
-        <Summary />
+        <Summary v-if="testResult.length > 0"   :testResult="testResult" />
 
-        <DisplayResult />
+        <DisplayResult v-if="testResult.length > 0" :testResult="testResult"
+                                                    :showingWrong="showingWrong" />
     </main>
 </template>
 
@@ -16,7 +19,10 @@ import Header from '@/components/Room_Exam/Result/Header.vue';
 import Summary from '@/components/Room_Exam/Result/Summary.vue';
 import DisplayResult from '@/components/Room_Exam/Result/DisplayResult.vue';
 
-import { io } from 'socket.io-client'
+import { io } from 'socket.io-client';
+import {
+    GetTestResult,
+} from "@/services/Room_Exam_API/testResultAPI.js"
 
 export default {
     name: 'TestResult',
@@ -31,11 +37,22 @@ export default {
         return {
             testObj: null,
             socket: null,
+
+            testResult: [],
+            showingWrong: false,
         };
     },
 
     methods: {
+        ToggleShowWrong(){
+            this.showingWrong = !this.showingWrong;
+        },
 
+        RetakeTest(){
+            this.$router.push({
+                name: "RoomTesting"
+            });
+        }
     },
 
     async created() {
@@ -58,6 +75,8 @@ export default {
 
         // console.error(this.testObj);-------------------------------------
 
+        // get test result from backend API
+        this.testResult = await GetTestResult(JSON.parse(localStorage.getItem("USER_ID")));
     },
 
     async mounted() {
@@ -75,7 +94,7 @@ export default {
 
     beforeUnmount() {
         // Disconnect the socket when the component is destroyed
-        this.socket.disconnect();
+        // this.socket.disconnect();
     },
 }
 </script>

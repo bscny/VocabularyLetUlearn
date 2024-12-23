@@ -1,5 +1,5 @@
 <template>
-    <button class="retake-button">
+    <button class="retake-button" @click="RetakeTest()">
         Retake Test
     </button>
 
@@ -7,11 +7,8 @@
         Back To Room
     </button>
 
-    <div class="header-flexbox">
-        <div class="text">
-            Test Result
-        </div>
-    
+    <div class="text">
+        Test Result
     </div>
 
     <button v-if="!showingWrong" class="toggle-wrong-button" @click="ToggleShowWrong()">
@@ -29,16 +26,24 @@ export default{
     components: {
 
     },
+
+    props: {
+        showingWrong: Boolean,
+    },
     
     data(){
         return{
-            showingWrong: false,
+
         };
     },
 
     methods: {
         ToggleShowWrong(){
-            this.showingWrong = !this.showingWrong;
+            this.$emit("ToggleShowWrong");
+        },
+
+        RetakeTest(){
+            this.$emit("RetakeTest");
         }
     },
 
@@ -115,14 +120,17 @@ export default{
 }
 
 .text {
+    display: inline;
     font-size: 2.5vw;
     text-align: center;
+
+    margin-bottom: 1vh;
 }
 
 .toggle-wrong-button {
-    position: absolute;
+    /* position: absolute;
     top: 12.5vh;
-    left: 60vw;
+    left: 60vw; */
     padding: 1vh 1vw;
     background-color: #00b2f8;
     color: white;

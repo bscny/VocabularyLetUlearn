@@ -3,6 +3,11 @@ import apiClient from '@/services/APIclient';
 async function GetTestSheet(ROOM_ID) {
     const testSheet = await apiClient.get(`/room/test-sheet/${ROOM_ID}`);
 
+    if(testSheet.status != 200){
+        alert("something wrong, can't get test sheet from backend");
+        return undefined;
+    }
+
     return testSheet.data;
 }
 
