@@ -26,8 +26,7 @@ export default {
   },
   data() {
     return {
-      isCreateRoom: true,
-      userName: ''
+      isCreateRoom: true
     };
   },
   methods: {

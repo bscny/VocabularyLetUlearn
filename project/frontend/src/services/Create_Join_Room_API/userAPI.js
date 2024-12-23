@@ -1,8 +1,9 @@
 import apiClient from '@/services/APIclient';
 
-async function CreateUser(USER_NAME) {
+async function CreateUser(USER_ID, USER_NAME) {
     const response = await apiClient.post(`/create_join_room/users/create-user`,
     {
+        userId: USER_ID,
         userName: USER_NAME
     }, 
     {

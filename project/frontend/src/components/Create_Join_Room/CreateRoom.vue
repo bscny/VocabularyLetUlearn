@@ -3,10 +3,6 @@
       <h2>建立房間</h2>
       <form @submit.prevent="createRoom">
         <div>
-        <label for="userName">用戶名稱：</label>
-        <input type="text" v-model="userName" required />
-      </div>
-        <div>
           <label for="roomName">房間名稱：</label>
           <input type="text" v-model="roomName" required />
         </div>
@@ -32,14 +28,21 @@
 import {
 CreateUser
 } from '@/services/Create_Join_Room_API/userAPI.js';
+
+import { useUserStore } from '@/stores/User/userStore.js';
   export default {
     data() {
       return {
         roomName: '',
+        userId: '',
         userName: '',
         isPublic: false,
         password: ''
       };
+    },
+    setup() {
+        const userStore = useUserStore(); // 使用 Pinia Store
+        return { userStore };
     },
     methods: {
       async createRoom() {
@@ -53,7 +56,10 @@ CreateUser
             console.error("創建房間失敗：", error.message);
             alert("房間創建失敗，請重試！");
         }
-        const user = await CreateUser(this.userName);
+        this.userName = this.userStore.userName;
+        this.userId = this.userStore.userId;
+        console.log(this.userId);
+        const user = await CreateUser(this.userId, this.userName);
         const response = await JoinRoom(roomId, user.userId, user.userName, this.password); // 創建者先加入房間
       }
     }

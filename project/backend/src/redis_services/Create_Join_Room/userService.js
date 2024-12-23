@@ -1,24 +1,7 @@
 const redisClient = require('@/redis.js');
 
-// 生成唯一的使用者 ID
-const generateUniqueUserId = async () => {
-    let userId;
-    let userExists;
-
-    // 反覆生成房間 ID 直到它唯一
-    do {
-        // 生成五位隨機數字
-        userId = Math.floor(10000 + Math.random() * 90000); // 生成 10000 到 99999 之間的隨機數字
-        userExists = await redisClient.exists(`User:${userId}`); // 檢查這個 ID 是否已存在
-    } while (userExists); // 如果使用者 ID 已存在，則重試
-
-    return userId;
-};
-
 // 建立使用者
-const createUser = async ({ userName }) => {
-    const userId = await generateUniqueUserId(); // 獲取唯一的使用者 ID
-    console.log(userId);
+const createUser = async ({ userId, userName }) => {
     const userKey = `User:${userId}`;
 
     const userData = {
