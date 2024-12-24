@@ -3,10 +3,6 @@
     <h2>加入房間</h2>
     <form @submit.prevent="joinRoom">
       <div>
-        <label for="userName">用戶名稱：</label>
-        <input type="text" v-model="userName" required />
-      </div>
-      <div>
         <label for="roomId">房間 ID：</label>
         <input type="text" v-model="roomId" required />
       </div>
