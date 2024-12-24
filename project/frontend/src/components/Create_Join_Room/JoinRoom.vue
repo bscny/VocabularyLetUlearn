@@ -23,6 +23,7 @@
 import {
     CreateUser
 } from '@/services/Create_Join_Room_API/userAPI.js';
+import { useRoomStore } from '@/stores/Room/RoomStore';
 
 import { useUserStore } from '@/stores/User/userStore.js';
   export default {
@@ -36,7 +37,8 @@ import { useUserStore } from '@/stores/User/userStore.js';
     },
     setup() {
         const userStore = useUserStore(); // 使用 Pinia Store
-        return { userStore };
+        const roomStore = useRoomStore();
+        return { userStore, roomStore};
     },
     methods: {
       async joinRoom() {
@@ -46,6 +48,7 @@ import { useUserStore } from '@/stores/User/userStore.js';
         const user = await CreateUser(this.userId, this.userName);
         try {
           const response = await JoinRoom(this.roomId, user.userId, user.userName, this.password);
+          this.roomStore.roomId = response.roomId;
           console.log("加入房間成功：", response);
           this.$emit("joinDone"); // 通知父組件
         } catch (error) {

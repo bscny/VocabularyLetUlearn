@@ -30,6 +30,7 @@ CreateUser
 } from '@/services/Create_Join_Room_API/userAPI.js';
 
 import { useUserStore } from '@/stores/User/userStore.js';
+import { useRoomStore } from '@/stores/Room/RoomStore.js';
   export default {
     data() {
       return {
@@ -42,7 +43,8 @@ import { useUserStore } from '@/stores/User/userStore.js';
     },
     setup() {
         const userStore = useUserStore(); // 使用 Pinia Store
-        return { userStore };
+        const roomStore = useRoomStore();
+        return { userStore, roomStore};
     },
     methods: {
       async createRoom() {
@@ -50,7 +52,7 @@ import { useUserStore } from '@/stores/User/userStore.js';
         try {
           const response = await CreateRoom(this.roomName, this.isPublic, this.password);
           console.log("房間創建成功：", response);
-          this.$emit("creationDone"); // 通知父組件
+          this.$emit("creationDone");
           roomId = response.roomId;
         } catch (error) {
             console.error("創建房間失敗：", error.message);
@@ -58,9 +60,10 @@ import { useUserStore } from '@/stores/User/userStore.js';
         }
         this.userName = this.userStore.userName;
         this.userId = this.userStore.userId;
-        console.log(this.userId);
         const user = await CreateUser(this.userId, this.userName);
         const response = await JoinRoom(roomId, user.userId, user.userName, this.password); // 創建者先加入房間
+        this.roomStore.roomId = response.roomId;
+        
       }
     }
   };
