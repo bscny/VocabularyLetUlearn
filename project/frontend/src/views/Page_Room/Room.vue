@@ -24,9 +24,9 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-import SubmittedSets from '@/components/room/SubmittedSets.vue';
-import ChatBox from '@/components/room/ChatBox.vue';
-import LobbyPlayerList from '@/components/room/LobbyPlayerList.vue';
+import SubmittedSets from '@/components/Room/SubmittedSets.vue';
+import ChatBox from '@/components/Room/ChatBox.vue';
+import LobbyPlayerList from '@/components/Room/LobbyPlayerList.vue';
 
 export default {
   name: 'Room',

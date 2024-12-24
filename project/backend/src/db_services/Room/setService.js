@@ -1,6 +1,6 @@
 const db = require("@/db.js");
-const setService = require("@/redis_services/setService");
-const roomService = require("@/redis_services/roomService");
+const setService = require("@/redis_services/Room/setService");
+const roomService = require("@/redis_services/Room/roomService");
 
 async function getUserSets(userId) {
   try {

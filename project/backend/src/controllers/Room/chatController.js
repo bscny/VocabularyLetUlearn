@@ -1,4 +1,4 @@
-const chatService = require("@/redis_services/chatService");
+const chatService = require("@/redis_services/Room/chatService");
 
 exports.SaveMessage = async (room, User_id, User_name, Content) => {
   try {

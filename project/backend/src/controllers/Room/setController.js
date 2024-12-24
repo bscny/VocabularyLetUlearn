@@ -1,5 +1,5 @@
 const dbService = require("@/db_services/Room/setService");
-const setService = require("@/redis_services/setService");
+const setService = require("@/redis_services/Room/setService");
 const redisClient = require("@/redis.js");
 
 exports.GetSubmittedSets = async (req, res) => {

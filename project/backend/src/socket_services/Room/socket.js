@@ -1,6 +1,6 @@
 const redisClient = require("@/redis.js");
-const chatService = require("@/redis_services/chatService");
-const setService = require("@/redis_services/setService");
+const chatService = require("@/redis_services/Room/chatService");
+const setService = require("@/redis_services/Room/setService");
 
 module.exports = (io) => {
   io.on("connection", (socket) => {
@@ -73,11 +73,6 @@ module.exports = (io) => {
       }
     });
 
-    /**
-     * [OPTIONAL] 開始遊戲 (若需要後端判斷房主以及全員就緒)
-     * 這裡以簡單方式示範：接收到房主的 startGame，若所有人 isReady=true 才廣播
-     * 可依自己邏輯去判斷是否為房主
-     */
     socket.on("startGame", async (callback) => {
       try {
         const userKey = `Room:${room}:Users`;

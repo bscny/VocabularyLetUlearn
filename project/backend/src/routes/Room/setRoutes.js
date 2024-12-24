@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const setController = require('@/controllers/setController');
+const setController = require('@/controllers/Room/setController');
 
 
 router.get("/api/room/:roomId/submitted-sets", setController.GetSubmittedSets);
