@@ -2,7 +2,7 @@
     <div class="BG">
         <div class="window">
             <button class="done-button"  @click="VocabCreationDone()">
-                Crate Vocabulary
+                Create Vocabulary
             </button>
 
             <button class="cancel-button"  @click="Cancel()">

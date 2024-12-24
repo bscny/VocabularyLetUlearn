@@ -1,12 +1,5 @@
 <template>
-    <Navbar 
-            :isLoggedIn="isLoggedIn" 
-            :userName="userName"
-            :userEmail="userEmail" 
-            @toggleLoginModal="showLoginModal = true" 
-            @toggleRegisterModal="showRegisterModal = true" 
-            @logout="logout()" 
-    />
+    <Navbar />
 
     <LeftBarFolders  @displayWords="setCanShow($event)"  @editFolder="setCanEditFolder($event)"
                      @createFolder="setCanCreateFolder()"/>
@@ -151,20 +144,6 @@ export default {
             });
         },
 
-        logout() {
-            localStorage.removeItem('USER_ID');
-            localStorage.removeItem('name');
-            localStorage.removeItem('token');
-            localStorage.removeItem('email');
-            this.isLoggedIn = false;
-            this.userName = '';
-            this.userEmail = '';
-
-            this.$router.push({
-                name: 'Home'
-            });
-        },
-
         async getWords(){
             this.words = await getWordsBySetId(this.curDisplaySetId);
         },
@@ -191,13 +170,27 @@ export default {
 </script>
 
 <style scoped>
+main{
+    display: flex;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    margin: 10vh 0 0 17vw;
+    /* width: 83vw;
+    height: 90vh; */
+}
+
 .flex-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 
-    margin: 10vh 0 0 20vw;
+    width: 100%;
+
+    margin: 2vh 0 0 0;
 }
 
 .quiz-button {
@@ -210,6 +203,8 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1vw;
 }
 
 .quiz-button:hover {
@@ -226,6 +221,8 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1vw;
 }
 
 .edit-set-button:hover {
@@ -234,9 +231,8 @@ export default {
 
 .search-box {
     display: block;
-    margin: 2vh 0 0 20vw;
     padding: 5px 10px;
-    font-size: 20px;
+    font-size: 1.5vw;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -250,7 +246,9 @@ export default {
 
 .vocabulary {
     display: block;
-    margin: 6vh 0 0 17vw;
+    margin: 6vh 0 0 0;
+
+    width: 100%;
 
     font-size: 20px;
 }
