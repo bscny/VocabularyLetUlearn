@@ -1,11 +1,13 @@
 <template>
     <div class="left-sidebar">
-        <ul class="sidebar-menu">
-            <li v-for="item in menuItems" :key="item.name" @click="navigate(item.route)">
+        <li class="items" v-for="item in menuItems" :key="item.name" @click="navigate(item.route)">
+            <div>
                 <img :src="item.icon" alt="" class="icon" />
+            </div>
+            <div class="text">
                 {{ item.name }}
-            </li>
-        </ul>
+            </div>
+        </li>
     </div>
 </template>
 
@@ -33,39 +35,47 @@ export default {
 <style scoped>
 .left-sidebar {
     position: fixed;
-    width: 200px;
-    padding: 1rem;
+    display: flex;
+
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+
+    top: 10vh;
+    bottom: 0;
+    left: 0;
+    width: 15vw;
+    padding-top: 2vh;
     background-color: #f7f7f7;
     height: 100vh;
     border-right: 1px solid #ddd;
 }
 
-.sidebar-menu {
+.items {
     display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
-}
 
-.sidebar-menu li {
-    display: block;
-    /* align-items: center; */
-    padding: 10px;
-    margin-bottom: 30px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 5vh;
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
-.sidebar-menu li:hover {
+.items:hover {
     background-color: #e0e0e0;
 }
 
 .icon {
-    margin-right: 10px;
+    margin-right: 1vw;
+    margin-left: 1vw;
     width: 20px;
     height: 20px;
+}
+
+.text{
+    font-size: 1.2vw;
 }
 </style>

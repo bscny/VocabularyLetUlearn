@@ -82,7 +82,7 @@ export default {
 <style scoped>
 .left-sidebar {
     position: absolute;
-    top: 50px;
+    top: 10vh;
     left: 0;
     bottom: 0;
     width: 17vw;
@@ -95,7 +95,7 @@ export default {
     display: block;
     margin: 2.5vh 0 0 2.5vw;
     padding: 0 10px 0 10px;
-    font-size: 18px;
+    font-size: 1.4vw;
     background-color: rgb(177, 187, 240);
     color: rgb(255, 255, 255);
     border: none;
@@ -121,7 +121,7 @@ export default {
     margin: 1vh 0 1vh 1vw;
     padding: 0 0 0 0;
     width: auto;
-    font-size: 20px;
+    font-size: 1.2vw;
 
     background-color: rgba(0, 0, 0, 0.137);
 }
@@ -141,6 +141,8 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    font-size: 1vw;
 }
 
 .edit-folder-button:hover {
@@ -150,7 +152,7 @@ export default {
 
 .sets {
     margin: 1vh 0 1vh 2vw;
-    font-size: 18px;
+    font-size: 1.1vw;
 }
 
 .sets:hover {
