@@ -155,12 +155,13 @@ export default {
     text-align: center;
 
     margin-bottom: 2vh;
+    padding-top: 2vh;
     border-radius: 10px;
 
     width: 70vw;
     height: 40vh;
 
-    background-color: aqua;
+    background-color: #fbfaf8;
 }
 
 .q-num-inline {
