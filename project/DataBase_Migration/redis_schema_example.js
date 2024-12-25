@@ -1,11 +1,11 @@
-const redis = require('ioredis');
+const Redis = require("redis");
 
-const redisCli = new redis();
+const redisCli = Redis.createClient()
 
 async function TestConnection() {
     try {
-        // Try to connect to Redis and issue a PING command
-        await redisCli.ping();
+        // trying to connect to redis server locally on port 6379
+        await redisCli.connect();
         console.log('Redis client connected successfully');
     } catch (err) {
         console.error('Failed to connect to Redis:', err);
@@ -38,19 +38,21 @@ data = {
     Test_sheet: [
         {
             Question_number: 1,
-            Correct_ans: "B",
+            Correct_ans: "Cat",
             OptionA: "Dog",
-            OptionB: "Cat",
+            OptionB: "Frog",
             OptionC: "Bird",
+            OptionD: "Cat",
             Ans_definition: "A small domesticated carnivorous mammal.",
             Sentence: "The cat is on the roof.",
         },
         {
             Question_number: 2,
-            Correct_ans: "A",
-            OptionA: "Tree",
+            Correct_ans: "Tree",
+            OptionA: "Rock",
             OptionB: "Grass",
             OptionC: "Flower",
+            OptionD: "Tree",
             Ans_definition: "A perennial plant with a woody stem.",
             Sentence: "The tree is tall.",
         },
@@ -78,33 +80,38 @@ data = {
 };
 
 // redis format:
-await redisCli.hset(`Room:${data.ROOM_ID}`, {
+await redisCli.hSet(`Room:${data.ROOM_ID}`, {
     Room_name: data.Room_name,
-    Is_public: data.Is_public,
+    Is_public: JSON.stringify(data.Is_public),
     Password: data.Password,
 });
 
 for (const message of data.Chat_message) {
-    await redisCli.rpush(`Room:${data.ROOM_ID}:Chat_messages`, JSON.stringify(message));
+    await redisCli.rPush(`Room:${data.ROOM_ID}:Chat_messages`, JSON.stringify(message));
 }
 
+// for (const question of data.Test_sheet) {
+//     await redisCli.hSet(`Room:${data.ROOM_ID}:Test_sheet:${question.Question_number}`, {
+//         Correct_ans: question.Correct_ans,
+//         OptionA: question.OptionA,
+//         OptionB: question.OptionB,
+//         OptionC: question.OptionC,
+//         OptionD: question.OptionD,
+//         Ans_definition: question.Ans_definition,
+//         Sentence: question.Sentence,
+//     });
+// }
+
 for (const question of data.Test_sheet) {
-    await redisCli.hset(`Room:${data.ROOM_ID}:Test_sheet:${question.Question_number}`, {
-        Correct_ans: question.Correct_ans,
-        OptionA: question.OptionA,
-        OptionB: question.OptionB,
-        OptionC: question.OptionC,
-        Ans_definition: question.Ans_definition,
-        Sentence: question.Sentence,
-    });
+    await redisCli.rPush(`Room:${data.ROOM_ID}:Test_sheet`, JSON.stringify(question));
 }
 
 for (const user of data.Users) {
-    await redisCli.rpush(`Room:${data.ROOM_ID}:Users`, JSON.stringify(user));
+    await redisCli.rPush(`Room:${data.ROOM_ID}:Users`, JSON.stringify(user));
 }
 
 for (const set of data.Sets) {
-    await redisCli.rpush(`Room:${data.ROOM_ID}:Sets`, JSON.stringify(set));
+    await redisCli.rPush(`Room:${data.ROOM_ID}:Sets`, JSON.stringify(set));
 }
 
 // --------------------------------------------------------------------------------------------------
@@ -116,43 +123,53 @@ data = {
     Test_result: [
         {
             Question_number: 1,
-            Correct_ans: "B",
+            Correct_ans: "Cat",
             OptionA: "Dog",
-            OptionB: "Cat",
+            OptionB: "Frog",
             OptionC: "Bird",
+            OptionD: "Cat",
             Ans_definition: "A small domesticated carnivorous mammal.",
             Sentence: "The cat is on the roof.",
-            Is_correct: true,
+            Choosed_ans: "Cat",
+            Is_correct: true
         },
         {
             Question_number: 2,
-            Correct_ans: "A",
-            OptionA: "Tree",
+            Correct_ans: "Tree",
+            OptionA: "Rock",
             OptionB: "Grass",
             OptionC: "Flower",
+            OptionD: "Tree",
             Ans_definition: "A perennial plant with a woody stem.",
             Sentence: "The tree is tall.",
-            Is_correct: true,
+            Choosed_ans: "Flower",
+            Is_correct: false
         },
     ]
 };
 
 // redis format:
-await redisCli.hset(`User:${data.USER_ID}`, {
-    User_name: data.User_name,
-    In_room_id: data.In_room_id,
+await redisCli.hSet(`User:${data.USER_ID}`, {
+    User_name: JSON.stringify(data.User_name),
+    In_room_id: JSON.stringify(data.In_room_id),
 });
 
+// for (const question of data.Test_result) {
+//     await redisCli.hSet(`User:${data.USER_ID}:Test_result:${question.Question_number}`, {
+//         Correct_ans: question.Correct_ans,
+//         OptionA: question.OptionA,
+//         OptionB: question.OptionB,
+//         OptionC: question.OptionC,
+//         OptionD: question.OptionD,
+//         Ans_definition: question.Ans_definition,
+//         Sentence: question.Sentence,
+//         Choosed_ans: question.Choosed_ans,
+//         Is_correct: JSON.stringify(question.Is_correct),
+//     });
+// }
+
 for (const question of data.Test_result) {
-    await redisCli.hset(`User:${data.USER_ID}:Test_result:${question.Question_number}`, {
-        Correct_ans: question.Correct_ans,
-        OptionA: question.OptionA,
-        OptionB: question.OptionB,
-        OptionC: question.OptionC,
-        Ans_definition: question.Ans_definition,
-        Sentence: question.Sentence,
-        Is_correct: question.Is_correct,
-    });
+    await redisCli.rPush(`User:${data.USER_ID}:Test_result`, JSON.stringify(question));
 }
 
 // -------------------------------------------------------------------------------------------------------
@@ -175,14 +192,18 @@ data = {
 };
 
 // redis format:
-await redisCli.hset(`Set:${data.SET_ID}`, {
+await redisCli.hSet(`Set:${data.SET_ID}`, {
     Set_name: data.Set_name,
 });
 
+// for (const vocabulary of data.Vocabularys) {
+//     await redisCli.hSet(`Set:${data.SET_ID}:Vocabularys:${vocabulary.Word}`, {
+//         Word: vocabulary.Word,
+//         Definition: vocabulary.Definition,
+//         Sentence: vocabulary.Sentence,
+//     });
+// }
+
 for (const vocabulary of data.Vocabularys) {
-    await redisCli.hset(`Set:${data.SET_ID}:Vocabularys:${vocabulary.Word}`, {
-        Word: vocabulary.Word,
-        Definition: vocabulary.Definition,
-        Sentence: vocabulary.Sentence,
-    });
+    await redisCli.rPush(`Set:${data.SET_ID}:Vocabularys`, JSON.stringify(vocabulary));
 }

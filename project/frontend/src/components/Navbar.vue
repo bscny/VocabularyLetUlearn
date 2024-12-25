@@ -5,15 +5,15 @@
         </div>
 
         <nav class="icons">
-            <div v-if="!isLoggedIn" class="login-button"  @click="$emit('toggleLoginModal')">
+            <div v-if="!_isLoggedIn" class="login-button"  @click="$emit('toggleLoginModal')">
                 登入
             </div>
             <div v-else class="user-info">
-                <span class="username">{{ userName }}</span>
-                <button class="logout-button" @click="$emit('logout')">登出</button>
+                <span class="username">{{ _userName }}</span>
+                <button class="logout-button" @click="Logout()">登出</button>
             </div>
 
-            <div v-if="!isLoggedIn" class="register-button"  @click="$emit('toggleRegisterModal')">
+            <div v-if="!_isLoggedIn" class="register-button"  @click="$emit('toggleRegisterModal')">
                 註冊
             </div>
 
@@ -44,9 +44,17 @@ export default {
         userEmail: String
     },
 
+    data(){
+        return{
+            _isLoggedIn: this.isLoggedIn,
+            _userName: this.userName,
+            _userEmail: this.userEmail
+        };
+    },
+
     methods: {
         GotoHomePage() {
-            if(this.isLoggedIn){
+            if(this._isLoggedIn){
                 this.$router.push({
                     name: 'HomeLoggedIn'
                 });
@@ -56,6 +64,28 @@ export default {
                 });
             }
         },
+
+        Logout(){
+            localStorage.removeItem('USER_ID');
+            localStorage.removeItem('name');
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            this._isLoggedIn = false;
+            this._userName = '';
+            this._userEmail = '';
+
+            this.$router.push({
+                name: 'Home'
+            });
+        }
+    },
+
+    created(){
+        if(localStorage.getItem('name') !== null){
+            this._isLoggedIn = true;
+            this._userName = JSON.parse(localStorage.getItem('name'));
+            this._userEmail = JSON.parse(localStorage.getItem('email'));
+        }
     }
 };
 </script>
@@ -63,14 +93,16 @@ export default {
 <style scoped>
 .navbar {
     display: flex;
+
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 50px;
+    height: 10vh;
     padding: 0 20px 0 20px;
     background-color: #333;
 
@@ -89,6 +121,8 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    font-size: 1.2em;
 }
 
 .icon,
