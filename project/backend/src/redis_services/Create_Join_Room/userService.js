@@ -10,9 +10,6 @@ const createUser = async ({ userId, userName }) => {
     };
 
     await redisClient.hSet(userKey, userData);
-
-    // 初始化 Test_result 為空陣列
-    await redisClient.rPush(`${userKey}:Test_result`, JSON.stringify([]));
     
     return { message: '使用者創建成功', userId, userName };
 };

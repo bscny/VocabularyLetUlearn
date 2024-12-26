@@ -23,15 +23,13 @@ const createRoom = async ({ roomName, isPublic, password }) => {
     const roomData = {
         Room_name: roomName,
         Is_public: isPublic.toString(), // 轉為字符串避免布林值直接存儲
-        Password: isPublic ? "" : password,
     };
-    await redisClient.hSet(roomKey, roomData);
+    
+    if (!isPublic) {
+        roomData.Password = password;
+    }
 
-    // 初始化空的資料結構
-    await redisClient.rPush(`${roomKey}:Chat_messages`, JSON.stringify([]));  // 空的聊天訊息
-    await redisClient.rPush(`${roomKey}:Test_sheet`, JSON.stringify([]));      // 空的測驗題目
-    await redisClient.rPush(`${roomKey}:Users`, JSON.stringify([]));          // 空的使用者列表
-    await redisClient.rPush(`${roomKey}:Sets`, JSON.stringify([]));           // 空的學習集
+    await redisClient.hSet(roomKey, roomData);
     
     return { message: '房間創建成功', roomId };
 };
