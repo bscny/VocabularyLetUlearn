@@ -61,10 +61,12 @@ data = {
         {
             User_id: 100,
             User_name: "Alice",
+            isReady: false
         },
         {
             User_id: 101,
             User_name: "Bob",
+            isReady: false
         }
     ],
     Sets: [
