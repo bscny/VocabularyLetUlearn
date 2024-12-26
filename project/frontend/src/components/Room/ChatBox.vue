@@ -1,12 +1,12 @@
 <template>
   <div class="chat-box">
-    <h3>Room ID : {{ room }}</h3>
+    <h3>Room ID : {{ userStore.room }}</h3>
     <div class="message-list" ref="chatContainer">
       <ul>
         <li
           v-for="(msg, index) in messages"
           :key="index"
-          :class="{ self: msg.User_name === User_name, other: msg.User_name !== User_name }"
+          :class="{ self: msg.User_name === userStore.User_name, other: msg.User_name !== userStore.User_name }"
         >
           <strong>{{ msg.User_name }}:</strong> {{ msg.Content }}
         </li>
@@ -25,43 +25,28 @@
 </template>
 
 <script>
+import { ref, nextTick } from "vue";
 import socketAPI from "@/services/Room_API/socketAPI";
+import { useUserStore } from "@/stores/Room/userStore";
 
 export default {
-  data() {
-    return {
-      messages: [],
-      newMessage: "",
-      User_id: null,
-      User_name: null,
-      room: null,
-    };
-  },
-  created() {
-    socketAPI.initRoom((roomData) => {
-      this.room = roomData.room;
-    });
-    
-    socketAPI.initUser((userData) => {
-      this.User_id = userData.User_id;
-      this.User_name = userData.User_name;
-    });
-
-    socketAPI.joinRoom(this.room);
+  setup() {
+    const userStore = useUserStore();
+    const messages = ref([]);
+    const newMessage = ref("");
 
     socketAPI.onMessage((msg) => {
-      this.messages.push(msg);
-      this.$nextTick(() => this.scrollToBottom());
+      messages.value.push(msg);
+      nextTick(() => scrollToBottom());
     });
-  },
-  methods: {
-    async sendMessage() {
-      if (this.newMessage.trim()) {
+
+    const sendMessage = async () => {
+      if (newMessage.value.trim()) {
         const messageData = {
-          room: this.room,
-          User_id: this.User_id,
-          User_name: this.User_name,
-          Content: this.newMessage.trim(),
+          room: userStore.room,
+          User_id: userStore.User_id,
+          User_name: userStore.User_name,
+          Content: newMessage.value.trim(),
         };
 
         console.log("Sending message:", messageData);
@@ -73,17 +58,25 @@ export default {
           console.error("Error sending message:", error.message);
         }
 
-        this.newMessage = "";
+        newMessage.value = ""; // 清空輸入框
       } else {
         console.log("No message to send.");
       }
-    },
-    scrollToBottom() {
-      const chatContainer = this.$refs.chatContainer;
+    };
+
+    const scrollToBottom = () => {
+      const chatContainer = document.querySelector(".message-list");
       if (chatContainer) {
         chatContainer.scrollTop = chatContainer.scrollHeight;
       }
-    },
+    };
+
+    return {
+      userStore,
+      messages,
+      newMessage,
+      sendMessage,
+    };
   },
 };
 </script>

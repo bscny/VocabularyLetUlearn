@@ -5,7 +5,7 @@ const setService = require("@/redis_services/Room/setService");
 module.exports = (io) => {
   io.on("connection", (socket) => {
     const room = "1";
-    const User_id = Math.floor(Math.random() * 1000);
+    const User_id = Math.floor(Math.random() * 5);
     const User_name = `Player${User_id}`;
 
     socket.emit("init room", { room });
@@ -14,8 +14,6 @@ module.exports = (io) => {
     socket.on("join room", async (_, callback) => {
       try {
         socket.join(room);
-        await redisClient.sAdd(`Room`, room);
-    
         const userKey = `Room:${room}:Users`;
     
         const userData = { User_id, User_name, isReady: false };
@@ -148,7 +146,6 @@ module.exports = (io) => {
 
         // 若房間內已無玩家，清除該房間資料
         if (updatedPlayers.length === 0) {
-          await redisClient.sRem(`Room`, room);
           await redisClient.del(`Room:${room}:Users`);
           await redisClient.del(`Room:${room}:Sets`);
           await redisClient.del(`Room:${room}:Chat_message`);

@@ -27,6 +27,8 @@ import Navbar from '@/components/Navbar.vue';
 import SubmittedSets from '@/components/Room/SubmittedSets.vue';
 import ChatBox from '@/components/Room/ChatBox.vue';
 import LobbyPlayerList from '@/components/Room/LobbyPlayerList.vue';
+import socketAPI from '@/services/Room_API/socketAPI';
+import { useUserStore } from "@/stores/Room/userStore";
 
 export default {
   name: 'Room',
@@ -36,18 +38,26 @@ export default {
     ChatBox,
     LobbyPlayerList,
   },
-  data() {
-    return {
-      isLoggedIn: true, // 模擬登入狀態
-      userName: "Player1",
-      userEmail: "player1@example.com",
-      showLoginModal: false,
-      showRegisterModal: false,
-    };
+  setup() {
+  const userStore = useUserStore();
+
+  socketAPI.initRoom((roomData) => {
+    userStore.setRoom(roomData.room);
+    console.log("Room initialized:", roomData.room);
+
+    socketAPI.initUser((userData) => {
+      userStore.setUser(userData);
+      console.log("User initialized:", userData);
+
+      socketAPI.joinRoom(userStore.room);
+    });
+  });
+  
+  return { userStore };
   },
   methods: {
     logout() {
-      alert("登出成功！");
+      alert("Logged out successfully!");
     },
   },
 };

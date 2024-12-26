@@ -3,11 +3,10 @@
     <div class="lobby-header">
       <h3>Lobby Player Names</h3>
       <button
-        @click="markReady"
-        :disabled="isReady"
-        class="ready-button"
+        @click="toggleReady"
+        :class="isReady ? 'cancel-ready-button' : 'ready-button'"
       >
-        {{ isReady ? "Ready!" : "Click to Ready" }}
+        {{ isReady ? "Cancel Ready" : "Click to Ready" }}
       </button>
     </div>
 
@@ -39,6 +38,7 @@
 
 <script>
 import socketAPI from "@/services/Room_API/socketAPI";
+import { useUserStore } from "@/stores/Room/userStore";
 
 export default {
   data() {
@@ -68,12 +68,12 @@ export default {
     });
   },
   methods: {
-    markReady() {
+    toggleReady() {
       socketAPI.emitReady((res) => {
         if (res.success) {
-          this.isReady = true;
+          this.isReady = !this.isReady;
         } else {
-          alert(`Failed to mark ready: ${res.message}`);
+          alert(`Failed to toggle ready: ${res.message}`);
         }
       });
     },
@@ -95,7 +95,6 @@ export default {
 </script>
 
 <style scoped>
-
 .lobby-player-list {
   background: #f9f9f9;
   padding: 20px;
@@ -116,27 +115,29 @@ export default {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
-  background-color: #cc0000;
+  background-color: #28a745;
   color: white;
   cursor: pointer;
 }
-.ready-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+
+.cancel-ready-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ccc; /* 灰色 */
+  color: black;
+  cursor: pointer;
 }
 
-.owner-action {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+.cancel-ready-button:hover {
+  background-color: #b3b3b3; /* 淺灰色 */
 }
 
 .start-button {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
-  background-color: #28a745;
+  background-color: #007bff;
   color: white;
   cursor: pointer;
 }

@@ -1,18 +1,18 @@
-import axios from "axios";
+import apiClient from '@/services/APIclient';
 
-const API_URL = "http://localhost:3000/api";
+const api = {
 
-export default {
-
-  async fetchSubmittedSets(roomId) {
-    return await axios.get(`${API_URL}/room/${roomId}/submitted-sets`);
+  fetchSubmittedSets(roomId) {
+    return apiClient.get(`/api/room/${roomId}/submitted-sets`);
   },
   
-  async fetchUserSets(userId) {
-    return await axios.get(`${API_URL}/${userId}/word-sets`);
+  fetchUserSets(userId) {
+    return apiClient.get(`/api/${userId}/word-sets`);
   },
 
-  async submitSet(data) {
-    return await axios.post(`${API_URL}/submit-set`, data);
+  submitSet(data) {
+    return apiClient.post(`/api/submit-set`, data);
   },
 };
+
+export default api;
