@@ -49,7 +49,7 @@ import { useUserStore } from '@/stores/User/userStore.js';
         try {
           const response = await JoinRoom(this.roomId, user.userId, user.userName, this.password);
           this.roomStore.roomId = response.roomId;
-          console.log("加入房間成功：", response);
+          console.error("加入房間成功：", response);
           this.$emit("joinDone"); // 通知父組件
         } catch (error) {
             console.error("加入房間失敗：", error.message);
