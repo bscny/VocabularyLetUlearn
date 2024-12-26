@@ -6,7 +6,7 @@ const roomController = require('@/controllers/Create_Join_Room/roomController.js
 router.post('/create-room', roomController.createRoom);
 
 // 加入房間
-router.post('/join-room', roomController.joinRoom);
+router.put('/join-room', roomController.joinRoom);
 
 // 離開房間
 router.post('/leave-room', roomController.leaveRoom);

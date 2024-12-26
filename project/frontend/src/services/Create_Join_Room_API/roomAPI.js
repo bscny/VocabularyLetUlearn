@@ -17,7 +17,7 @@ async function CreateRoom(ROOM_NAME, IS_PUBLIC, PWD) {
 }
 
 async function JoinRoom(ROOM_ID, USER_ID, USER_NAME, PWD) {
-    const response = await apiClient.post(`/create_join_room/rooms/join-room`,
+    const response = await apiClient.put(`/create_join_room/rooms/join-room`,
     {
         roomId: ROOM_ID,
         userId: USER_ID,
