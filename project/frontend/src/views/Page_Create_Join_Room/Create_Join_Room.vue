@@ -12,6 +12,7 @@
     <div v-else class="form-container">
       <JoinRoom @join-room="handleJoinRoom" />
     </div>
+    <button class="home-button" @click="goToHome">回到首頁</button>
   </div>
 </template>
 
@@ -30,14 +31,9 @@ export default {
     };
   },
   methods: {
-    handleCreateRoom(roomData) {
-      console.log('創建房間資料:', roomData);
-      // 處理創建房間邏輯
+    goToHome() {
+      this.$router.push('/home-logged-in'); // 假設首頁路徑為 '/'
     },
-    handleJoinRoom(roomData) {
-      console.log('加入房間資料:', roomData);
-      // 處理加入房間邏輯
-    }
   }
 };
 </script>
