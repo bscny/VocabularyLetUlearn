@@ -16,6 +16,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: "http://localhost:5173" },
 });
+app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
@@ -49,6 +50,14 @@ app.use('/api/set', landing_setRoutes);
 // Account related aka "log in page"
 const authRoutes = require('@/routes/Account/authRoutes.js');
 app.use('/auth', authRoutes);
+
+// create and join room
+const roomRoute = require('@/routes/Create_Join_Room/roomRoute.js');
+const userRoute = require('@/routes/Create_Join_Room/userRoute.js');
+
+app.use('/create_join_room/rooms', roomRoute);
+app.use('/create_join_room/users', userRoute);
+// routes end
 
 app.get("/test", (req, res) => {
   res.status(200).send({ 'success': 'success' });

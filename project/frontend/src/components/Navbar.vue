@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/User/userStore.js';
 export default {
     props: {
         isLoggedIn: Boolean,
@@ -51,7 +52,10 @@ export default {
             _userEmail: this.userEmail
         };
     },
-
+    setup() {
+        const userStore = useUserStore(); // 使用 Pinia Store
+        return { userStore };
+    },
     methods: {
         GotoHomePage() {
             if(this._isLoggedIn){
@@ -66,13 +70,13 @@ export default {
         },
 
         Logout(){
-            localStorage.removeItem('USER_ID');
             localStorage.removeItem('name');
             localStorage.removeItem('token');
             localStorage.removeItem('email');
-            this._isLoggedIn = false;
+            this.userStore.clearUser();
+            /*this._isLoggedIn = false;
             this._userName = '';
-            this._userEmail = '';
+            this._userEmail = '';*/
 
             this.$router.push({
                 name: 'Home'
