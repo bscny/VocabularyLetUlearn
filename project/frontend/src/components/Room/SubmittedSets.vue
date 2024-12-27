@@ -1,12 +1,13 @@
 <template>
   <div class="submitted-sets">
     <h3>The set player submitted</h3>
-    <ul ref="setList" v-if="submittedSets.length > 0" class="set-list">
+    <div v-if="loading" class="loading">Loading...</div>
+    <ul ref="setList" v-if="!loading && submittedSets.length > 0" class="set-list">
       <li v-for="(set, index) in submittedSets" :key="set.setId">
         {{ set.setName }}
       </li>
     </ul>
-    <p v-else>No sets submitted yet.</p>
+    <p v-else-if="!loading">No sets submitted yet.</p>
 
     <div class="select-set">
       <div class="action-row">
@@ -28,121 +29,122 @@
 <script>
 import setAPI from "@/services/Room_API/setAPI";
 import socketAPI from "@/services/Room_API/socketAPI";
+import { useUserStore } from "@/stores/Room/userStore";
+import { ref, computed, watch, nextTick } from "vue";
 
 export default {
-  data() {
-    return {
-      submittedSets: [],
-      availableSets: [],
-      selectedSetId: null,
-      userId: 2, // 預設用戶 ID
-      roomId: 1, // 房間 ID
-      loading: false,
-    };
-  },
-  async created() {
+  setup() {
+    const userStore = useUserStore();
 
-    socketAPI.initRoom((roomData) => {
-      this.roomId = roomData.room;
-    });
+    const userId = computed(() => userStore.User_id);
+    const roomId = computed(() => userStore.room);
 
-    socketAPI.initUser((userData) => {
-      this.User_id = userData.User_id;
-      this.User_name = userData.User_name;
-    });
+    const submittedSets = ref([]);
+    const availableSets = ref([]);
+    const selectedSetId = ref(null);
+    const loading = ref(false);
+    const setList = ref(null);
 
-    socketAPI.onSetSubmitted((data) => {
-      console.log("[INFO] New set received:", data);
-      const isDuplicate = this.submittedSets.some((set) => set.setId === data.setId);
-      if (!isDuplicate) {
-        this.submittedSets.push({
-          setId: data.setId,
-          setName: data.setName,
-        });
-        this.scrollToBottom();
-      }
-    });
-
-    await this.fetchRoomSubmittedSets();
-    await this.fetchAvailableSets();
-  },
-  methods: {
-    // 獲取已提交的 set
-    async fetchRoomSubmittedSets() {
-  try {
-    const response = await setAPI.fetchSubmittedSets(this.roomId);
-
-    this.submittedSets = response.data.map((set) => ({
-      setId: set.setId,
-      setName: set.setName,
-    }));
-    console.log("Processed submittedSets:", this.submittedSets);
-  } catch (error) {
-    console.error("Failed to fetch submitted sets:", error.message);
-  }
-},
-
-    // 獲取可選擇的 set
-    async fetchAvailableSets() {
+    const fetchRoomSubmittedSets = async () => {
+      if (!roomId.value) return;
       try {
-        const response = await setAPI.fetchUserSets(this.userId);
-        this.availableSets = Array.isArray(response.data) ? response.data : [];
-        console.log("Available sets fetched:", this.availableSets);
+        const response = await setAPI.fetchSubmittedSets(roomId.value);
+        submittedSets.value = response.data.map((set) => ({
+          setId: set.setId,
+          setName: set.setName,
+        }));
+        console.log("Processed submittedSets:", submittedSets.value);
+      } catch (error) {
+        console.error("Failed to fetch submitted sets:", error.message);
+      }
+    };
+
+    const fetchAvailableSets = async () => {
+      if (!userId.value) return;
+      try {
+        const response = await setAPI.fetchUserSets(userId.value);
+        availableSets.value = Array.isArray(response.data) ? response.data : [];
+        console.log("Available sets fetched:", availableSets.value);
       } catch (error) {
         console.error("Failed to fetch available sets:", error.message);
         alert("Failed to fetch available sets. Please try again.");
       }
-    },
+    };
 
-    // 提交 set
-    async handleReady() {
-      if (!this.selectedSetId || !this.roomId) {
+    const handleReady = async () => {
+      if (!selectedSetId.value || !roomId.value) {
         alert("Please select a set and make sure you are in a room.");
         return;
       }
-      
-      // 防止重複提交
-      const isDuplicate = this.submittedSets.some(
-        (set) => set.setId === this.selectedSetId
-      );
+
+      const isDuplicate = submittedSets.value.some((set) => set.setId === selectedSetId.value);
       if (isDuplicate) {
         alert("This set has already been submitted.");
         return;
       }
 
-      this.loading = true;
-      const selectedSet = this.availableSets.find((set) => set.SET_ID === this.selectedSetId);
+      loading.value = true;
+      const selectedSet = availableSets.value.find((set) => set.SET_ID === selectedSetId.value);
       if (!selectedSet) {
         alert("Invalid set selection. Please try again.");
-        this.loading = false;
+        loading.value = false;
         return;
       }
 
-      socketAPI.submitSet(this.roomId, selectedSet.SET_ID, selectedSet.SET_NAME, (response) => {
+      socketAPI.submitSet(roomId.value, selectedSet.SET_ID, selectedSet.SET_NAME, (response) => {
         if (response && response.success) {
           console.log("[INFO] Set submitted successfully:", selectedSet.SET_NAME);
-          this.submittedSets.push({
+          submittedSets.value.push({
             setId: selectedSet.SET_ID,
             setName: selectedSet.SET_NAME,
           });
-          this.scrollToBottom();
-          this.selectedSetId = null;
+          scrollToBottom();
+          selectedSetId.value = null;
         } else {
           alert("Failed to submit set.");
           console.error("[ERROR] Failed to submit set:", response?.message || "Unknown error");
         }
-        this.loading = false;
+        loading.value = false;
       });
-    },
+    };
 
-    scrollToBottom() {
-      this.$nextTick(() => {
-        const setList = this.$refs.setList;
-        if (setList) {
-          setList.scrollTop = setList.scrollHeight;
+    const scrollToBottom = () => {
+      nextTick(() => {
+        if (setList.value) {
+          setList.value.scrollTop = setList.value.scrollHeight;
         }
       });
-    },
+    };
+
+    socketAPI.onSetSubmitted((data) => {
+      if (!submittedSets.value.some((set) => set.setId === data.setId)) {
+        submittedSets.value.push({
+          setId: data.setId,
+          setName: data.setName,
+        });
+        scrollToBottom();
+      }
+    });
+
+    // 監控 userId 和 roomId
+    watch(userId, (newUserId) => {
+      if (newUserId) fetchAvailableSets();
+    });
+
+    watch(roomId, (newRoomId) => {
+      if (newRoomId) fetchRoomSubmittedSets();
+    });
+
+    return {
+      userId,
+      roomId,
+      submittedSets,
+      availableSets,
+      selectedSetId,
+      loading,
+      handleReady,
+      setList,
+    };
   },
 };
 </script>
