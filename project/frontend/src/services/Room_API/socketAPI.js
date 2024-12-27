@@ -72,7 +72,7 @@ export default {
 
   onPlayersUpdate(callback) {
     socket.on("update players", (players) => {
-      const data = { players };  
+      const data = { players };
       callback(data);
     });
   },
@@ -98,4 +98,9 @@ export default {
       if (callback) callback(response);
     });
   },
+
+  leaveRoom(room, callback) {
+    console.log("[DEBUG] Emitting leave room with callback:", typeof callback);
+    socket.emit("leave room", room, callback);
+  }
 }

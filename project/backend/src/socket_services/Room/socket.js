@@ -125,6 +125,46 @@ module.exports = (io) => {
         if (callback) callback({ success: false, message: "Failed to submit set" });
       }
     });
+    
+    socket.on("leave room", async (room, callback) => {
+  try {
+    socket.leave(room);
+    const userKey = `Room:${room}:Users`;
+
+    const players = await redisClient.lRange(userKey, 0, -1);
+    const parsedPlayers = players.map((player) => JSON.parse(player));
+
+    const updatedPlayers = parsedPlayers.filter((player) => player.User_id !== User_id);
+
+    await redisClient.del(userKey);
+    for (const player of updatedPlayers) {
+      await redisClient.rPush(userKey, JSON.stringify(player));
+    }
+
+    io.to(room).emit("update players", updatedPlayers);
+
+    console.log(`[INFO] User ${User_id} left room: ${room}`);
+
+    if (updatedPlayers.length === 0) {
+      await redisClient.del(`Room:${room}:Users`);
+      await redisClient.del(`Room:${room}:Sets`);
+      await redisClient.del(`Room:${room}:Chat_message`);
+      console.log(`[INFO] Room ${room} is now empty and has been deleted`);
+    }
+
+    // 確保回調函數是有效的函數
+    if (typeof callback === "function") {
+      callback({ success: true });
+    } else {
+      console.warn("[WARN] Callback is not a function.");
+    }
+  } catch (error) {
+    console.error("[ERROR] Failed to leave room", error);
+    if (typeof callback === "function") {
+      callback({ success: false, message: "Failed to leave room" });
+    }
+  }
+});
 
     socket.on("disconnect", async () => {
       console.log(`[INFO] User disconnected: ${User_name}`);

@@ -15,8 +15,8 @@
       <ChatBox class="chat-box" />
       <LobbyPlayerList class="lobby-player-list" />
 
-      <div class="ready-button">
-        <ReadyButton />
+      <div class="leave-button">
+        <button @click="leaveRoom">Leave Room</button>
       </div>
     </div>
   </div>
@@ -57,8 +57,27 @@ export default {
   },
   methods: {
     logout() {
-      alert("Logged out successfully!");
+      this.User_id = null;
+      this.User_name = null;
+      this.room = null;
+
+      this.$router.push('/');
+      alert("登出成功！");
     },
+
+    leaveRoom() {
+      console.log("Attempting to leave room...");
+      socketAPI.leaveRoom(this.userStore.room, (response) => {
+        if (response.success) {
+          console.log("Successfully left room:");
+          this.$router.push({
+                    name: 'HomeLoggedIn'
+                });
+        } else {
+          console.error("Failed to leave room");
+        }
+      });
+    }
   },
 };
 </script>
@@ -121,6 +140,24 @@ export default {
   height: 100%; /* 填滿高度 */
 }
 
+.leave-button button {
+  background-color: #ff4d4f;
+  color: white;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.leave-button button:hover {
+  background-color: #ff1a1c;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
+}
 
 @media (max-width: 768px) {
   .main-content {
