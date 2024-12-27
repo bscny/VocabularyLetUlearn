@@ -52,6 +52,7 @@ import { useRoomStore } from '@/stores/Room/RoomStore.js';
         try {
           const response = await CreateRoom(this.roomName, this.isPublic, this.password);
           console.error("房間創建成功：", response);
+          alert("已建立房間，roomID：" + response.roomId);
           this.$emit("creationDone");
           roomId = response.roomId;
         } catch (error) {
