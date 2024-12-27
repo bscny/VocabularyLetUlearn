@@ -20,7 +20,7 @@ export default {
                 { name: 'Search', route: '/home-logged-in', icon: '/icons/search-icon.png' },
                 { name: 'My Set', route: '/userinventory', icon: '/icons/my_set-icon.png' },
                 { name: 'Ranking Exam', route: '/ranking-exam', icon: '/icons/ranking_exam-icon.png' },
-                { name: 'Room', route: '/room', icon: '/icons/room-icon.png' },
+                { name: 'Room', route: '/create-join-room', icon: '/icons/room-icon.png' },
             ]
         };
     },

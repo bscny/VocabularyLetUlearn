@@ -1,16 +1,16 @@
 <template>
     <div class="home">
         <Navbar 
-            :isLoggedIn="isLoggedIn" 
-            :userName="userName"
-            :userEmail="userEmail" 
+            :isLoggedIn="userStore.isLoggedIn" 
+            :userName="userStore.userName"
+            :userEmail="userStore.userEmail" 
             @toggleLoginModal="showLoginModal = true" 
             @toggleRegisterModal="showRegisterModal = true" 
             @logout="logout" 
         />
 
         <div class="main-layout">
-            <Content :isLoggedIn="isLoggedIn" :userEmail="userEmail" :userName="userName" />
+            <Content :isLoggedIn="userStore.isLoggedIn" :userEmail="userStore.userEmail" :userName="userStore.userName" />
         </div>
         
         <LoginModal 
@@ -50,6 +50,7 @@ import ForgetPasswordModal from '@/components/Account/ForgetPasswordModal.vue';
 import Content from '@/components/Account/Content.vue';
 import VerifyPrompt from '@/components/Account/VerifyPrompt.vue';
 import api from '@/services/Account_API/accountAPI.js';
+import { useUserStore } from '@/stores/User/userStore.js';
 
 export default {
     components: {
@@ -81,6 +82,10 @@ export default {
             this.userEmail = JSON.parse(localStorage.getItem('email'));
         }
     },
+    setup() {
+        const userStore = useUserStore(); // 使用 Pinia Store
+        return { userStore };
+    },
     methods: {
         handleLogin(userData) {
             api.login(userData).then(response => {
@@ -89,13 +94,17 @@ export default {
                 localStorage.setItem('token', JSON.stringify(response.data.token));
                 localStorage.setItem('email', JSON.stringify(userData.email));
 
+                this.userStore.setUser(response.data.USER_ID,response.data.name, response.data.email);
+               
+
+                /*
                 this.isLoggedIn = true;
                 this.userName = response.data.name;
                 this.userEmail = userData.email;
                 this.showLoginModal = false;
                 this.loginError = '';
-
-                this.updateLastLogin(this.userEmail);
+                */
+                this.updateLastLogin(this.userStore.userEmail);
 
                 if (!response.data.isVerified) {
                     this.showVerifyPrompt = true;
@@ -138,10 +147,13 @@ export default {
             localStorage.removeItem('name');
             localStorage.removeItem('token');
             localStorage.removeItem('email');
+
+            this.userStore.clearUser();
+            /*
             this.isLoggedIn = false;
             this.userName = '';
             this.userEmail = '';
-
+            */
             this.$router.push({
                 name: 'Home'
             });

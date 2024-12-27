@@ -19,6 +19,7 @@ import Navbar from '@/components/Navbar.vue';
 import LeftSideBar from '@/components/Landing/LeftSideBar.vue';
 import SearchResult from '@/components/Landing/SearchResult.vue';
 import UserDashboard from '@/components/Landing/UserDashboard.vue';
+import { useUserStore } from '@/stores/User/userStore.js';
 
 export default {
     components: {
@@ -48,15 +49,21 @@ export default {
             this.userEmail = JSON.parse(localStorage.getItem('email'));
         }
     },
+    setup() {
+        const userStore = useUserStore(); // 使用 Pinia Store
+        return { userStore };
+    },
     methods: {
         logout() {
             localStorage.removeItem('USER_ID');
             localStorage.removeItem('name');
             localStorage.removeItem('token');
             localStorage.removeItem('email');
+            this.userStore.clearUser();
+            /*
             this.isLoggedIn = false;
             this.userName = '';
-            this.userEmail = '';
+            this.userEmail = '';*/
 
             this.$router.push({
                 name: 'Home'

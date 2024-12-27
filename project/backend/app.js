@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use(cors({
     origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
@@ -44,6 +44,12 @@ const authRoutes = require('@/routes/Account/authRoutes.js');
 
 app.use('/auth', authRoutes);
 
+// create and join room
+const roomRoute = require('@/routes/Create_Join_Room/roomRoute.js');
+const userRoute = require('@/routes/Create_Join_Room/userRoute.js');
+
+app.use('/create_join_room/rooms', roomRoute);
+app.use('/create_join_room/users', userRoute);
 // routes end
 
 app.get("/test", (req, res) => {
