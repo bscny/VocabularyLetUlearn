@@ -43,7 +43,6 @@ import {
 import {
     useRoomStore,
 } from "@/stores/Room/RoomStore.js";
-import { LeaveRoom } from '@/services/Create_Join_Room_API/roomAPI';
 
 export default {
     name: 'Room',
@@ -78,6 +77,7 @@ export default {
     async created() {
         await this.FetchData();
         await this.GetAvailableSets();
+        this.CalculateReadyPlayers()
 
         this.renderFlag = true;
 
@@ -122,6 +122,16 @@ export default {
 
         async GetAvailableSets(){
             this.availableSets = await getSetsByUserID(this.USER_ID);
+        },
+
+        CalculateReadyPlayers(){
+            // in case user refresh the page and disordered the counter, we do it everytime created
+            this.readyCount = 0;
+            for(let i = 0; i < this.players.length; i ++){
+                if(this.players[i].isReady == true){
+                    this.readyCount ++;
+                }
+            }
         },
 
         AddSubmitSet(newSet){
@@ -179,7 +189,9 @@ export default {
         },
 
         StartGame(){
-
+            this.$router.push({
+                name: 'RoomTesting'
+            });
         }
     },
 };

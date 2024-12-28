@@ -63,10 +63,8 @@ app.use('/create_join_room/rooms', roomRoute);
 app.use('/create_join_room/users', userRoute);
 
 // In room
-const room_setRoutes = require('@/routes/Room/setRoutes.js');
 const inRoomRoute = require("@/routes/Room/roomRoutes.js");
 
-app.use(room_setRoutes);
 app.use("/room", inRoomRoute);
 
 // room exam related

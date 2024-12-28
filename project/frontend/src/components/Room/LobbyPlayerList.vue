@@ -68,6 +68,16 @@ export default {
             }
         }
     },
+
+    created(){
+        for(let i = 0; i < this.players.length; i ++){
+            if(this.players[i].User_id == this.USER_ID){
+                // set isready
+                this.isReady = this.players[i].isReady;
+            }
+        }
+    },
+
     computed: {
         // 只有全部玩家都 ready 時，才可開始遊戲
         CanStart() {

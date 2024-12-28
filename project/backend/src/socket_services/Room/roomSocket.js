@@ -1,7 +1,6 @@
 const roomService = require("@/redis_services/Room/roomService.js");
 const chatService = require("@/redis_services/Room/chatService");
 const setService = require("@/redis_services/Room/setService");
-const { RootNodesUnavailableError, SocketClosedUnexpectedlyError } = require("redis");
 
 module.exports = (io) => {
     io.on("connection", (socket) => {
