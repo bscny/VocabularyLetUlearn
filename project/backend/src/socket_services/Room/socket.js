@@ -4,10 +4,6 @@ const setService = require("@/redis_services/Room/setService");
 
 module.exports = (io) => {
 	io.on("connection", (socket) => {
-		const room = 1;
-		const User_id = 1;
-		const User_name = `Player${User_id}`;
-
 		// socket.emit("init room", { room });
 		// socket.emit("init user", { room, User_id, User_name });
 		socket.on("init room", async function (Roominfo) {

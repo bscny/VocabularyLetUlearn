@@ -1,11 +1,16 @@
 <template>
-    <Navbar/>
+    <Navbar />
 
     <div class="container">
         <div class="main-content">
-            <SubmittedSets class="submitted-sets" />
-            <ChatBox class="chat-box" />
-            <LobbyPlayerList class="lobby-player-list" />
+            <!-- <SubmittedSets class="submitted-sets" /> -->
+            <ChatBox class="chat-box"   :messages="messages"
+                                        :ROOM_ID="roomStore.ROOM_ID"
+                                        @AddNewMessage="AddNewMessage($event)" />
+
+            <LobbyPlayerList class="lobby-player-list" v-if="players.length > 0"    :players="players"
+                                                                                    :readyCount="readyCount"
+                                                                                    @ToggleReady="UpdateReadyCount($event)" />
 
             <div class="leave-button">
                 <button @click="leaveRoom">Leave Room</button>
@@ -16,64 +21,130 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-import SubmittedSets from '@/components/Room/SubmittedSets.vue';
+// import SubmittedSets from '@/components/Room/SubmittedSets.vue';
 import ChatBox from '@/components/Room/ChatBox.vue';
 import LobbyPlayerList from '@/components/Room/LobbyPlayerList.vue';
-import socketAPI from '@/services/Room_API/socketAPI';
-import { useUserStore } from "@/stores/Room/userStore";
+
+import { io } from "socket.io-client";
+
+import {
+    GetInitRoom,
+    GetPlayerInRoom,
+    GetSetsInRoom,
+    GetMessagesInRoom,
+} from '@/services/Room_API/roomAPI';
+
+import {
+    useRoomStore,
+} from "@/stores/Room/RoomStore.js";
 
 export default {
     name: 'Room',
     components: {
         Navbar,
-        SubmittedSets,
+        // SubmittedSets,
         ChatBox,
         LobbyPlayerList,
     },
 
-    data(){
-        return{
-            userStore: useUserStore(),
+    data() {
+        return {
+            roomStore: useRoomStore(),
+            USER_ID: JSON.parse(localStorage.getItem("USER_ID")),
+            User_name: JSON.parse(localStorage.getItem("name")),
+
+            socket: io("http://localhost:3000"),
+
+            roomInfo: null,
+            messages: [],
+            setsUsed: [],
+            players: [],
+
+            readyCount: 0,
         };
     },
 
-    async created() {
-        // fake data:
-        const roomInfo = {
-            Room_ID: 1,
-            Room_name: "English Learning Room",
-            Is_public: true,
-        };
+    // async setup(){
+    //     this.roomStore.ROOM_ID = JSON.parse(localStorage.getItem("ROOM_ID"));
 
-        // socketAPI.initRoom((roomData) => {
-        //     userStore.setRoom(roomData.room);
-        //     console.log("Room initialized:", roomData.room);
-
-        //     socketAPI.initUser((userData) => {
-        //         userStore.setUser(userData);
-        //         console.log("User initialized:", userData);
-
-        //         socketAPI.joinRoom(userStore.room);
-        //     });
-        // });
-
-        socketAPI.initRoom(roomInfo);
-    },
+    //     // get data from backend (redis) to know current room info
+    //     this.roomInfo = await GetInitRoom(this.roomStore.ROOM_ID);
+    //     this.players = await GetPlayerInRoom(this.roomStore.ROOM_ID);
+    //     this.setsUsed = await GetSetsInRoom(this.roomStore.ROOM_ID);
+    //     this.messages = await GetMessagesInRoom(this.roomStore.ROOM_ID);
+    // },
     
+    async created() {
+        await this.FetchData();
+
+        this.socket.emit("join-room", this.roomStore.ROOM_ID);
+        
+        // dealing with all socket listened events:
+        // other user just join the room!
+        this.socket.on("update-player-list", async () => {
+            this.players = await GetPlayerInRoom(this.roomStore.ROOM_ID);
+        });
+
+        // other player just toggle the ready button!
+        this.socket.on("set-ready-count", async (val) => {
+            this.readyCount = val;
+        });
+
+        // other player just send amsg to chat box
+        this.socket.on("update-chat-message", async () => {
+            this.messages = await GetMessagesInRoom(this.roomStore.ROOM_ID);
+        });
+    },
+
     methods: {
-        leaveRoom() {
-            console.log("Attempting to leave room...");
-            socketAPI.leaveRoom(this.userStore.room, (response) => {
-                if (response.success) {
-                    console.log("Successfully left room:");
-                    this.$router.push({
-                        name: 'HomeLoggedIn'
-                    });
-                } else {
-                    console.error("Failed to leave room");
-                }
-            });
+        async FetchData() {
+            this.roomStore.ROOM_ID = JSON.parse(localStorage.getItem("ROOM_ID"));
+
+            // get data from backend (redis) to know current room info
+            this.roomInfo = await GetInitRoom(this.roomStore.ROOM_ID);
+            this.players = await GetPlayerInRoom(this.roomStore.ROOM_ID);
+            this.setsUsed = await GetSetsInRoom(this.roomStore.ROOM_ID);
+            this.messages = await GetMessagesInRoom(this.roomStore.ROOM_ID);
         },
+
+        AddNewMessage(newMsg){
+            // first, add message to sender's own array
+            const newChatMessage = {
+                User_id: this.USER_ID,
+                User_name: this.User_name,
+                Content: newMsg
+            }
+            this.messages.push(newChatMessage);
+
+            // then broadcast to other player to fetch data from the updated redis db
+            this.socket.emit("send-chat-message", this.roomStore.ROOM_ID, newChatMessage);
+        },
+
+        UpdateReadyCount(val){
+            if(val){
+                // user just toggle to ready
+                this.readyCount ++;
+            }else{
+                this.readyCount --;
+            }
+
+            // call socket to broadcast the new ready count
+            this.socket.emit("update-ready-count", this.readyCount, this.roomStore.ROOM_ID, this.USER_ID);
+        }
+
+        // leaveRoom() {
+        //     console.log("Attempting to leave room...");
+        //     socketAPI.leaveRoom(this.userStore.room, (response) => {
+        //         if (response.success) {
+        //             console.log("Successfully left room:");
+        //             this.$router.push({
+        //                 name: 'HomeLoggedIn'
+        //             });
+        //         } else {
+        //             console.error("Failed to leave room");
+        //         }
+        //     });
+        // },
     },
 };
 </script>

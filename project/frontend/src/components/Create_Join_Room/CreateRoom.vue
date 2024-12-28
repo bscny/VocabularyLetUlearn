@@ -60,12 +60,10 @@ export default {
             let roomId
             try {
                 const response = await CreateRoom(this.roomName, this.isPublic, this.password);
-                console.error("房間創建成功：", response);
                 alert("已建立房間，roomID：" + response.roomId);
                 this.$emit("creationDone");
                 roomId = response.roomId;
             } catch (error) {
-                console.error("創建房間失敗：", error.message);
                 alert("房間創建失敗，請重試！");
             }
             this.userName = this.userStore.userName;
@@ -73,6 +71,7 @@ export default {
             const user = await CreateUser(this.userId, this.userName);
             const response = await JoinRoom(roomId, user.userId, user.userName, this.password); // 創建者先加入房間
             this.roomStore.ROOM_ID = response.roomId;
+            localStorage.setItem("ROOM_ID", JSON.stringify(response.roomId));
         }
     }
 };

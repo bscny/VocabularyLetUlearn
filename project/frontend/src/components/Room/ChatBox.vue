@@ -1,82 +1,68 @@
 <template>
     <div class="chat-box">
-        <h3>Room ID : {{ userStore.room }}</h3>
+        <h3>Room ID : {{ ROOM_ID }}</h3>
         <div class="message-list" ref="chatContainer">
-            <ul>
+            <ul v-if="messages.length > 0">
                 <li v-for="(msg, index) in messages" :key="index"
-                    :class="{ self: msg.User_name === userStore.User_name, other: msg.User_name !== userStore.User_name }">
+                    :class="{ self: msg.User_id === USER_ID, other: msg.User_id !== USER_ID }">
                     <strong>{{ msg.User_name }}:</strong> {{ msg.Content }}
                 </li>
             </ul>
         </div>
         <div class="message-input">
-            <input v-model="newMessage" type="text" placeholder="Send a message..." @keyup.enter="sendMessage" />
-            <button @click="sendMessage">Send</button>
+            <input v-model="newMessage" type="text" placeholder="Send a message..." @keyup.enter="SendMessage" />
+            <button @click="SendMessage">Send</button>
         </div>
     </div>
 </template>
 
 <script>
-import { ref, nextTick } from "vue";
-import socketAPI from "@/services/Room_API/socketAPI";
-import { useUserStore } from "@/stores/Room/userStore";
 
 export default {
     data(){
         return{
-            userStore: useUserStore(),
-            messages: [],
             newMessage: "",
+
+            USER_ID: JSON.parse(localStorage.getItem("USER_ID")),
         };
     },
 
+    props: {
+        ROOM_ID: Number,
+        messages: Array,
+    },
+
     methods: {
-        async sendMessage(){
+        async SendMessage(){
             if (this.newMessage != "") {
-                // fake data:
-                const messageData = {
-                    room: 1,
-                    User_id: JSON.parse(localStorage.getItem("USER_ID")),
-                    User_name: JSON.parse(localStorage.getItem("name")),
-                    Content: this.newMessage,
-                };
-
-                const newMessage = { 
-                    User_id: JSON.parse(localStorage.getItem("USER_ID")),
-                    User_name: JSON.parse(localStorage.getItem("name")),
-                    Content: this.newMessage,
-                };
-        
-                try {
-                    await socketAPI.sendMessage(messageData);
-
-                    // add new msg to sender's own array
-                    this.messages.push(newMessage);
-
-                    console.log("Message sent successfully");
-                } catch (error) {
-                    console.error("Error sending message:", error.message);
-                }
-        
+                this.$emit("AddNewMessage", this.newMessage);
+                
                 this.newMessage = ""; // 清空輸入框 
-            } else {
-                console.log("No message to send.");
             }
         },
 
         scrollToBottom(){
-            const chatContainer = document.querySelector(".message-list");
+            const chatContainer = this.$refs.chatContainer;
             if (chatContainer) {
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         },
     },
 
-    async created() {
-        socketAPI.onMessage((msg) => {
-            this.messages.push(msg);
-            nextTick(() => this.scrollToBottom());
-        });
+    mounted(){
+        this.scrollToBottom();
+    },
+
+    watch: {
+        // Watch for changes in the messages prop and scroll to the bottom
+        messages: {
+            handler() {
+                this.$nextTick(() => {
+                    this.scrollToBottom();
+                });
+            },
+            deep: true, // Ensure nested changes in messages are detected
+        },
     },
 };
 </script>

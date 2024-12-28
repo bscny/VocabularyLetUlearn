@@ -4,7 +4,7 @@
         <form @submit.prevent="joinRoom">
             <div>
                 <label for="roomId">房間 ID：</label>
-                <input type="text" v-model="roomId" required />
+                <input type="number" v-model="roomId" required />
             </div>
             <div>
                 <label for="password">密碼：</label>
@@ -29,7 +29,7 @@ import { useUserStore } from '@/stores/User/userStore.js';
 export default {
     data() {
         return {
-            roomId: '',
+            roomId: null,
             userId: '',
             userName: '',
             password: ''
@@ -57,11 +57,10 @@ export default {
             try {
                 const response = await JoinRoom(this.roomId, user.userId, user.userName, this.password);
                 this.roomStore.ROOM_ID = response.roomId;
-                console.error("加入房間成功：", response);
+                localStorage.setItem("ROOM_ID", JSON.stringify(response.roomId));
                 alert("成功加入房間");
                 this.$emit("joinDone"); // 通知父組件
             } catch (error) {
-                console.error("加入房間失敗：", error.message);
                 alert("加入房間失敗，請重試！");
             }
         }

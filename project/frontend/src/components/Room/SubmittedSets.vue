@@ -29,7 +29,7 @@
 <script>
 import setAPI from "@/services/Room_API/setAPI";
 import socketAPI from "@/services/Room_API/socketAPI";
-import { useUserStore } from "@/stores/Room/userStore";
+// import { useUserStore } from "@/stores/Room/userStore";
 import { ref, computed, watch, nextTick } from "vue";
 
 export default {

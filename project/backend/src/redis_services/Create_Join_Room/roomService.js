@@ -60,7 +60,7 @@ const joinRoom = async (roomId, user) => {
     }
 
     // 加入房間
-    const userInfo = JSON.stringify({ User_id: user.userId, User_name: user.userName });
+    const userInfo = JSON.stringify({ User_id: user.userId, User_name: user.userName, isReady: false });
     await redisClient.rPush(`${roomKey}:Users`, userInfo);
 
     // 更新使用者的 In_room_id

@@ -2,9 +2,6 @@
 const express = require('express');
 require('express-async-errors');
 
-const http = require('http');
-const { Server } = require('socket.io');
-
 require('module-alias/register');
 
 const bodyParser = require('body-parser');
@@ -15,24 +12,25 @@ dotenv.config();
 
 const app = express();
 
+const http = require('http');
 const server = http.createServer(app);
+
+// start initializing------------------------------------------------------------------
+const PORT = process.env.PORT || 3000;
+
+const { Server } = require('socket.io');
 const io = new Server(server, {
     cors: {
         origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
     },
 });
-
-// start initializing------------------------------------------------------------------
-const PORT = process.env.PORT || 3000;
+require("@/socket_services/Room/roomSocket.js")(io);
 
 app.use(bodyParser.json());
 app.use(cors({
     origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
 }));
 app.use(express.json());
-
-require("@/socket_services/Room/socket")(io);
-
 
 // routes are here -------------------------------------------------------------------
 // user's inventory aka "my sets page"
@@ -57,15 +55,6 @@ app.use('/api/set', landing_setRoutes);
 const authRoutes = require('@/routes/Account/authRoutes.js');
 app.use('/auth', authRoutes);
 
-// room exam related
-const roomTestingFakeDataRoutes = require('@/routes/Room/Room_Exam/fakadataRoutes.js');
-const roomExamRoutes = require("@/routes/Room/Room_Exam/roomRoutes.js");
-const roomUserExamRoutes = require("@/routes/Room/Room_Exam/userRoutes.js")
-
-app.use('/test', roomTestingFakeDataRoutes);
-app.use('/room', roomExamRoutes);
-app.use("/room/user", roomUserExamRoutes);
-
 // create and join room
 const roomRoute = require('@/routes/Create_Join_Room/roomRoute.js');
 const userRoute = require('@/routes/Create_Join_Room/userRoute.js');
@@ -75,7 +64,20 @@ app.use('/create_join_room/users', userRoute);
 
 // In room
 const room_setRoutes = require('@/routes/Room/setRoutes.js');
+const inRoomRoute = require("@/routes/Room/roomRoutes.js");
+
 app.use(room_setRoutes);
+app.use("/room", inRoomRoute);
+
+// room exam related
+const roomTestingFakeDataRoutes = require('@/routes/Room/Room_Exam/fakadataRoutes.js');
+const roomExamRoutes = require("@/routes/Room/Room_Exam/roomRoutes.js");
+const roomUserExamRoutes = require("@/routes/Room/Room_Exam/userRoutes.js")
+
+app.use('/test', roomTestingFakeDataRoutes);
+app.use('/room', roomExamRoutes);
+app.use("/room/user", roomUserExamRoutes);
+
 // routes end
 
 // my Socket.IO event handling -------------------------------------------------------------
