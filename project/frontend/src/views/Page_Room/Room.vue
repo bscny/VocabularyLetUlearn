@@ -1,25 +1,17 @@
 <template>
-  <!-- Navbar -->
-  <Navbar 
-    :isLoggedIn="isLoggedIn" 
-    :userName="userName"
-    :userEmail="userEmail" 
-    @toggleLoginModal="showLoginModal = true" 
-    @toggleRegisterModal="showRegisterModal = true" 
-    @logout="logout" 
-  />
+    <Navbar/>
 
-  <div class="container">
-    <div class="main-content">
-      <SubmittedSets class="submitted-sets" />
-      <ChatBox class="chat-box" />
-      <LobbyPlayerList class="lobby-player-list" />
+    <div class="container">
+        <div class="main-content">
+            <SubmittedSets class="submitted-sets" />
+            <ChatBox class="chat-box" />
+            <LobbyPlayerList class="lobby-player-list" />
 
-      <div class="leave-button">
-        <button @click="leaveRoom">Leave Room</button>
-      </div>
+            <div class="leave-button">
+                <button @click="leaveRoom">Leave Room</button>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -31,145 +23,164 @@ import socketAPI from '@/services/Room_API/socketAPI';
 import { useUserStore } from "@/stores/Room/userStore";
 
 export default {
-  name: 'Room',
-  components: {
-    Navbar,
-    SubmittedSets,
-    ChatBox,
-    LobbyPlayerList,
-  },
-  setup() {
-  const userStore = useUserStore();
-
-  socketAPI.initRoom((roomData) => {
-    userStore.setRoom(roomData.room);
-    console.log("Room initialized:", roomData.room);
-
-    socketAPI.initUser((userData) => {
-      userStore.setUser(userData);
-      console.log("User initialized:", userData);
-
-      socketAPI.joinRoom(userStore.room);
-    });
-  });
-  
-  return { userStore };
-  },
-  methods: {
-    logout() {
-      this.User_id = null;
-      this.User_name = null;
-      this.room = null;
-
-      this.$router.push('/');
-      alert("登出成功！");
+    name: 'Room',
+    components: {
+        Navbar,
+        SubmittedSets,
+        ChatBox,
+        LobbyPlayerList,
     },
 
-    leaveRoom() {
-      console.log("Attempting to leave room...");
-      socketAPI.leaveRoom(this.userStore.room, (response) => {
-        if (response.success) {
-          console.log("Successfully left room:");
-          this.$router.push({
-                    name: 'HomeLoggedIn'
-                });
-        } else {
-          console.error("Failed to leave room");
-        }
-      });
-    }
-  },
+    data(){
+        return{
+            userStore: useUserStore(),
+        };
+    },
+
+    async created() {
+        // fake data:
+        const roomInfo = {
+            Room_ID: 1,
+            Room_name: "English Learning Room",
+            Is_public: true,
+        };
+
+        // socketAPI.initRoom((roomData) => {
+        //     userStore.setRoom(roomData.room);
+        //     console.log("Room initialized:", roomData.room);
+
+        //     socketAPI.initUser((userData) => {
+        //         userStore.setUser(userData);
+        //         console.log("User initialized:", userData);
+
+        //         socketAPI.joinRoom(userStore.room);
+        //     });
+        // });
+
+        socketAPI.initRoom(roomInfo);
+    },
+    
+    methods: {
+        leaveRoom() {
+            console.log("Attempting to leave room...");
+            socketAPI.leaveRoom(this.userStore.room, (response) => {
+                if (response.success) {
+                    console.log("Successfully left room:");
+                    this.$router.push({
+                        name: 'HomeLoggedIn'
+                    });
+                } else {
+                    console.error("Failed to leave room");
+                }
+            });
+        },
+    },
 };
 </script>
 
 <style scoped>
-
 .container {
-  font-family: Arial, sans-serif;
-  margin: 0 auto;
-  margin-top: 50px;
-  max-width: 1200px;
-  height: calc(100vh - 60px); /* 填滿整個視窗，扣除 Navbar 高度 */
-  padding: 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    margin-top: 50px;
+    max-width: 1200px;
+    height: calc(100vh - 60px);
+    /* 填滿整個視窗，扣除 Navbar 高度 */
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 .main-content {
-  display: grid;
-  grid-template-columns: 1fr 2fr; /* 調整左2份，右1份寬度 */
-  grid-template-rows: 1fr 1fr;   /* 第一行自動高度，第二行填滿剩餘空間 */
-  gap: 20px;                     /* 區塊間距 */
-  margin-top: 20px;              /* 上方間距 */
-  flex: 1; /* 填滿剩餘高度 */
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    /* 調整左2份，右1份寬度 */
+    grid-template-rows: 1fr 1fr;
+    /* 第一行自動高度，第二行填滿剩餘空間 */
+    gap: 20px;
+    /* 區塊間距 */
+    margin-top: 20px;
+    /* 上方間距 */
+    flex: 1;
+    /* 填滿剩餘高度 */
 }
 
 .submitted-sets {
-  grid-column: 1 / 2;  /* 左側第一列 */
-  grid-row: 2 / 3;     /* 第一行 */
-  background-color: #e6f7ff;
-  padding: 20px;
-  border: 1px solid #b3d8ff;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    grid-column: 1 / 2;
+    /* 左側第一列 */
+    grid-row: 2 / 3;
+    /* 第一行 */
+    background-color: #e6f7ff;
+    padding: 20px;
+    border: 1px solid #b3d8ff;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .lobby-player-list {
-  grid-column: 1 / 2; /* 移到左側第一列 */
-  grid-row: 1 / 2;    /* 第二行 */
-  background-color: #f5f5f5;
-  padding: 20px;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px;
-  overflow-y: auto;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  height: 100%; /* 填滿高度 */
+    grid-column: 1 / 2;
+    /* 移到左側第一列 */
+    grid-row: 1 / 2;
+    /* 第二行 */
+    background-color: #f5f5f5;
+    padding: 20px;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    overflow-y: auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    /* 填滿高度 */
 }
 
 .chat-box {
-  grid-column: 2 / 3; /* 移到右側第二列 */
-  grid-row: 1 / 3;    /* 占滿第一、二行 */
-  background-color: #fffae6;
-  padding: 20px;
-  border: 1px solid #ffd591;
-  border-radius: 10px;
-  overflow-y: auto;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  height: 100%; /* 填滿高度 */
+    grid-column: 2 / 3;
+    /* 移到右側第二列 */
+    grid-row: 1 / 3;
+    /* 占滿第一、二行 */
+    background-color: #fffae6;
+    padding: 20px;
+    border: 1px solid #ffd591;
+    border-radius: 10px;
+    overflow-y: auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    /* 填滿高度 */
 }
 
 .leave-button button {
-  background-color: #ff4d4f;
-  color: white;
-  padding: 12px 25px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+    background-color: #ff4d4f;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
 .leave-button button:hover {
-  background-color: #ff1a1c;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-  transform: scale(1.05);
+    background-color: #ff1a1c;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
-  .main-content {
-    grid-template-columns: 1fr; /* 單欄佈局 */
-    grid-template-rows: auto;   /* 自動高度 */
-  }
+    .main-content {
+        grid-template-columns: 1fr;
+        /* 單欄佈局 */
+        grid-template-rows: auto;
+        /* 自動高度 */
+    }
 
-  .submitted-sets,
-  .chat-box,
-  .lobby-player-list {
-    grid-column: 1 / 2;
-    grid-row: auto;
-  }
+    .submitted-sets,
+    .chat-box,
+    .lobby-player-list {
+        grid-column: 1 / 2;
+        grid-row: auto;
+    }
 }
 </style>

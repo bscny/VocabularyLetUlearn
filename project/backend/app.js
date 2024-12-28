@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
 }));
 app.use(express.json());
 
@@ -80,35 +80,35 @@ app.use(room_setRoutes);
 
 // my Socket.IO event handling -------------------------------------------------------------
 
-io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+// io.on('connection', (socket) => {
+//     console.log('A user connected:', socket.id);
 
-  // Listen for a custom event from the client
-  socket.on("join-room-exam", (roomID) => {
-      console.log('Received current room from client:', roomID);
+//     // Listen for a custom event from the client
+//     socket.on("join-room-exam", (roomID) => {
+//         console.log('Received current room from client:', roomID);
 
-      // Broadcast data to all connected clients
-      io.emit('send-testsheet', {
-          message: 'Hello from server',
-          Test_sheet: [
-              {
-                  Q_num: 1,
-                  Q_body: "Am i stupid?"
-              }
-          ]
-      });
-  });
+//         // Broadcast data to all connected clients
+//         io.emit('send-testsheet', {
+//             message: 'Hello from server',
+//             Test_sheet: [
+//                 {
+//                     Q_num: 1,
+//                     Q_body: "Am i stupid?"
+//                 }
+//             ]
+//         });
+//     });
 
-  // Handle disconnection
-  socket.on('disconnect', () => {
-      console.log('A user disconnected:', socket.id);
-  });
-});
+//     // Handle disconnection
+//     socket.on('disconnect', () => {
+//         console.log('A user disconnected:', socket.id);
+//     });
+// });
 
 // globally checker for error handling, so we dont need catch for any async func in backend ---------
 app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(err.status || 500).send("something is wrong...\n detected in global error handler");
+    console.log(err);
+    res.status(err.status || 500).send("something is wrong...\n detected in global error handler");
 });
 
 // start the server
