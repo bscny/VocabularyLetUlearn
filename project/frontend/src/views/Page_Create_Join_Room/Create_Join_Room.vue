@@ -32,7 +32,9 @@ export default {
     },
     methods: {
         goToHome() {
-            this.$router.push('/home-logged-in'); // 假設首頁路徑為 '/'
+            this.$router.push({
+                name: 'HomeLoggedIn'
+            });
         },
     }
 };

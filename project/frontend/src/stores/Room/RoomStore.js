@@ -13,7 +13,7 @@ import { defineStore } from "pinia";
 
 const useRoomStore = defineStore('RoomStore', {
     state: () => ({
-        roomID: null,
+        ROOM_ID: null,
     }),
 
     actions: {
