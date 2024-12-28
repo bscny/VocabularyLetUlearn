@@ -10,6 +10,8 @@ import ResetPassword from '@/views/Page_Account/ResetPassword.vue';
 // stage 2, room exam
 import RoomTesting from '@/views/Page_Room_Exam/RoomTesting.vue';
 import TestResult from '@/views/Page_Room_Exam/TestResult.vue';
+import Room from '@/views/Page_Room/Room.vue';
+import CreateJoinRoom from '@/views/Page_Create_Join_Room/Create_Join_Room.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +50,16 @@ const router = createRouter({
 
         // stage 2's path
         {
+            path: '/Room',
+            name: 'Room',
+            component: Room,
+        },
+        {
+            path: '/create-join-room',
+            name: 'CreateJoinRoom',
+            component: CreateJoinRoom,
+        },
+        {
             path: '/RoomTesting',
             name: 'RoomTesting',
             component: RoomTesting,
@@ -60,4 +72,4 @@ const router = createRouter({
     ],
 })
 
-export default router
+export default router;
