@@ -31,6 +31,14 @@ module.exports = (io) => {
 
             // inform other player to site render chat box
             socket.to(ROOM_ID).emit("update-chat-message");
+        });
+
+        // some player submit a set
+        socket.on("submit-set", async function (ROOM_ID, NewSetUsed) {
+            await setService.AddSetToRoom(ROOM_ID, NewSetUsed);
+
+            // inform other player to site render submit box
+            socket.to(ROOM_ID).emit("update-used-sets");
         })
 
         // Handle disconnection

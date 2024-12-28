@@ -31,6 +31,8 @@
 <script>
 
 export default {
+    name: "LobbyPlayerList",
+    
     data() {
         return {
             USER_ID: JSON.parse(localStorage.getItem("USER_ID")),

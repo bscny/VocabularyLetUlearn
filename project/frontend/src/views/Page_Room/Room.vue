@@ -3,14 +3,17 @@
 
     <div class="container">
         <div class="main-content">
-            <!-- <SubmittedSets class="submitted-sets" /> -->
+            <SubmittedSets class="submitted-sets" v-if="renderFlag" :submittedSets="setsUsed"
+                                                                    :availableSets="availableSets"
+                                                                    @SubmitSet="AddSubmitSet($event)" />
+
             <ChatBox class="chat-box"   :messages="messages"
                                         :ROOM_ID="roomStore.ROOM_ID"
                                         @AddNewMessage="AddNewMessage($event)" />
 
-            <LobbyPlayerList class="lobby-player-list" v-if="players.length > 0"    :players="players"
-                                                                                    :readyCount="readyCount"
-                                                                                    @ToggleReady="UpdateReadyCount($event)" />
+            <LobbyPlayerList class="lobby-player-list" v-if="renderFlag"    :players="players"
+                                                                            :readyCount="readyCount"
+                                                                            @ToggleReady="UpdateReadyCount($event)" />
 
             <div class="leave-button">
                 <button @click="leaveRoom">Leave Room</button>
@@ -21,7 +24,7 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-// import SubmittedSets from '@/components/Room/SubmittedSets.vue';
+import SubmittedSets from '@/components/Room/SubmittedSets.vue';
 import ChatBox from '@/components/Room/ChatBox.vue';
 import LobbyPlayerList from '@/components/Room/LobbyPlayerList.vue';
 
@@ -35,6 +38,10 @@ import {
 } from '@/services/Room_API/roomAPI';
 
 import {
+    getSetsByUserID,
+} from '@/services/User_Inventory_API/setAPI.js'
+
+import {
     useRoomStore,
 } from "@/stores/Room/RoomStore.js";
 
@@ -42,7 +49,7 @@ export default {
     name: 'Room',
     components: {
         Navbar,
-        // SubmittedSets,
+        SubmittedSets,
         ChatBox,
         LobbyPlayerList,
     },
@@ -60,22 +67,19 @@ export default {
             setsUsed: [],
             players: [],
 
+            availableSets: [],
+
             readyCount: 0,
+
+            renderFlag: false,
         };
     },
-
-    // async setup(){
-    //     this.roomStore.ROOM_ID = JSON.parse(localStorage.getItem("ROOM_ID"));
-
-    //     // get data from backend (redis) to know current room info
-    //     this.roomInfo = await GetInitRoom(this.roomStore.ROOM_ID);
-    //     this.players = await GetPlayerInRoom(this.roomStore.ROOM_ID);
-    //     this.setsUsed = await GetSetsInRoom(this.roomStore.ROOM_ID);
-    //     this.messages = await GetMessagesInRoom(this.roomStore.ROOM_ID);
-    // },
     
     async created() {
         await this.FetchData();
+        await this.GetAvailableSets();
+
+        this.renderFlag = true;
 
         this.socket.emit("join-room", this.roomStore.ROOM_ID);
         
@@ -94,6 +98,11 @@ export default {
         this.socket.on("update-chat-message", async () => {
             this.messages = await GetMessagesInRoom(this.roomStore.ROOM_ID);
         });
+
+        // other player just submitted a set
+        this.socket.on("update-used-sets", async () => {
+            this.setsUsed = await GetSetsInRoom(this.roomStore.ROOM_ID);
+        })
     },
 
     methods: {
@@ -105,6 +114,23 @@ export default {
             this.players = await GetPlayerInRoom(this.roomStore.ROOM_ID);
             this.setsUsed = await GetSetsInRoom(this.roomStore.ROOM_ID);
             this.messages = await GetMessagesInRoom(this.roomStore.ROOM_ID);
+        },
+
+        async GetAvailableSets(){
+            this.availableSets = await getSetsByUserID(this.USER_ID);
+        },
+
+        AddSubmitSet(newSet){
+            // first, add set to sender's own array
+            const newSetUsed = {
+                Set_id: newSet.SET_ID,
+                Set_name: newSet.Set_name,
+            };
+
+            this.setsUsed.push(newSetUsed);
+
+            // then broadcast to other player to fetch data from the updated redis db
+            this.socket.emit("submit-set", this.roomStore.ROOM_ID, newSetUsed);
         },
 
         AddNewMessage(newMsg){
