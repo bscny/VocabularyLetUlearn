@@ -25,6 +25,10 @@
         <p class="ready-count">
             {{ readyCount }} / {{ players.length }} players are ready.
         </p>
+
+        <div class="leave-button">
+            <button @click="LeaveRoom()">Leave Room</button>
+        </div>
     </div>
 </template>
 
@@ -46,43 +50,23 @@ export default {
         readyCount: Number,
     },
 
-    created() {
-        // 收到玩家列表更新
-        // socketAPI.onPlayersUpdate((data) => {
-        //     console.log("Received player updates:", data);
-        //     if (data?.players) {
-        //         this.players = data.players;
-        //         this.readyCount = this.players.filter((p) => p.isReady).length;
-        //     }
-        // });
-
-        // socketAPI.onGameStarted(() => {
-        //     alert("The game has started!");
-        // });
-    },
-
     methods: {
         ToggleReady() {
-            // socketAPI.emitReady((res) => {
-            //     if (res.success) {
-            //         this.isReady = !this.isReady;
-            //     } else {
-            //         alert(`Failed to toggle ready: ${res.message}`);
-            //     }
-            // });
             this.isReady = !this.isReady;
             this.$emit("ToggleReady", this.isReady);
         },
 
         StartGame() {
-            // socketAPI.emitStartGame((res) => {
-            //     if (!res.success) {
-            //         alert(`Failed to start game: ${res.message}`);
-            //     }
-            // });
-
             this.$emit("StartGame");
         },
+
+        LeaveRoom(){
+            if(this.isReady){
+                alert("Can not leave room when you're ready!");
+            }else{
+                this.$emit("LeaveRoom");
+            }
+        }
     },
     computed: {
         // 只有全部玩家都 ready 時，才可開始遊戲
@@ -156,5 +140,27 @@ export default {
 
 .ready-count {
     margin: 0;
+}
+
+.leave-button button {
+    position: fixed;
+    right: 1vw;
+    bottom: 1vh;
+    background-color: #ff4d4f;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.leave-button button:hover {
+    background-color: #ff1a1c;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    transform: scale(1.05);
 }
 </style>

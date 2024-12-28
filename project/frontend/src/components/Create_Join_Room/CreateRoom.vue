@@ -61,7 +61,6 @@ export default {
             try {
                 const response = await CreateRoom(this.roomName, this.isPublic, this.password);
                 alert("已建立房間，roomID：" + response.roomId);
-                this.$emit("creationDone");
                 roomId = response.roomId;
             } catch (error) {
                 alert("房間創建失敗，請重試！");
@@ -72,6 +71,10 @@ export default {
             const response = await JoinRoom(roomId, user.userId, user.userName, this.password); // 創建者先加入房間
             this.roomStore.ROOM_ID = response.roomId;
             localStorage.setItem("ROOM_ID", JSON.stringify(response.roomId));
+
+            this.$router.push({
+                name: 'Room'
+            });
         }
     }
 };

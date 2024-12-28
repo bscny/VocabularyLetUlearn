@@ -59,10 +59,13 @@ export default {
                 this.roomStore.ROOM_ID = response.roomId;
                 localStorage.setItem("ROOM_ID", JSON.stringify(response.roomId));
                 alert("成功加入房間");
-                this.$emit("joinDone"); // 通知父組件
             } catch (error) {
                 alert("加入房間失敗，請重試！");
             }
+
+            this.$router.push({
+                name: 'Room'
+            });
         }
     }
 };

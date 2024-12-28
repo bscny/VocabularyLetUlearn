@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import { ref, computed, watch, nextTick } from "vue";
 
 export default {
     name: "SubmittedSet",
@@ -57,102 +56,8 @@ export default {
                     break;
                 }
             }
-
-
-            // socketAPI.submitSet(roomId.value, selectedSet.SET_ID, selectedSet.SET_NAME, (response) => {
-            //     if (response && response.success) {
-            //         console.log("[INFO] Set submitted successfully:", selectedSet.SET_NAME);
-            //         submittedSets.value.push({
-            //             setId: selectedSet.SET_ID,
-            //             setName: selectedSet.SET_NAME,
-            //         });
-            //         scrollToBottom();
-            //         selectedSetId.value = null;
-            //     } else {
-            //         alert("Failed to submit set.");
-            //         console.error("[ERROR] Failed to submit set:", response?.message || "Unknown error");
-            //     }
-            //     loading.value = false;
-            // });
         }
     },
-
-    // setup() {
-    //     const userStore = useUserStore();
-
-    //     const userId = computed(() => userStore.User_id);
-    //     const roomId = computed(() => userStore.room);
-
-    //     const submittedSets = ref([]);
-    //     const availableSets = ref([]);
-    //     const selectedSetId = ref(null);
-    //     const loading = ref(false);
-    //     const setList = ref(null);
-
-    //     const fetchRoomSubmittedSets = async () => {
-    //         if (!roomId.value) return;
-    //         try {
-    //             const response = await setAPI.fetchSubmittedSets(roomId.value);
-    //             submittedSets.value = response.data.map((set) => ({
-    //                 setId: set.setId,
-    //                 setName: set.setName,
-    //             }));
-    //             console.log("Processed submittedSets:", submittedSets.value);
-    //         } catch (error) {
-    //             console.error("Failed to fetch submitted sets:", error.message);
-    //         }
-    //     };
-
-    //     const fetchAvailableSets = async () => {
-    //         if (!userId.value) return;
-    //         try {
-    //             const response = await setAPI.fetchUserSets(userId.value);
-    //             availableSets.value = Array.isArray(response.data) ? response.data : [];
-    //             console.log("Available sets fetched:", availableSets.value);
-    //         } catch (error) {
-    //             console.error("Failed to fetch available sets:", error.message);
-    //             alert("Failed to fetch available sets. Please try again.");
-    //         }
-    //     };
-
-    //     const scrollToBottom = () => {
-    //         nextTick(() => {
-    //             if (setList.value) {
-    //                 setList.value.scrollTop = setList.value.scrollHeight;
-    //             }
-    //         });
-    //     };
-
-    //     socketAPI.onSetSubmitted((data) => {
-    //         if (!submittedSets.value.some((set) => set.setId === data.setId)) {
-    //             submittedSets.value.push({
-    //                 setId: data.setId,
-    //                 setName: data.setName,
-    //             });
-    //             scrollToBottom();
-    //         }
-    //     });
-
-    //     // 監控 userId 和 roomId
-    //     watch(userId, (newUserId) => {
-    //         if (newUserId) fetchAvailableSets();
-    //     });
-
-    //     watch(roomId, (newRoomId) => {
-    //         if (newRoomId) fetchRoomSubmittedSets();
-    //     });
-
-    //     return {
-    //         userId,
-    //         roomId,
-    //         submittedSets,
-    //         availableSets,
-    //         selectedSetId,
-    //         loading,
-    //         handleReady,
-    //         setList,
-    //     };
-    // },
 };
 </script>
 

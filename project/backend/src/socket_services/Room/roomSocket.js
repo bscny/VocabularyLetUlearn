@@ -1,7 +1,7 @@
 const roomService = require("@/redis_services/Room/roomService.js");
 const chatService = require("@/redis_services/Room/chatService");
 const setService = require("@/redis_services/Room/setService");
-const { RootNodesUnavailableError } = require("redis");
+const { RootNodesUnavailableError, SocketClosedUnexpectedlyError } = require("redis");
 
 module.exports = (io) => {
     io.on("connection", (socket) => {
@@ -21,7 +21,7 @@ module.exports = (io) => {
 
             socket.to(ROOM_ID).emit("set-ready-count", readyCount);
 
-            // inform other player in the room for site rendering
+            // inform other player in the room for site rendering player list
             io.in(ROOM_ID).emit("update-player-list");
         });
 
@@ -39,6 +39,17 @@ module.exports = (io) => {
 
             // inform other player to site render submit box
             socket.to(ROOM_ID).emit("update-used-sets");
+        });
+
+        // some player wants to leave
+        socket.on("leave-room", async function (ROOM_ID, User_id, cb) {
+            await roomService.DeletePlayer(ROOM_ID, User_id);
+
+            // inform other player to site render player list
+            socket.to(ROOM_ID).emit("update-player-list");
+
+            // use cb to delete frontend variables and redirect pages
+            cb();
         })
 
         // Handle disconnection

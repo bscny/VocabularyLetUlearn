@@ -7,17 +7,16 @@
                                                                     :availableSets="availableSets"
                                                                     @SubmitSet="AddSubmitSet($event)" />
 
-            <ChatBox class="chat-box"   :messages="messages"
-                                        :ROOM_ID="roomStore.ROOM_ID"
-                                        @AddNewMessage="AddNewMessage($event)" />
+            <ChatBox class="chat-box" v-if="renderFlag" :messages="messages"
+                                                        :ROOM_ID="roomStore.ROOM_ID"
+                                                        :Room_name="roomInfo.Room_name"
+                                                        @AddNewMessage="AddNewMessage($event)" />
 
             <LobbyPlayerList class="lobby-player-list" v-if="renderFlag"    :players="players"
                                                                             :readyCount="readyCount"
-                                                                            @ToggleReady="UpdateReadyCount($event)" />
-
-            <div class="leave-button">
-                <button @click="leaveRoom">Leave Room</button>
-            </div>
+                                                                            @ToggleReady="UpdateReadyCount($event)"
+                                                                            @LeaveRoom="LeaveRoom()"
+                                                                            @StartGame="StartGame()" />
         </div>
     </div>
 </template>
@@ -44,6 +43,7 @@ import {
 import {
     useRoomStore,
 } from "@/stores/Room/RoomStore.js";
+import { LeaveRoom } from '@/services/Create_Join_Room_API/roomAPI';
 
 export default {
     name: 'Room',
@@ -60,7 +60,7 @@ export default {
             USER_ID: JSON.parse(localStorage.getItem("USER_ID")),
             User_name: JSON.parse(localStorage.getItem("name")),
 
-            socket: io("http://localhost:3000"),
+            socket: io(import.meta.env.VITE_API_BASE_URL),
 
             roomInfo: null,
             messages: [],
@@ -107,6 +107,10 @@ export default {
 
     methods: {
         async FetchData() {
+            if(localStorage.getItem("ROOM_ID") == undefined){
+                return;
+            }
+
             this.roomStore.ROOM_ID = JSON.parse(localStorage.getItem("ROOM_ID"));
 
             // get data from backend (redis) to know current room info
@@ -156,21 +160,27 @@ export default {
 
             // call socket to broadcast the new ready count
             this.socket.emit("update-ready-count", this.readyCount, this.roomStore.ROOM_ID, this.USER_ID);
-        }
+        },
 
-        // leaveRoom() {
-        //     console.log("Attempting to leave room...");
-        //     socketAPI.leaveRoom(this.userStore.room, (response) => {
-        //         if (response.success) {
-        //             console.log("Successfully left room:");
-        //             this.$router.push({
-        //                 name: 'HomeLoggedIn'
-        //             });
-        //         } else {
-        //             console.error("Failed to leave room");
-        //         }
-        //     });
-        // },
+        LeaveRoom(){
+            // broadcast to every that i'm leaving
+            this.socket.emit("leave-room", this.roomStore.ROOM_ID, this.USER_ID, () => {
+                // using call back to remove related variablesin frontend
+                // since web connection takes latency
+
+                // delete room related variables
+                localStorage.removeItem('ROOM_ID');
+                this.roomStore.ROOM_ID = null;
+    
+                this.$router.push({
+                    name: 'HomeLoggedIn'
+                });
+            });
+        },
+
+        StartGame(){
+
+        }
     },
 };
 </script>
@@ -244,25 +254,6 @@ export default {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     height: 100%;
     /* 填滿高度 */
-}
-
-.leave-button button {
-    background-color: #ff4d4f;
-    color: white;
-    padding: 12px 25px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-}
-
-.leave-button button:hover {
-    background-color: #ff1a1c;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    transform: scale(1.05);
 }
 
 @media (max-width: 768px) {

@@ -59,11 +59,29 @@ async function ToggleReady(ROOM_ID, User_id) {
     await redisClient.lSet(userKey, thisPlayerIndex, JSON.stringify(parsedPlayers[thisPlayerIndex]));
 }
 
+async function DeletePlayer(ROOM_ID, User_id) {
+    // find the user first
+    const players = await GetUserInRoom(ROOM_ID);
+
+    for(let i = 0; i < players.length; i ++){
+        if(players[i].User_id == User_id){
+            // delete this element from redis
+            await redisClient.lRem(`Room:${ROOM_ID}:Users`, 0, JSON.stringify(players[i]));
+        }
+    }
+
+    // now, delete the user himself
+    await redisClient.del(`User:${User_id}`);
+}
+
 module.exports = {
     GetRoomInfo,
     GetUserInRoom,
     GetSetsInRoom,
     GetMessagesInRoom,
-    ToggleReady
+
+    ToggleReady,
+
+    DeletePlayer,
 };
 

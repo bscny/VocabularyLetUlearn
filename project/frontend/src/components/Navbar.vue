@@ -74,9 +74,6 @@ export default {
             localStorage.removeItem('token');
             localStorage.removeItem('email');
             this.userStore.clearUser();
-            /*this._isLoggedIn = false;
-            this._userName = '';
-            this._userEmail = '';*/
 
             this.$router.push({
                 name: 'Home'

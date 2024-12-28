@@ -1,6 +1,7 @@
 <template>
     <div class="chat-box">
         <h3>Room ID : {{ ROOM_ID }}</h3>
+        <h3>Room Name : {{ Room_name }}</h3>
         <div class="message-list" ref="chatContainer">
             <ul v-if="messages.length > 0">
                 <li v-for="(msg, index) in messages" :key="index"
@@ -31,6 +32,7 @@ export default {
 
     props: {
         ROOM_ID: Number,
+        Room_name: String,
         messages: Array,
     },
 

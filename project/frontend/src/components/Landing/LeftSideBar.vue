@@ -19,7 +19,7 @@ export default {
             menuItems: [
                 { name: 'Search', route: 'HomeLoggedIn', icon: '/icons/search-icon.png' },
                 { name: 'My Set', route: 'UserInventory', icon: '/icons/my_set-icon.png' },
-                { name: 'Ranking Exam', route: 'Room', icon: '/icons/ranking_exam-icon.png' },
+                //{ name: 'Ranking Exam', route: 'Room', icon: '/icons/ranking_exam-icon.png' },
                 { name: 'Room', route: 'CreateJoinRoom', icon: '/icons/room-icon.png' },
             ]
         };
