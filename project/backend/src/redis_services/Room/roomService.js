@@ -59,6 +59,20 @@ async function ToggleReady(ROOM_ID, User_id) {
     await redisClient.lSet(userKey, thisPlayerIndex, JSON.stringify(parsedPlayers[thisPlayerIndex]));
 }
 
+async function ResetPlayersReady(ROOM_ID) {
+    const userKey = `Room:${ROOM_ID}:Users`;
+
+    const players = await redisClient.lRange(userKey, 0, -1);
+    const parsedPlayers = players.map((player) => JSON.parse(player));
+
+    await redisClient.del(userKey);
+    for (const player of parsedPlayers) {
+        player.isReady = false;
+
+        await redisClient.rPush(userKey, JSON.stringify(player));
+    }
+}
+
 async function DeletePlayer(ROOM_ID, User_id) {
     // find the user first
     const players = await GetUserInRoom(ROOM_ID);
@@ -81,6 +95,7 @@ module.exports = {
     GetMessagesInRoom,
 
     ToggleReady,
+    ResetPlayersReady,
 
     DeletePlayer,
 };

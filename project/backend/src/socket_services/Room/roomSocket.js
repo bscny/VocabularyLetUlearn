@@ -20,7 +20,7 @@ module.exports = (io) => {
 
             socket.to(ROOM_ID).emit("set-ready-count", readyCount);
 
-            // inform other player in the room for site rendering player list
+            // inform all players in the room for site rendering player list
             io.in(ROOM_ID).emit("update-player-list");
         });
 
@@ -49,7 +49,16 @@ module.exports = (io) => {
 
             // use cb to delete frontend variables and redirect pages
             cb();
-        })
+        });
+
+        // the host just start the game
+        socket.on("game-start", function(ROOM_ID){
+            // broadcast this message to every one in the room
+            io.in(ROOM_ID).emit("game-start");
+
+            // set all player to un ready state
+            roomService.ResetPlayersReady(ROOM_ID);
+        });
 
         // Handle disconnection
         socket.on('disconnect', () => {

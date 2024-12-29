@@ -41,6 +41,10 @@ import {
 } from '@/services/User_Inventory_API/setAPI.js'
 
 import {
+    CreateTestSheet,
+} from '@/services/Room_Exam_API/testingAPI.js'
+
+import {
     useRoomStore,
 } from "@/stores/Room/RoomStore.js";
 
@@ -102,7 +106,13 @@ export default {
         // other player just submitted a set
         this.socket.on("update-used-sets", async () => {
             this.setsUsed = await GetSetsInRoom(this.roomStore.ROOM_ID);
-        })
+        });
+
+        this.socket.on("game-start", () => {
+            this.$router.push({
+                name: 'RoomTesting'
+            });
+        });
     },
 
     methods: {
@@ -185,13 +195,27 @@ export default {
                 this.$router.push({
                     name: 'HomeLoggedIn'
                 });
+
+                this.socket.disconnect();
             });
         },
 
-        StartGame(){
-            this.$router.push({
-                name: 'RoomTesting'
-            });
+        async StartGame(){
+            if(this.setsUsed.length == 0){
+                alert("Need to Submit sets to test first!");
+                return;
+            }
+            
+            // create a testsheet in redis
+            const result = await CreateTestSheet(this.roomStore.ROOM_ID);
+
+            if(!result){
+                // create failed
+                return;
+            }
+
+            // broadcast to every one that the test starts
+            this.socket.emit("game-start", this.roomStore.ROOM_ID);
         }
     },
 };

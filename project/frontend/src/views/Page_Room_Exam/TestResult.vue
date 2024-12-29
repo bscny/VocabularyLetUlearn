@@ -4,7 +4,8 @@
     <main class="blocks">
         <Header :showingWrong="showingWrong"
                 @ToggleShowWrong="ToggleShowWrong()"
-                @RetakeTest="RetakeTest()" />
+                @RetakeTest="RetakeTest()"
+                @BackToRoom="BackToRoom()" />
 
         <Summary v-if="testResult.length > 0"   :testResult="testResult" />
 
@@ -51,6 +52,12 @@ export default {
         RetakeTest(){
             this.$router.push({
                 name: "RoomTesting"
+            });
+        },
+
+        BackToRoom(){
+            this.$router.push({
+                name: "Room"
             });
         }
     },

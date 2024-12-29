@@ -38,7 +38,7 @@ export default {
             roomName: '',
             userId: '',
             userName: '',
-            isPublic: false,
+            isPublic: true,
             password: ''
         };
     },

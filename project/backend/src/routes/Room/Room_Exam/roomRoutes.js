@@ -8,4 +8,6 @@ const roomController = require('@/controllers/Room/Room_Exam/roomController.js')
 
 router.get("/test-sheet/:ROOM_ID", roomController.GetTestSheet);
 
+router.post("/create-test-sheet/:ROOM_ID", roomController.CreateTestSheet);
+
 module.exports = router;

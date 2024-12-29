@@ -32,7 +32,7 @@ export default{
     methods: {
         GoHomePage(){
             this.$router.push({
-                name: 'HomeLoggedIn'
+                name: 'Room'
             });
         }
     },
