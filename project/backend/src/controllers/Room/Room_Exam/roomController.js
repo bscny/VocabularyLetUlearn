@@ -17,9 +17,8 @@ async function CreateTestSheet(req, res) {
     const testSheet = await redisServices.GetTestSheet(req.params.ROOM_ID);
     
     if(testSheet[0] != undefined){
-        res.status(200).send(testSheet);
-
-        return testSheet;
+        // delete this testsheet
+        await redisServices.DeleteTestSheet(req.params.ROOM_ID);
     }
     
     // get all set id in the room

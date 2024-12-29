@@ -30,6 +30,10 @@ async function GetTestSheet(ROOM_ID) {
     return parsedTestSheets;
 }
 
+async function DeleteTestSheet(ROOM_ID) {
+    await redisClient.del(`Room:${ROOM_ID}:Test_sheet`);
+}
+
 async function CreateQuestion(questionObj, ROOM_ID) {
     await redisClient.rPush(`Room:${ROOM_ID}:Test_sheet`, JSON.stringify(questionObj));
 }
@@ -39,5 +43,6 @@ module.exports = {
     CreateTestSheet,
     GetRoomInfo,
     GetTestSheet,
-    CreateQuestion
+    DeleteTestSheet,
+    CreateQuestion,
 };
