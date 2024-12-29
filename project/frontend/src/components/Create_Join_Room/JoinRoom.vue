@@ -1,18 +1,16 @@
 <template>
-    <div class="join-room">
-        <h2>加入房間</h2>
-        <form @submit.prevent="joinRoom">
-            <div>
-                <label for="roomId">房間 ID：</label>
-                <input type="number" v-model="roomId" required />
-            </div>
-            <div>
-                <label for="password">密碼：</label>
-                <input type="password" v-model="password" />
-            </div>
-            <button type="submit">加入房間</button>
-        </form>
-    </div>
+     <h2 class="category">加入房間</h2>
+    <form @submit.prevent="joinRoom">
+        <div>
+            <label class="body-text" for="roomId">房間 ID：</label>
+            <input class="body-text" type="number" v-model="roomId" required />
+        </div>
+        <div>
+            <label class="body-text" for="password">密碼：</label>
+            <input class="body-text" type="password" v-model="password" />
+        </div>
+        <button class="submit-button" type="submit">加入房間</button>
+    </form>
 </template>
 
 <script>
@@ -35,7 +33,7 @@ export default {
             password: ''
         };
     },
-    
+
     setup() {
         const userStore = useUserStore(); // 使用 Pinia Store
         const roomStore = useRoomStore();
@@ -44,7 +42,7 @@ export default {
         userStore.setUser(JSON.parse(localStorage.getItem("USER_ID")),
             JSON.parse(localStorage.getItem("name")),
             JSON.parse(localStorage.getItem("email")));
-        
+
         return { userStore, roomStore };
     },
 
@@ -59,18 +57,43 @@ export default {
                 this.roomStore.ROOM_ID = response.roomId;
                 localStorage.setItem("ROOM_ID", JSON.stringify(response.roomId));
                 alert("成功加入房間");
+                this.$router.push({
+                    name: 'Room'
+                });
             } catch (error) {
                 alert("加入房間失敗，請重試！");
             }
-
-            this.$router.push({
-                name: 'Room'
-            });
         }
     }
 };
 </script>
 
 <style scoped>
-/* Add custom styling here */
+.category {
+    font-size: 2vw;
+}
+
+.body-text {
+    font-size: 1.2vw;
+}
+
+.submit-button {
+    padding: 1vh 2vw;
+    font-size: 1vw;
+    background-color: #24a74b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 1.5vh;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #1de903;
+}
+
+.submit-button.active {
+    background-color: #28a745;
+}
 </style>

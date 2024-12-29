@@ -46,6 +46,7 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     min-height: 100vh;
     width: 100vw;
     background-color: #f5f5f5;
@@ -62,12 +63,12 @@ export default {
 .button-group {
     display: flex;
     gap: 4vw;
-    margin-bottom: 6vw;
+    margin-bottom: 3vw;
 }
 
 button {
     padding: 2vw 4vw;
-    font-size: 3vw;
+    font-size: 2vw;
     background-color: #007bff;
     color: white;
     border: none;
@@ -85,14 +86,17 @@ button.active {
 }
 
 .form-container {
-    width: 80vw;
-    max-width: 60vw;
+    width: 60vw;
     background-color: white;
     padding: 4vw;
     box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
     border-radius: 2vw;
     display: flex;
     flex-direction: column;
+    align-items: start;
+    justify-content: space-around;
     gap: 2vw;
+
+    margin-bottom: 3vh;
 }
 </style>

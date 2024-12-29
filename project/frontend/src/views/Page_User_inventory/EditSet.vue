@@ -287,6 +287,11 @@ main {
     display: block;
     margin: 6vh 0;
 
+    background-color: #e6f7ff;
+    border-color: blue;
+    border-style: solid;
+    border-radius: 10px;
+
     font-size: 20px;
 }
 
@@ -294,9 +299,9 @@ main {
     display: grid;
     grid-template-columns: 10vw 1fr 1fr;
 
-    border-top: solid;
+    /* border-top: solid;
     border-width: 2px;
-    border-color: black;
+    border-color: black; */
 }
 
 .edit-vocab-button {

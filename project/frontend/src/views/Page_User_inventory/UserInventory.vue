@@ -15,7 +15,7 @@
 
     <main> 
         <div v-if="canShow" class="flex-buttons">
-            <button class="quiz-button">
+            <button class="quiz-button"  @click="LocalQuiz()">
                 Local Quiz
             </button>
 
@@ -24,7 +24,7 @@
             </button>
         </div>
 
-        <input v-if="canShow" class="search-box" type="text" v-model="search" />    
+        <input v-if="canShow" class="search-box" type="text" v-model="search" placeholder="search a word..."/>    
 
         <ul class="vocabulary" v-if="canShow" v-for="vocabulary in SearchFilterWords" :key="vocabulary.WORD">
             <div class="word-def-grid">
@@ -135,6 +135,10 @@ export default {
             this.canEdit = false;
         },
 
+        LocalQuiz(){
+            alert("Just go Room Exam with only you ^^");
+        },
+
         EditSet(){
             this.$router.push({
                 name: 'EditSet',
@@ -195,7 +199,7 @@ main{
 
 .quiz-button {
     display: block;
-    margin: 0 0 0 0;
+    margin: 0 0 0 0.5vw;
     padding: 10px 20px 10px 20px;
     background-color: #4caf50;
     color: white;
@@ -249,6 +253,10 @@ main{
     margin: 6vh 0 0 0;
 
     width: 100%;
+    background-color: #e6f7ff;
+    border-color: blue;
+    border-style: solid;
+    border-radius: 10px;
 
     font-size: 20px;
 }
@@ -257,9 +265,9 @@ main{
     display: grid;
     grid-template-columns: 1fr 1fr;
 
-    border-top: solid;
+    /* border-top: solid;
     border-width: 2px;
-    border-color: black;
+    border-color: black; */
 }
 
 .category {

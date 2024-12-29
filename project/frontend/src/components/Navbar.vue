@@ -111,7 +111,7 @@ export default {
 }
 
 .logo {
-    font-size: 1.5em;
+    font-size: 3vh;
     color: white;
 
     cursor: pointer;
@@ -135,6 +135,8 @@ export default {
     cursor: pointer;
     line-height: 50px;
 
+    font-size: 2.1vh;
+
     color: white;
 }
 
@@ -145,6 +147,8 @@ export default {
     line-height: 50px;
 
     border: none;
+
+    font-size: 2vh;
 
     background-color: #333;
     color: white;

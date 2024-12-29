@@ -8,13 +8,7 @@ async function GetSetsInRoom(ROOM_ID) {
     return paresedResult;
 }
 
-async function CreateTestSheet(ROOM_ID, TestSheet) {
-    const checker = GetTestSheet(ROOM_ID);
-    if(checker[0] != undefined){
-        // not the first creation
-        return;
-    }
-    
+async function CreateTestSheet(ROOM_ID, TestSheet) { 
     for (const question of TestSheet) {
         await redisClient.rPush(`Room:${ROOM_ID}:Test_sheet`, JSON.stringify(question));
     }
