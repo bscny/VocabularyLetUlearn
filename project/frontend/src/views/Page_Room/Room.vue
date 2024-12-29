@@ -187,14 +187,14 @@ export default {
             this.socket.emit("leave-room", this.roomStore.ROOM_ID, this.USER_ID, () => {
                 // using call back to remove related variablesin frontend
                 // since web connection takes latency
+                this.$router.push({
+                    name: 'HomeLoggedIn'
+                });
 
                 // delete room related variables
                 localStorage.removeItem('ROOM_ID');
                 this.roomStore.ROOM_ID = null;
     
-                this.$router.push({
-                    name: 'HomeLoggedIn'
-                });
 
                 this.socket.disconnect();
             });

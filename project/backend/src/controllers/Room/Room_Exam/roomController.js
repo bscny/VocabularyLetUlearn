@@ -13,6 +13,15 @@ async function GetTestSheet(req, res) {
 }
 
 async function CreateTestSheet(req, res) {
+    // check redis first, if cache hits, use it
+    const testSheet = await redisServices.GetTestSheet(req.params.ROOM_ID);
+    
+    if(testSheet[0] != undefined){
+        res.status(200).send(testSheet);
+
+        return testSheet;
+    }
+    
     // get all set id in the room
     const setsInRoom = await redisServices.GetSetsInRoom(req.params.ROOM_ID);
 
