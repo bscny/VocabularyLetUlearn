@@ -2,8 +2,14 @@
     <div class="submitted-sets">
         <h3>The set player submitted</h3>
         <ul ref="setList" v-if="submittedSets.length > 0" class="set-list">
-            <li v-for="set in submittedSets" :key="set.setId">
-                {{ set.Set_name }}
+            <li class="set-used" v-for="set in submittedSets" :key="set.Set_id">
+                <button class="unsbmit-button" v-if="USER_ID == rootPlayer.User_id" @click="RemoveSet(set)">
+                    &#8722;
+                </button>
+
+                <div>
+                    {{ set.Set_name }}
+                </div>
             </li>
         </ul>
         <p v-else>No sets submitted yet.</p>
@@ -33,16 +39,23 @@ export default {
     props: {
         submittedSets: Array,
         availableSets: Array,
+        rootPlayer: Object,
     },
 
     data(){
         return{
             selectedSetId: null,
+
+            USER_ID: JSON.parse(localStorage.getItem("USER_ID")),
         };
     },
 
     methods: {
-        async SubmitSet(){
+        RemoveSet(set){
+            this.$emit("RemoveSet", set);
+        },
+
+        SubmitSet(){
             const isDuplicate = this.submittedSets.some((set) => set.Set_id === this.selectedSetId);
             if (isDuplicate) {
                 alert("This set has already been submitted.");
@@ -73,6 +86,30 @@ export default {
     justify-content: space-between;
     height: 100%;
     text-align: center;
+}
+
+.set-used {
+    display: flex;
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.unsbmit-button {
+    padding: 0.5vh .5vw;
+    background-color: #d45959;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    margin-right: 0.5vw;
+}
+
+.unsbmit-button:hover {
+    background-color: #db3232;
 }
 
 .set-list {

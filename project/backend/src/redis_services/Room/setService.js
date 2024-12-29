@@ -13,6 +13,12 @@ async function AddSetToRoom(ROOM_ID, newSet) {
     }
 }
 
+async function RemoveSetInRoom(ROOM_ID, removeIndex) {
+    const curSetUsed = await GetRoomSets(ROOM_ID);
+
+    await redisClient.lRem(`Room:${ROOM_ID}:Sets`, 0, JSON.stringify(curSetUsed[removeIndex]));
+}
+
 async function GetRoomSets(roomId) {
     try {
         const roomKey = `Room:${roomId}:Sets`;
@@ -28,4 +34,5 @@ async function GetRoomSets(roomId) {
 module.exports = {
     AddSetToRoom,
     GetRoomSets,
+    RemoveSetInRoom,
 };

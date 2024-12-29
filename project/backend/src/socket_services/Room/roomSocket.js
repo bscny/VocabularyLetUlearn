@@ -40,6 +40,14 @@ module.exports = (io) => {
             socket.to(ROOM_ID).emit("update-used-sets");
         });
 
+        // host wants to remove a set used
+        socket.on("remove-set", async function (ROOM_ID, removeIndex) {
+            await setService.RemoveSetInRoom(ROOM_ID, removeIndex);
+
+            // inform other player to site render submit box
+            socket.to(ROOM_ID).emit("update-used-sets");
+        })
+
         // some player wants to leave
         socket.on("leave-room", async function (ROOM_ID, User_id, cb) {
             await roomService.DeletePlayer(ROOM_ID, User_id);

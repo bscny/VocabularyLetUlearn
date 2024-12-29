@@ -5,7 +5,9 @@
         <div class="main-content">
             <SubmittedSets class="submitted-sets" v-if="renderFlag" :submittedSets="setsUsed"
                                                                     :availableSets="availableSets"
-                                                                    @SubmitSet="AddSubmitSet($event)" />
+                                                                    :rootPlayer="players[0]"
+                                                                    @SubmitSet="AddSubmitSet($event)"
+                                                                    @RemoveSet="RemoveSet($event)" />
 
             <ChatBox class="chat-box" v-if="renderFlag" :messages="messages"
                                                         :ROOM_ID="roomStore.ROOM_ID"
@@ -157,6 +159,21 @@ export default {
             this.socket.emit("submit-set", this.roomStore.ROOM_ID, newSetUsed);
         },
 
+        RemoveSet(removeSet){
+            // first, delete set from sender's own array
+            let removeIndex;
+            for(let i = 0; i < this.setsUsed.length; i ++){
+                if(this.setsUsed[i].Set_id == removeSet.Set_id){
+                    // find the index of removed-set
+                    this.setsUsed.splice(i, 1);
+                    removeIndex = i;
+                }
+            }
+
+            // then broadcast to other player to fetch data from the updated redis db
+            this.socket.emit("remove-set", this.roomStore.ROOM_ID, removeIndex);
+        },
+
         AddNewMessage(newMsg){
             // first, add message to sender's own array
             const newChatMessage = {
@@ -225,9 +242,9 @@ export default {
 .container {
     font-family: Arial, sans-serif;
     margin: 0 auto;
-    margin-top: 50px;
-    max-width: 1200px;
-    height: calc(100vh - 60px);
+    margin-top: 10vh;
+    width: 90vw;
+    height: calc(100vh - 10vh);
     /* 填滿整個視窗，扣除 Navbar 高度 */
     padding: 20px;
     box-sizing: border-box;
