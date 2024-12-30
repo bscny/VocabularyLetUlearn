@@ -81,6 +81,13 @@ export default {
             this.userName = JSON.parse(localStorage.getItem('name'));
             this.userEmail = JSON.parse(localStorage.getItem('email'));
         }
+
+        if(localStorage.getItem("USER_ID")){
+            // already a log in user
+            this.$router.push({
+                name: 'HomeLoggedIn'
+            });
+        }
     },
     setup() {
         const userStore = useUserStore(); // 使用 Pinia Store

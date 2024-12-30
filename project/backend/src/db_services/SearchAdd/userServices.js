@@ -8,8 +8,8 @@ async function SelectAllFromUsers() {
 
 async function SelectFromUsersWhereID(id) {
     const [record] = await db.query(`select * 
-                                  from users
-                                  where USER_ID = ?`, [id]);
+                                     from users
+                                     where USER_ID = ?`, [id]);
 
     return record;
 }

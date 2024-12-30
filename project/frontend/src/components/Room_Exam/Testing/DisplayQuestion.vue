@@ -195,7 +195,7 @@ export default{
     border-radius: 10px;
     border: 5px solid transparent;
 
-    background-color: rgb(95, 95, 248);
+    background-color: #e6f7ff;
 }
 
 .option:hover {

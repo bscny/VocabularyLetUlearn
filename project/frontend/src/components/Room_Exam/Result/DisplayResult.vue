@@ -232,7 +232,7 @@ export default {
     min-width: 90%;
     min-height: 20vh;
 
-    background-color: burlywood;
+    background-color: #fffbe6;
 }
 
 .extra-space {

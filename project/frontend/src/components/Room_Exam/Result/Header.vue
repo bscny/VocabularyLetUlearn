@@ -3,7 +3,7 @@
         Retake Test
     </button>
 
-    <button class="back-button">
+    <button class="back-button" @click="BackToRoom()">
         Back To Room
     </button>
 
@@ -44,6 +44,10 @@ export default{
 
         RetakeTest(){
             this.$emit("RetakeTest");
+        },
+
+        BackToRoom(){
+            this.$emit("BackToRoom");
         }
     },
 

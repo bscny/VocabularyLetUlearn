@@ -9,6 +9,14 @@ async function SelectSetInFolder(FOLDER_ID) {
     return records;
 }
 
+async function SelectSetInUser(USER_ID) {
+    const [records] = await db.query(`select S.*
+                                      from sets as S, folders as F
+                                      where F.Owner_id = ? and S.In_folder_id = F.FOLDER_ID;`, [USER_ID]);
+
+    return records;
+}
+
 async function SelectSet(SET_ID) {
     const [records] = await db.query(`select *
                                       from sets
@@ -49,6 +57,8 @@ async function UpdateSet(bodyObj, SET_ID) {
 
 module.exports = { 
     SelectSetInFolder,
+    SelectSetInUser,
+    
     SelectSet,
 
     DeleteSetWhereId,

@@ -1,158 +1,176 @@
 <template>
-  <div class="lobby-player-list">
-    <div class="lobby-header">
-      <h3>Lobby Player Names</h3>
-      <button
-        @click="toggleReady"
-        :class="isReady ? 'cancel-ready-button' : 'ready-button'"
-      >
-        {{ isReady ? "Cancel Ready" : "Click to Ready" }}
-      </button>
-    </div>
+    <div class="lobby-player-list">
+        <div class="lobby-header">
+            <h3>Lobby Player Names</h3>
+            <button @click="ToggleReady" :class="isReady ? 'cancel-ready-button' : 'ready-button'">
+                {{ isReady ? "Cancel Ready" : "Click to Ready" }}
+            </button>
+        </div>
 
-    <!-- 玩家列表 -->
-    <ul v-if="players.length > 0">
-      <li v-for="(player, index) in players" :key="player.User_id">
-        <span v-if="player.isReady">✅</span>
-        <span v-else>❌</span>
-        {{ player.User_name }}
-      </li>
-    </ul>
-    <p v-else>No players in the lobby yet.</p>
+        <!-- 玩家列表 -->
+        <ul v-if="players.length > 0">
+            <li v-for="player in players" :key="player.User_id">
+                <span v-if="player.isReady">✅</span>
+                <span v-else>❌</span>
+                {{ player.User_name }}
+            </li>
+        </ul>
 
-    <!-- 若使用者是房主，顯示 Start Game 與準備狀態 -->
-    <div v-if="isOwner" class="owner-action">
-      <button
-        @click="startGame"
-        :disabled="!canStart"
-        class="start-button"
-      >
-        Start Game
-      </button>
-      <p class="ready-count">
-        {{ readyCount }}/{{ players.length }} players are ready.
-      </p>
+        <!-- 若使用者是房主，顯示 Start Game 與準備狀態 -->
+        <div v-if="USER_ID == players[0].User_id" class="owner-action">
+            <button @click="StartGame" :disabled="!CanStart" class="start-button">
+                Start Game
+            </button>
+        </div>
+        <p class="ready-count">
+            {{ readyCount }} / {{ players.length }} players are ready.
+        </p>
+
+        <div class="leave-button">
+            <button @click="LeaveRoom()">Leave Room</button>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-import socketAPI from "@/services/Room_API/socketAPI";
-import { useUserStore } from "@/stores/Room/userStore";
 
 export default {
-  data() {
-    return {
-      players: [],
-      isReady: false,
-      isOwner: false,
-      readyCount: 0,
-    };
-  },
-  created() {
-    // 收到玩家列表更新
-    socketAPI.onPlayersUpdate((data) => {
-      console.log("Received player updates:", data);
-      if (data?.players) {
-        this.players = data.players;
-        this.readyCount = this.players.filter((p) => p.isReady).length;
-      }
-    });
+    name: "LobbyPlayerList",
+    
+    data() {
+        return {
+            USER_ID: JSON.parse(localStorage.getItem("USER_ID")),
 
-    socketAPI.onGameStarted(() => {
-      alert("The game has started!");
-    });
+            isReady: false,
+        };
+    },
+    
+    props: {
+        players: Array,
+        readyCount: Number,
+    },
 
-    socketAPI.onAssignOwner(() => {
-      this.isOwner = true;
-    });
-  },
-  methods: {
-    toggleReady() {
-      socketAPI.emitReady((res) => {
-        if (res.success) {
-          this.isReady = !this.isReady;
-        } else {
-          alert(`Failed to toggle ready: ${res.message}`);
+    methods: {
+        ToggleReady() {
+            this.isReady = !this.isReady;
+            this.$emit("ToggleReady", this.isReady);
+        },
+
+        StartGame() {
+            this.$emit("StartGame");
+        },
+
+        LeaveRoom(){
+            if(this.isReady){
+                alert("Can not leave room when you're ready!");
+            }else{
+                this.$emit("LeaveRoom");
+            }
         }
-      });
     },
-    startGame() {
-      socketAPI.emitStartGame((res) => {
-        if (!res.success) {
-          alert(`Failed to start game: ${res.message}`);
+
+    created(){
+        for(let i = 0; i < this.players.length; i ++){
+            if(this.players[i].User_id == this.USER_ID){
+                // set isready
+                this.isReady = this.players[i].isReady;
+            }
         }
-      });
     },
-  },
-  computed: {
-    // 只有全部玩家都 ready 時，才可開始遊戲
-    canStart() {
-      return this.readyCount === this.players.length && this.players.length > 0;
+
+    computed: {
+        // 只有全部玩家都 ready 時，才可開始遊戲
+        CanStart() {
+            return this.readyCount === this.players.length && this.players.length > 0;
+        },
     },
-  },
 };
 </script>
 
 <style scoped>
 .lobby-player-list {
-  background: #f9f9f9;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  max-height: 300px;
-  overflow-y: auto;
+    background: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .lobby-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 
 .ready-button {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
 }
 
 .cancel-ready-button {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: #ccc; /* 灰色 */
-  color: black;
-  cursor: pointer;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #ccc;
+    /* 灰色 */
+    color: black;
+    cursor: pointer;
 }
 
 .cancel-ready-button:hover {
-  background-color: #b3b3b3; /* 淺灰色 */
+    background-color: #b3b3b3;
+    /* 淺灰色 */
 }
 
 .start-button {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
 }
+
 .start-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .lobby-player-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .ready-count {
-  margin: 0;
+    margin: 0;
+}
+
+.leave-button button {
+    position: fixed;
+    right: 1vw;
+    bottom: 1vh;
+    background-color: #ff4d4f;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.leave-button button:hover {
+    background-color: #ff1a1c;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    transform: scale(1.05);
 }
 </style>

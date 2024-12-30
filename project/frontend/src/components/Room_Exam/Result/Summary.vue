@@ -10,7 +10,7 @@
             </div>
 
             <div class="info">
-                Correct Rate: {{ correctPercentage * 100 }} %
+                Correct Rate: {{ (correctPercentage * 100).toFixed(3) }} %
             </div>
         </div>
     </div>

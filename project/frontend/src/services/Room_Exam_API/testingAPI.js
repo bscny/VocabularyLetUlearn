@@ -1,5 +1,17 @@
 import apiClient from '@/services/APIclient';
 
+async function CreateTestSheet(ROOM_ID) {
+    const testSheet = await apiClient.post(`/room/create-test-sheet/${ROOM_ID}`);
+
+    if(testSheet.status != 200){
+        alert("vocabulary not enough for a quiz, need at least 4");
+
+        return false
+    }
+
+    return true;
+}
+
 async function GetTestSheet(ROOM_ID) {
     const testSheet = await apiClient.get(`/room/test-sheet/${ROOM_ID}`);
 
@@ -26,6 +38,7 @@ async function SubmitTestSheet(AnswerSheet) {
 }
 
 export {
+    CreateTestSheet,
     GetTestSheet,
     SubmitTestSheet,
 };

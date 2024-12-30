@@ -7,6 +7,8 @@ const setControllers = require('@/controllers/User_Inventory/setController.js');
 // http://localhost:PORT/sets
 
 router.get("/get-sets/:FOLDER_ID", setControllers.DisplaySets);
+router.get("/get-sets-in-user/:USER_ID", setControllers.DisplaySetsInUser);
+
 router.get("/get-set/:SET_ID", setControllers.DisplaySet);
 
 router.delete("/delete-set/:SET_ID", setControllers.DeleteSet);

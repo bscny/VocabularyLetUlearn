@@ -2,18 +2,18 @@
 import { RouterLink, RouterView } from 'vue-router'
 
 export default {
-  name: 'App',
+    name: 'App',
 };
 </script>
 
 <template>
-  <RouterView />
+    <RouterView />
 </template>
 
 <style>
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 </style>

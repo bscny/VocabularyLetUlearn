@@ -4,12 +4,23 @@ const mysqlService = require("@/db_services/User_Inventory/wordServices.js");
 async function GetTestSheet(req, res) {
     // check redis first, if cache hits, use it
     const testSheet = await redisServices.GetTestSheet(req.params.ROOM_ID);
-
+    
     if(testSheet[0] != undefined){
         res.status(200).send(testSheet);
-        return;
+    }else{
+        res.status(500).send("cant find test sheet");
     }
+}
 
+async function CreateTestSheet(req, res) {
+    // check redis first, if cache hits, use it
+    const testSheet = await redisServices.GetTestSheet(req.params.ROOM_ID);
+    
+    if(testSheet[0] != undefined){
+        // delete this testsheet
+        await redisServices.DeleteTestSheet(req.params.ROOM_ID);
+    }
+    
     // get all set id in the room
     const setsInRoom = await redisServices.GetSetsInRoom(req.params.ROOM_ID);
 
@@ -101,4 +112,5 @@ async function GetTestSheet(req, res) {
 
 module.exports = {
     GetTestSheet,
+    CreateTestSheet,
 };

@@ -39,8 +39,7 @@ export default {
 
     data() {
         return {
-            // fake data:
-            curRoomID: 1,
+            curRoomID: JSON.parse(localStorage.getItem("ROOM_ID")),
 
             testSheet: [],
             choseAns: [],

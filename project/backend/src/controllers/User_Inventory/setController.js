@@ -6,6 +6,12 @@ async function DisplaySets(req, res) {
     res.send(result);
 }
 
+async function DisplaySetsInUser(req, res) {
+    const result = await service.SelectSetInUser(req.params.USER_ID);
+
+    res.send(result);
+}
+
 async function DisplaySet(req, res) {
     const result = await service.SelectSet(req.params.SET_ID);
 
@@ -36,6 +42,7 @@ async function ModifySet(req, res) {
 
 module.exports = {
     DisplaySets,
+    DisplaySetsInUser,
     DisplaySet,
 
     DeleteSet,
