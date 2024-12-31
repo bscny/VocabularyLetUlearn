@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 
-const http = require('http');
+/*const http = require('http');
 const server = http.createServer(app);
 
 // start initializing------------------------------------------------------------------
@@ -21,14 +21,52 @@ const PORT = process.env.PORT || 3000;
 const { Server } = require('socket.io');
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
+        origin: ["https://vocabularyletlearn.online"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // 允許的方法
+    allowedHeaders: ['Content-Type', 'Authorization'],  // 允許的標頭
+    credentials: true  // 如果需要處理 cookies 或授權
     },
 });
+require("@/socket_services/Room/roomSocket.js")(io);*/
+const fs = require('fs');
+const path = require('path');
+const http = require('http');
+const https = require('https');  // 引入 https 模塊
+
+const PORT = process.env.PORT || 3000;
+// 加載 SSL 憑證
+const httpsOptions = {
+    key: fs.readFileSync('/etc/nginx/ssl/private.key'),  // 私鑰
+    cert: fs.readFileSync('/etc/nginx/ssl/certificate.crt'),  // 伺服器憑證
+    ca: fs.readFileSync('/etc/nginx/ssl/ca_bundle.crt'),  // 中介憑證
+};
+
+// 創建 HTTPS 伺服器
+const server = https.createServer(httpsOptions, app);
+
+// 創建 Socket.IO 伺服器，並確保它使用相同的 httpsServer
+const { Server } = require('socket.io');
+const io = new Server(server, {
+    cors: {
+        origin: ["https://vocabularyletlearn.online"],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+    },
+});
+
 require("@/socket_services/Room/roomSocket.js")(io);
+
+
+// 允許所有 OPTIONS 請求
+app.options('*', cors());
 
 app.use(bodyParser.json());
 app.use(cors({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
+    origin: ["https://vocabularyletlearn.online"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // 允許的方法
+    allowedHeaders: ['Content-Type', 'Authorization'],  // 允許的標頭
+    credentials: true  // 如果需要處理 cookies 或授權
 }));
 app.use(express.json());
 
@@ -111,5 +149,5 @@ app.use((err, req, res, next) => {
 
 // start the server
 server.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://18.183.51.228:${PORT}`);
 });

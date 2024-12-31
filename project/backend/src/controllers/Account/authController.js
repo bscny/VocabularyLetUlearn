@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
         await userService.createUser(email, hashedPassword, name);
 
         const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1d' });
-        const verificationLink = `http://localhost:5173/verify-email?token=${token}`;
+        const verificationLink = `https://vocabularyletlearn.online/verify-email?token=${token}`;
         
         // 解碼 token，並正確提取 email
         const decoded = jwt.verify(token, JWT_SECRET);
@@ -178,7 +178,7 @@ exports.resendVerificationEmail = async (req, res) => {
         }
 
         const token = jwt.sign({ email: user.Email }, JWT_SECRET, { expiresIn: '1d' });
-        const verificationLink = `http://localhost:5173/verify-email?token=${token}`;
+        const verificationLink = `https://vocabularyletlearn.online/verify-email?token=${token}`;
 
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
@@ -227,7 +227,7 @@ exports.sendResetPasswordEmail = async (req, res) => {
         const user = results[0];
 
         const token = jwt.sign({ email: user.Email }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        const resetLink = `http://localhost:5173/reset-password?token=${token}`;
+        const resetLink = `https://vocabularyletlearn.online/reset-password?token=${token}`;
 
         // 發送郵件
         await transporter.sendMail({
