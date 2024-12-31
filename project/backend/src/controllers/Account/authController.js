@@ -123,6 +123,7 @@ exports.verifyEmail = async (req, res) => {
         res.status(200).json({ 
             message: 'Email verified successfully',
             USER_ID: user[0].USER_ID,
+            User_name: user[0].User_name
         });
 
     } catch (err) {

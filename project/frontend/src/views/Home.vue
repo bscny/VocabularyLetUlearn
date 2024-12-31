@@ -130,8 +130,8 @@ export default {
 
         handleRegister(userData) {
             api.register(userData).then(response => {
-                localStorage.setItem('name', JSON.stringify(userData.name));
-                localStorage.setItem('email', JSON.stringify(userData.email));
+                // localStorage.setItem('name', JSON.stringify(userData.name));
+                // localStorage.setItem('email', JSON.stringify(userData.email));
                 
                 this.isLoggedIn = true;
                 this.userName = userData.name;
