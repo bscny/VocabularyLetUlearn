@@ -70,6 +70,7 @@ export default {
         },
 
         Logout(){
+            localStorage.removeItem('USER_ID');
             localStorage.removeItem('name');
             localStorage.removeItem('token');
             localStorage.removeItem('email');

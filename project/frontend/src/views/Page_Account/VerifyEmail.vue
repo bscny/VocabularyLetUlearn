@@ -40,6 +40,7 @@ export default {
                     if (response.data.message === 'Email verified successfully') {
                         localStorage.setItem('token', JSON.stringify(token));
                         localStorage.setItem('USER_ID', JSON.stringify(response.data.USER_ID));
+                        localStorage.setItem('name', JSON.stringify(response.data.User_name));
 
                         this.verified = true;
                         this.startCountdown();

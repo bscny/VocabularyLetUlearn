@@ -103,21 +103,10 @@ export default {
 
                 this.userStore.setUser(response.data.USER_ID,response.data.name, response.data.email);
                
-
-                /*
-                this.isLoggedIn = true;
-                this.userName = response.data.name;
-                this.userEmail = userData.email;
-                this.showLoginModal = false;
-                this.loginError = '';
-                */
                 this.updateLastLogin(this.userStore.userEmail);
 
                 if (!response.data.isVerified) {
                     this.showVerifyPrompt = true;
-                    /*this.loginError = '您的信箱尚未驗證。請檢查郵件完成驗證。';
-                    this.logout();
-                    return;*/
                 }else{
                     this.$router.push({
                         name: 'HomeLoggedIn'
@@ -129,10 +118,7 @@ export default {
         },
 
         handleRegister(userData) {
-            api.register(userData).then(response => {
-                localStorage.setItem('name', JSON.stringify(userData.name));
-                localStorage.setItem('email', JSON.stringify(userData.email));
-                
+            api.register(userData).then(response => {               
                 this.isLoggedIn = true;
                 this.userName = userData.name;
                 this.userEmail = userData.email;
